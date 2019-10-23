@@ -33,11 +33,11 @@
         <a-button @click="$router.push({ name: 'create-application' })" icon="rocket" size="large" v-if="$store.appsLoaded && Object.keys($store.applications).length < 1" type="primary">Create new application</a-button>
 
         <!-- If app selected -->
-        <div slot="description" v-if="$store.appsLoaded && $store.selectedApplication !== ''">
+        <!-- <div slot="description" v-if="$store.appsLoaded && $store.selectedApplication !== ''">
         </div>
         <span slot="image" style="color: #1823F8" v-if="$store.appsLoaded && $store.selectedApplication !== ''">
           <a-avatar :size="110" shape="square" :src="$store.applications[$store.selectedApplication].icon" />
-        </span>
+        </span> -->
       </a-empty>
     </a-card>
   </div>
@@ -51,8 +51,22 @@ export default {
     }
   },
   mounted () {
+    this.possiblyRedirectToAppSettings()
   },
   methods: {
+    possiblyRedirectToAppSettings () {
+      if (this.$store.appsLoaded && this.$store.selectedApplication !== '') {
+        this.$router.push({ name: 'app-settings' })
+      }
+    }
+  },
+  watch: {
+    '$store.appsLoaded' () {
+      this.possiblyRedirectToAppSettings()
+    },
+    '$store.selectedApplication' () {
+      this.possiblyRedirectToAppSettings()
+    }
   }
 }
 </script>

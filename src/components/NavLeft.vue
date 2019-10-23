@@ -1,29 +1,59 @@
 <template>
-  <a-menu theme="dark" mode="inline" :selectedKeys="[$route.name || '']" :defaultSelectedKeys="[$route.name || '']">
-    <a-menu-item key="a">
-      <router-link to="/a">
-        <a-icon type="hdd" />
-        <span class="nav-text">A Routed C</span>
+  <a-menu theme="dark" mode="inline" :selectedKeys="selectedMenuItem" :defaultSelectedKeys="selectedMenuItem">
+    <a-menu-item key="app-settings">
+      <router-link to="/app-settings">
+        <a-icon type="setting" />
+        <span class="nav-text">Settings</span>
       </router-link>
     </a-menu-item>
-    <a-menu-item key="b">
-      <router-link :to="{ name: 'b', params: { id: 123 } }">
-        <a-icon type="pie-chart" />
-        <span class="nav-text">Nav B</span>
+    <a-menu-item key="app-logs">
+      <router-link to="/app-logs">
+        <a-icon type="profile" />
+        <span class="nav-text">Logs</span>
       </router-link>
     </a-menu-item>
-    <a-menu-item key="c">
-      <router-link :to="{ name: 'c', params: { id: 456 } }">
-        <a-icon type="plus-circle" />
-        <span class="nav-text">Nav C</span>
+    <a-menu-item key="app-payloads">
+      <router-link to="/app-payloads">
+        <a-icon type="build" />
+        <span class="nav-text">Payloads</span>
       </router-link>
     </a-menu-item>
-    <a-menu-item key="d">
-      <router-link :to="{ name: 'd', params: { id: 456 } }">
-        <a-icon type="clock-circle" />
-        <span class="nav-text">CallSomething</span>
+    <a-menu-item key="user-tokens">
+      <router-link to="/user-tokens">
+        <a-icon type="tags" />
+        <span class="nav-text">User tokens</span>
       </router-link>
     </a-menu-item>
+
+    <a-menu-item-group key="g1">
+      <template slot="title">
+        <a-icon type="tool" /> <span> Development</span>
+      </template>
+      <a-menu-item key="a">
+        <router-link to="/a">
+          <a-icon type="hdd" />
+          <span class="nav-text">A Routed C</span>
+        </router-link>
+      </a-menu-item>
+      <a-menu-item key="b">
+        <router-link :to="{ name: 'b', params: { id: 123 } }">
+          <a-icon type="pie-chart" />
+          <span class="nav-text">Nav B</span>
+        </router-link>
+      </a-menu-item>
+      <a-menu-item key="c">
+        <router-link :to="{ name: 'c', params: { id: 456 } }">
+          <a-icon type="plus-circle" />
+          <span class="nav-text">Nav C</span>
+        </router-link>
+      </a-menu-item>
+      <a-menu-item key="d">
+        <router-link :to="{ name: 'd', params: { id: 456 } }">
+          <a-icon type="clock-circle" />
+          <span class="nav-text">CallSomething</span>
+        </router-link>
+      </a-menu-item>
+    </a-menu-item-group>
     <!-- <a-menu-item key="4">
       <a-icon type="bar-chart" />
       <span class="nav-text">nav 4</span>
@@ -52,6 +82,17 @@ export default {
   name: 'NavLeft',
   data () {
     return {}
+  },
+  computed: {
+    selectedMenuItem () {
+      const defaultSelected = 'app-settings'
+      const currentRouteName = this.$route.name || defaultSelected
+      return [
+        currentRouteName === '' || currentRouteName === 'home'
+          ? defaultSelected
+          : currentRouteName
+      ]
+    }
   },
   mounted () {},
   methods: {}

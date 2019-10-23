@@ -1,7 +1,7 @@
 <template>
   <div id="component_container">
     <a-layout-sider v-if="fullLayout">
-      <router-link to="/"><div class="menu-logo"></div></router-link>
+      <router-link :to="{ name: $store.appsLoaded && $store.selectedApplication !== '' ? 'app-settings' : 'home' }"><div class="menu-logo"></div></router-link>
       <NavLeft />
     </a-layout-sider>
     <a-layout>
