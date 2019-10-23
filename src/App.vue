@@ -1,28 +1,190 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <a-layout id="components-layout">
+    <div id="mobile" v-if="isMobile">
+      <img class="logo-icon rounded mb-1" src="./assets/icon.png" />
+      <h1 class="py-0 my-0"><b>xumm</b></h1>
+      <h6 class="py-0 text-secondary">developer dashboard</h6>
+      <a-alert type="warning" class="mt-5">
+        <div slot="message" class="text-dark">
+          <!-- <a-icon type="exclamation-circle" theme="filled" class="mr-1" /> -->
+          <b>Screen real estate required</b>
+        </div>
+        <div slot="description" class="text-secondary">
+          The <b>xumm</b> developer dashboard is not available on mobile devices.
+          Please visit the developer console on your desktop.
+        </div>
+      </a-alert>
+    </div><!-- On mobile -->
+
+    <div v-if="!isMobile && ($auth.loading || !$auth.isAuthenticated)">
+      <a-row class="mt-5">
+        <a-col :span="8" :offset="8">
+          <a-card class="bg-title">
+            <div slot="title">
+              <b>xumm</b> developer dashboard
+            </div>
+            <div v-if="$auth.loading">
+              <a-skeleton active :style="{marginTop: '-15px', marginBottom: '-10px'}" />
+            </div>
+            <div v-else>
+              <a-alert type="warning" showIcon>
+                <span slot="message">
+                  Not logged in.
+                </span>
+              </a-alert>
+              <div class="text-center mt-3">
+                <a-button icon="lock" :loading="loggingIn" @click="login" size="large">Log in (or register)</a-button>
+              </div>
+            </div>
+          </a-card>
+        </a-col>
+      </a-row>
+    </div><!-- Not on mobile, auth not loading (auth ready) -->
+
+    <Container v-if="!isMobile && !$auth.loading && $auth.isAuthenticated">
+      <router-view />
+    </Container><!-- Not on mobile, auth loaded, user logged in -->
+  </a-layout>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Container from './components/Container'
+import { isMobile } from 'mobile-device-detect'
 
 export default {
-  name: 'app',
+  name: 'AppContainer',
   components: {
-    HelloWorld
+    Container
+  },
+  computed: {
+    isMobile () {
+      return isMobile
+    }
+  },
+  data () {
+    return {
+      loggingIn: false
+    }
+  },
+  methods: {
+    login () {
+      this.loggingIn = true
+      this.$auth.loginWithRedirect()
+    }
+    // ,
+    // logout () {
+    //   this.$auth.logout({
+    //     returnTo: window.location.origin
+    //   })
+    // }
   }
 }
 </script>
 
 <style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  @import url("https://use.typekit.net/kcs7nfc.css");
+  @import url('https://fonts.googleapis.com/css?family=Ubuntu+Mono&display=swap');
+
+  html, body, p, a, h1, h2, h3, h4, h5, h6, p, div.ant-card {
+    font-family: proxima-nova, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  code, pre, .monospace, .mono {
+    font-family: 'Ubuntu Mono', monospace;
+  }
+
+  body {
+    overflow: hidden;
+    font-family: proxima-nova, sans-serif;
+    font-weight: 400;
+    font-style: normal;
+
+    #mobile {
+      background: #fff;
+      text-align: center;
+      padding: 20px;
+      height: 100vh;
+      overflow-x: hidden;
+      overflow-y: auto;
+
+      img.logo-icon {
+        width: 150px;
+        max-width: 100%;
+      }
+    }
+  }
+
+  div.ant-card {
+    &.bg-title {
+      .ant-card-head {
+        background-image: url('/theme/blue-repeat.png');
+        background-size: 300px;
+        color: #fff;
+        font-weight: 300;
+
+        b { font-weight: 900; }
+      }
+    }
+  }
+
+  #components-layout {
+    min-height: 100vh;
+
+    #component_container {
+      .menu-logo {
+        position: absolute;
+        width: 100%;
+        height: 64px;
+        background-size: 64px;
+        background-position: 16px center;
+        background-repeat: no-repeat;
+
+        /* No app selected */
+        background-image: url('/logo/xumm-icon.svg');
+        color: #333;
+        /* END - No app selected */
+
+        &:hover {
+          &:after { text-decoration: underline; }
+        }
+        &:after {
+          content: 'developer console';
+          display: inline;
+          height: inherit;
+          text-align: left;
+          width: inherit;
+          white-space: normal;
+          overflow: hidden;
+          padding-left: 93px;
+          padding-top: 18px;
+          padding-right: 10px;
+          float: left;
+          line-height: 1em;
+          font-size: 1em;
+        }
+      }
+    }
+
+    &.ant-layout-has-sider {
+      #component_container {
+        >.ant-layout {
+          margin-left: 200px;
+        }
+
+        // App selected
+        .menu-logo {
+          background-image: url('/theme/xumm-icon-white.svg');
+          color: #fff;
+        }
+      }
+    }
+  }
+
+  .ant-menu-submenu.ant-menu-submenu-popup {
+    /* White by default, annoying */
+    background-color: transparent;
+  }
+
 </style>

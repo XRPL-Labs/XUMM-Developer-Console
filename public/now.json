@@ -1,0 +1,12 @@
+{
+    "version":2,
+    "name":"xumm-developer-dashboard",
+    "alias": [
+        "xumm-developer-dashboard",
+        "apps.xumm.dev"
+    ],
+    "routes": [
+        { "handle": "filesystem" },
+        { "src": "/.*", "dest": "/index.html" }
+    ]
+}
