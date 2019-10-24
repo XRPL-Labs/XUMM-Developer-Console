@@ -29,6 +29,14 @@ const Store = new Vue({
       this.$store.appsLoaded = true
     }, 3000)
   },
+  computed: {
+    appName () {
+      if (this.appsLoaded && this.selectedApplication !== '') {
+        return this.applications[this.selectedApplication].name
+      }
+      return ''
+    }
+  },
   watch: {
     selectedApplication (to, from) {
       if (Object.keys(Options.router.currentRoute.meta).indexOf('clearSelectedApp') > -1 && Options.router.currentRoute.meta.clearSelectedApp) {
