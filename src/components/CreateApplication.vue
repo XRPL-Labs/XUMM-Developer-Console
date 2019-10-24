@@ -1,6 +1,9 @@
 <template>
-  <div class="create-container">
+  <div class="create-container container">
     <h3>Create application</h3>
+    <div class="card px-2 py-1">
+      Work in progress...
+    </div>
   </div>
 </template>
 
