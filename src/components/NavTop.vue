@@ -20,13 +20,17 @@
         <a-icon type="experiment" theme="twoTone" twoToneColor="#1823F8" :style="{fontSize: '1.5em', position: 'relative', top: '0.125em'}" />
         Select an app
       </span>
-      <a-menu-item :class="{ 'ant-menu-item-selected': $store.selectedApplication === k }" :disabled="$store.selectedApplication === k" @click="$store.selectedApplication=k" v-for="(v, k) in $store.applications" v-bind:key="k">
-        <a-avatar :style="{marginTop: '-3px', marginLeft: '-8px', marginRight: '5px'}" shape="square" :src="v.icon" />
+      <a-menu-item class="my-0" :disabled="$store.selectedApplication === k" @click="$store.selectedApplication=k" v-for="(v, k) in $store.applications" v-bind:key="k"
+      >
+        <a-avatar :style="avatarMargins" shape="square" :src="v.icon" />
         {{ v.name }}
       </a-menu-item>
-      <a-menu-item-group v-show="$router.currentRoute.name !== 'create-application'">
-        <a-button @click="$router.push({ name: 'create-application' })" size="large" icon="rocket" type="primary" :block="true">Create new application</a-button>
-      </a-menu-item-group>
+      <a-menu-item class="my-0" :disabled="$router.currentRoute.name === 'create-application'"
+        @click="$router.push({ name: 'create-application' })"
+      >
+        <a-avatar :style="avatarMargins" shape="square" icon="plus-circle" />
+        Create new application
+      </a-menu-item>
       <!-- <a-menu-item-group title="Item 2">
         <a-menu-item key="setting:3">Option 3</a-menu-item>
         <a-menu-item key="setting:4">Option 4</a-menu-item>
@@ -40,8 +44,12 @@
         <a-avatar shape="square" size="large" :style="{ marginLeft: '15px' }" :src="$auth.user.picture" />
         <!-- </a-badge> -->
       </span>
-      <a-menu-item v-if="$auth.user.sub.split('|')[0] === 'auth0'" @click="changePassword"><a-icon type="lock" /> Change password</a-menu-item>
-      <a-menu-item @click="logout"><a-icon type="right-square" /> Logout</a-menu-item>
+      <a-menu-item class="my-0" v-if="$auth.user.sub.split('|')[0] === 'auth0'" @click="changePassword">
+        <a-icon type="lock" /> Change password
+      </a-menu-item>
+      <a-menu-item class="my-0" @click="logout">
+        <a-icon type="right-square" /> Logout
+      </a-menu-item>
     </a-sub-menu>
     <!-- <a-menu-item key="user"> -->
       <!-- <a class="nopointer"> -->
@@ -61,6 +69,11 @@ export default {
   },
   async mounted () {
     // console.log(this.$auth.auth0Client.options.client_id)
+  },
+  computed: {
+    avatarMargins () {
+      return { marginTop: '-3px', marginLeft: '-8px', marginRight: '5px' }
+    }
   },
   methods: {
     changePassword () {

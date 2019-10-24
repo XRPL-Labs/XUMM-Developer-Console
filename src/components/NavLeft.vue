@@ -25,55 +25,31 @@
       </router-link>
     </a-menu-item>
 
-    <a-menu-item-group key="g1">
+    <a-menu-item-group key="g1" class="mt-5">
       <template slot="title">
-        <a-icon type="tool" /> <span> Development</span>
+        <a-icon type="tool" /> <span> <b>&nbsp;<u>Development</u></b></span>
       </template>
       <a-menu-item key="a">
         <router-link to="/a">
-          <a-icon type="hdd" />
           <span class="nav-text">A Routed C</span>
         </router-link>
       </a-menu-item>
       <a-menu-item key="b">
         <router-link :to="{ name: 'b', params: { id: 123 } }">
-          <a-icon type="pie-chart" />
           <span class="nav-text">Nav B</span>
         </router-link>
       </a-menu-item>
       <a-menu-item key="c">
         <router-link :to="{ name: 'c', params: { id: 456 } }">
-          <a-icon type="plus-circle" />
           <span class="nav-text">Nav C</span>
         </router-link>
       </a-menu-item>
       <a-menu-item key="d">
         <router-link :to="{ name: 'd', params: { id: 456 } }">
-          <a-icon type="clock-circle" />
           <span class="nav-text">CallSomething</span>
         </router-link>
       </a-menu-item>
     </a-menu-item-group>
-    <!-- <a-menu-item key="4">
-      <a-icon type="bar-chart" />
-      <span class="nav-text">nav 4</span>
-    </a-menu-item>
-    <a-menu-item key="5">
-      <a-icon type="cloud-o" />
-      <span class="nav-text">nav 5</span>
-    </a-menu-item>
-    <a-menu-item key="6">
-      <a-icon type="appstore-o" />
-      <span class="nav-text">nav 6</span>
-    </a-menu-item>
-    <a-menu-item key="7">
-      <a-icon type="team" />
-      <span class="nav-text">nav 7</span>
-    </a-menu-item>
-    <a-menu-item key="8">
-      <a-icon type="shop" />
-      <span class="nav-text">nav 8</span>
-    </a-menu-item> -->
   </a-menu>
 </template>
 
