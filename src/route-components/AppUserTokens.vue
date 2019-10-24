@@ -1,19 +1,29 @@
 <template>
   <div class="">
-    <h1>{{ $router.currentRoute.name }}</h1>
-    <p>{{ $router.params }}</p>
-    <a-button size="large" loading>Test</a-button>
+    <h3 class="mb-1">User tokens</h3>
+    <h6 class="mb-3"><b>{{ $store.appName }}</b></h6>
+    <p>Test</p>
+    <div class="card px-2 py-1">
+      <pre class="mx-1 my-1">{{ $router.params || {} }}</pre>
+    </div>
   </div>
 </template>
 
 <script>
-
 export default {
-  components: {
-  },
   name: 'AppUserTokens',
-  props: {
-    msg: String
+  components: {},
+  data () {
+    return {
+
+    }
+  },
+  props: {},
+  mounted () {
+  },
+  computed: {
+  },
+  methods: {
   }
 }
 </script>
