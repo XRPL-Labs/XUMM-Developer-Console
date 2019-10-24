@@ -1,12 +1,13 @@
 <template>
   <div class="home-container py-3">
-    <a-card :loading="!$store.appsLoaded" class="no-apps">
+    <a-card :loading="!$store.appsLoaded" class="no-apps bg-title">
       <div slot="title" v-if="!$store.appsLoaded">
-        <a-icon slot="indicator" type="loading" class="d-inline-block mr-2" spin />
+        <a-icon type="loading" class="d-inline-block mr-2" spin />
         <b>Loading applications</b>
       </div>
       <div slot="title" v-if="$store.appsLoaded && Object.keys($store.applications).length < 1">
-        <b v-if="$store.appsLoaded && Object.keys($store.applications).length < 1">No application found</b>
+        <a-icon type="layout" class="d-inline-block mr-2" />
+        <b>No application found</b>
       </div>
       <a-empty>
         <span slot="image" style="color: #1823F8" v-if="$store.appsLoaded && Object.keys($store.applications).length > 0 && $store.selectedApplication === ''">
@@ -56,7 +57,11 @@ export default {
   methods: {
     possiblyRedirectToAppSettings () {
       if (this.$store.appsLoaded && this.$store.selectedApplication !== '') {
+        // If app selected: go to settings (that's home)
         this.$router.push({ name: 'app-settings' })
+      } else if (this.$store.appsLoaded && this.$store.selectedApplication === '' && Object.keys(this.$store.applications).length === 1) {
+        // If no app selected and only one available
+        this.$store.selectedApplication = Object.keys(this.$store.applications)[0]
       }
     }
   },
