@@ -1,5 +1,5 @@
 <template>
-  <a-layout id="components-layout">
+  <a-layout id="components-layout" class="h100">
     <div id="mobile" v-if="isMobile">
       <img class="logo-icon rounded mb-1" src="./assets/icon.png" />
       <h1 class="py-0 my-0"><b>xumm</b></h1>
@@ -16,9 +16,9 @@
       </a-alert>
     </div><!-- On mobile -->
 
-    <div v-if="!isMobile && ($auth.loading || !$auth.isAuthenticated)">
-      <a-row class="mt-5">
-        <a-col :span="8" :offset="8">
+    <div v-if="!isMobile && ($auth.loading || !$auth.isAuthenticated)" class="h100">
+      <a-row class="h100 flex-center">
+        <a-col :span="8" :offset="0">
           <a-card class="bg-title">
             <div slot="title">
               <b>xumm</b> developer dashboard
@@ -71,12 +71,6 @@ export default {
       this.loggingIn = true
       this.$auth.loginWithRedirect()
     }
-    // ,
-    // logout () {
-    //   this.$auth.logout({
-    //     returnTo: window.location.origin
-    //   })
-    // }
   }
 }
 </script>
@@ -90,6 +84,9 @@ export default {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  .h100 { height: 100% !important; }
+  .flex-center { display: flex !important; align-items: center; justify-content: center; }
 
   code, pre, .monospace, .mono {
     font-family: 'Ubuntu Mono', monospace;
@@ -187,4 +184,23 @@ export default {
     background-color: transparent;
   }
 
+  ul.ant-menu.ant-menu-vertical.ant-menu-sub.ant-menu-submenu-content {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    span.ant-avatar.ant-avatar-square.ant-avatar-icon {
+      i.anticon {
+        font-size: 1.3em;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        margin: 0 auto 0 auto;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        svg {
+          margin: 0 auto 0 auto;
+        }
+      }
+    }
+  }
 </style>
