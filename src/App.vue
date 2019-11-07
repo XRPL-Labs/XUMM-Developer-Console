@@ -85,11 +85,67 @@ export default {
     -moz-osx-font-smoothing: grayscale;
   }
 
+  h1, h2, h3, h4, h5, h6 { color: #333; }
+
+  .ant-card {
+    .ant-card-cover {
+      .hljs {
+        padding: 20px 35px;
+      }
+    }
+  }
+
+  .ant-input, .ant-btn, .ant-upload {
+    border-radius: 4px !important;
+    resize: none;
+    margin-bottom: 0 !important;
+  }
+
+  .ant-upload {
+    // border: 1px solid red;
+    width: 100%;
+    text-align: center;
+    display: inline-block;
+    height: 100%;
+    border-radius: 7px !important;
+
+    .ant-upload-drag-container {
+      display: inline-block !important;
+    }
+    &.ant-upload-drag {
+      box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      // border: 1px solid purple !important;
+      padding: 2px !important;
+      border-radius: 7px !important;
+      background: none !important;
+    }
+    &.ant-upload-drag.ant-upload-drag-hover:not(.ant-upload-disabled) {
+      padding: 0px !important;
+      border: 3px solid #1823F8 !important;
+      background-color: #fcfcfc;
+    }
+  }
+
   .h100 { height: 100% !important; }
   .flex-center { display: flex !important; align-items: center; justify-content: center; }
 
   code, pre, .monospace, .mono {
     font-family: 'Ubuntu Mono', monospace;
+  }
+
+  .ant-form.ant-form-vertical {
+    .ant-form-item {
+      .ant-form-item-label {
+        // padding: 0;
+
+        label {
+          padding: 0;
+          margin: 0;
+        }
+      }
+    }
   }
 
   body {

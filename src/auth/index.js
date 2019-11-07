@@ -117,6 +117,10 @@ export const useAuth0 = ({
         this.user = await this.auth0Client.getUser()
         this.loading = false
       }
+
+      this.$nextTick(() => {
+        options.router.app.$emit('auth-registered')
+      })
     }
   })
 

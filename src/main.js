@@ -13,11 +13,15 @@ Vue.config.productionTip = false
 Vue.use(Antd)
 Vue.use(VueRouter)
 
+const router = new VueRouter({ mode: 'history', routes })
+router.beforeEach(beforeEnter)
+
 // Install the authentication plugin here
 Vue.use(Auth0Plugin, {
   domain,
   clientId,
   audience,
+  router,
   onRedirectCallback: appState => {
     router.push(
       appState && appState.targetUrl
@@ -26,9 +30,6 @@ Vue.use(Auth0Plugin, {
     )
   }
 })
-
-const router = new VueRouter({ mode: 'history', routes })
-router.beforeEach(beforeEnter)
 
 Vue.use(Store, { router })
 
