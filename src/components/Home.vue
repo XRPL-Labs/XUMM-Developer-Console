@@ -61,7 +61,10 @@ export default {
         this.$router.push({ name: 'app-settings' })
       } else if (this.$store.appsLoaded && this.$store.selectedApplication === '' && Object.keys(this.$store.applications).length === 1) {
         // If no app selected and only one available
-        this.$store.selectedApplication = Object.keys(this.$store.applications)[0]
+        // this.$store.selectedApplication = Object.keys(this.$store.applications)[0]
+        // ^^ Disable, conflicts with updating a no longer present app, shoud redirect home instead selecting the last present app
+        // This would only select the only present app when returning from the App Create screen
+        console.log('-- Only one app, do not autoselect @Home.vue')
       }
     }
   },

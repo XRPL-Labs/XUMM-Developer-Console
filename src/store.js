@@ -29,11 +29,20 @@ const Store = new Vue({
         ? devUrl
         : liveUrl
     },
+    appsReady () {
+      return this.appsLoaded && this.selectedApplication !== ''
+    },
     appName () {
-      if (this.appsLoaded && this.selectedApplication !== '') {
-        return this.applications[this.selectedApplication].name
+      if (this.appsReady) {
+        return this.app.name
       }
       return ''
+    },
+    app () {
+      if (this.appsReady) {
+        return this.applications[this.selectedApplication]
+      }
+      return {}
     }
   },
   watch: {
@@ -46,24 +55,36 @@ const Store = new Vue({
     }
   },
   methods: {
-    async fetchApps (preventAutoSelect) {
-      this.$store.appsLoaded = false
-      this.applications = {}
+    async fetchApps (autoSelect = true) {
+      // this.$store.appsLoaded = false
+      // this.applications = {}
 
       const apps = await this.api('get', 'console/apps')
-      console.log(apps)
+      // console.log(apps)
 
       if (typeof apps.applications !== 'undefined') {
+        const newData = {}
+
         apps.applications.forEach(a => {
-          this.$store.applications[a.application_uuidv4] = {
+          newData[a.application_uuidv4] = {
             name: a.application_name,
             icon: a.application_icon_url,
             details: a
           }
         })
+
+        this.$set(this, 'applications', newData)
+
+        if (this.selectedApplication !== '' && typeof newData[this.selectedApplication] === 'undefined') {
+          autoSelect = false
+          this.$set(this, 'selectedApplication', '')
+          this.$nextTick(() => {
+            Options.router.push({ name: 'home' })
+          })
+        }
       }
 
-      if (typeof preventAutoSelect === 'undefined' || preventAutoSelect) {
+      if (typeof autoSelect === 'undefined' || autoSelect) {
         if (Object.keys(this.$store.applications).length === 1) {
           this.selectedApplication = Object.keys(this.$store.applications)[0]
         }

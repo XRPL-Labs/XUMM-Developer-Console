@@ -79,10 +79,10 @@ export default {
   @import url("https://use.typekit.net/kcs7nfc.css");
   @import url('https://fonts.googleapis.com/css?family=Ubuntu+Mono&display=swap');
 
-  html, body, p, a, h1, h2, h3, h4, h5, h6, p, div.ant-card {
+  html, body, p, a, b, div, h1, h2, h3, h4, h5, h6, p, div.ant-card {
     font-family: proxima-nova, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    // -webkit-font-smoothing: antialiased;
+    // -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 { color: #333; }
@@ -93,6 +93,12 @@ export default {
         padding: 20px 35px;
       }
     }
+  }
+
+  .overflow-visible { overflow: visible !important; }
+
+  .ant-popover-message-title {
+    max-width: 300px;
   }
 
   .ant-input, .ant-btn, .ant-upload {

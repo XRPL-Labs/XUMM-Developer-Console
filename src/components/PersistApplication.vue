@@ -1,10 +1,13 @@
 <template>
-  <div class="create-container container">
-    <h3 v-if="!appDetails.created">Create application</h3>
-    <p v-if="!appDetails.created">
-      To get access to the <b>xumm</b> API (to submit signing requests) you'll need an API key. Please enter some details below to register your
-      application and get your API key. The information entered below will be visible to your users.
-    </p>
+  <div class="create-container" :class="{ container: !editMode }">
+    <div v-if="!editMode">
+      <h3 v-if="!appDetails.created">Create application</h3>
+      <p v-if="!appDetails.created">
+        To get access to the <b>xumm</b> API (to submit signing requests) you'll need an API key. Please enter some details below to register your
+        application and get your API key. The information entered below will be visible to your users.
+      </p>
+    </div>
+
     <h3 v-if="appDetails.created">Application created</h3>
     <a-alert v-if="appDetails.created" type="success" showIcon>
       <span slot="message"><b>{{appDetails.name}}</b></span>
@@ -41,17 +44,21 @@
         </a-card>
       </span>
     </a-alert>
-    <div v-if="appDetails.created">
+
+    <div v-if="appDetails.created && !editMode">
       <a-button class="mt-4 float-right" :disabled="!$store.appsLoaded" @click="$store.selectedApplication = appDetails.uuidv4" size="large" type="primary">
         <span>Open <b>{{ appDetails.name }}</b>&nbsp;<a-icon type="arrow-right" /></span>
       </a-button>
     </div>
-    <a-row :gutter="16" class="mt-5" v-if="!appDetails.created">
-      <a-col :xs="12" :sm="10" :md="8" :lg="6" :xl="5">
+
+    <!-- <a-row :gutter="16" class="mt-5" v-if="!appDetails.created"> -->
+    <a-layout class="mt-5" v-if="!appDetails.created">
+      <!-- <a-col :style="{ width: '200px' }"> -->
+      <a-layout-sider theme="light" :style="{ width: '210px', maxWidth: '210px', flex: '0 0 210px', backgroundColor: 'transparent' }">
         <a-form layout="vertical">
           <a-form-item required label="App icon">
             <div :style="uploadContainerStyle">
-              <a-upload-dragger :style="uploadDraggerStyle" name="upload" listType="picture-card" class="avatar-uploader" :showUploadList="false" :beforeUpload="beforeUpload">
+              <a-upload-dragger ref="icon" :multiple="false" :style="uploadDraggerStyle" name="upload" listType="picture-card" class="avatar-uploader" :showUploadList="false" :beforeUpload="beforeUpload">
                 <div v-show="uploading > 0" style="position: absolute; top: 50px; left: 50px; border-radius: 80px; padding: 10px; background: rgba(255,255,255,.5);">
                   <a-icon slot="indicator" type="loading" style="font-size: 80px" spin />
                 </div>
@@ -65,14 +72,16 @@
             </div>
           </a-form-item>
         </a-form>
-      </a-col>
-      <a-col :xs="12" :sm="14" :md="16" :lg="18" :xl="19">
+      <!-- </a-col> -->
+      </a-layout-sider>
+      <!-- <a-col> -->
+      <a-layout-content class="pl-2 overflow-visible">
         <a-form autocomplete="off" :form="form" layout="vertical" @submit="handleSubmit">
           <a-form-item label="Application name">
             <a-input size="large" v-focus v-decorator="[
               'appName',
               { rules: [
-                { required: true, min: 3, whitespace: true, message: 'Please enter a catchy name for your app' }
+                { required: true, min: 3, max: 60, whitespace: true, message: 'Please enter a catchy name for your app (max. 60 characters)' }
               ] }
             ]" placeholder="My Super Cool App">
               <a-icon slot="prefix" type="tag" style="color: rgba(0,0,0,.25)" />
@@ -90,7 +99,7 @@
             <span slot="label">
               Webhook URL for callbacks. You can get a URL at <a href="https://webhook.site/" target="_blank" tabindex="-1"><b>https://webhook.site</b></a> for testing purposes
             </span>
-            <a-input size="large" v-decorator="[
+            <a-input size="large" allowClear v-decorator="[
               'appWebhookUrl', { validateTrigger: 'blur', rules: [ { required: false, type: 'url', message: 'Please enter a valid URL where you can receive webhooks' } ] }
             ]" placeholder="https://my-super-cool-app.dev/xumm-hooks">
               <a-icon slot="prefix" type="link" style="color: rgba(0,0,0,.25)" />
@@ -98,14 +107,24 @@
           </a-form-item>
 
           <a-form-item>
-            <a-button class="mt-4 float-right" :loading="uploading > 0 || submitting" size="large" type="primary" html-type="submit">
+            <a-button :class="{ 'mt-4': !editMode }" class="float-right" :loading="uploading > 0 || submitting" size="large" type="primary" html-type="submit">
               <span v-if="uploading > 0">Processing upload</span>
-              <span v-else>Create application <a-icon type="arrow-right" /></span>
+              <span v-else>
+                <span v-if="!editMode">
+                  Create application <a-icon type="arrow-right" />
+                </span>
+                <span v-else>
+                  <a-icon type="save" />
+                  Update application
+                </span>
+              </span>
             </a-button>
           </a-form-item>
         </a-form>
-      </a-col>
-    </a-row>
+      <!-- </a-col> -->
+      </a-layout-content>
+    <!-- </a-row> -->
+    </a-layout>
   </div>
 </template>
 
@@ -127,7 +146,14 @@ Vue.use(VueClipboard)
 Vue.prototype.$form = Form
 
 export default {
-  name: 'CreateApplication',
+  name: 'PersistApplication',
+  props: {
+    editMode: {
+      type: Boolean,
+      required: false,
+      default: false
+    }
+  },
   directives: {
     focus: {
       inserted (el) {
@@ -138,9 +164,12 @@ export default {
       }
     }
   },
-  beforeCreate () {
-    const options = {}
-    this.form = this.$form.createForm(this, options)
+  created () {
+    this.createForm()
+  },
+  mounted () {
+    // In case of editmode
+    this.prepopulate()
   },
   data () {
     return {
@@ -150,30 +179,58 @@ export default {
       submitting: false,
       appDetails: {
         created: false,
-        uuidv4: '123-456-789',
-        name: 'Some Cool App',
+        uuidv4: '',
+        name: '',
         credentials: {
-          secret: '456-789-321'
+          secret: ''
         }
       }
     }
   },
   watch: {
+    '$store.selectedApplication' () {
+      console.log('Changed application')
+      this.prepopulate()
+      this.createForm()
+    },
     imageUrl () {
       const uploadContainer = document.querySelector('span[role="button"].ant-upload')
-      uploadContainer.style.border = '1px solid white'
-      uploadContainer.style.backgroundImage = 'url(' + this.imageUrl + ')'
-      uploadContainer.style.backgroundSize = 'cover'
-      uploadContainer.style.backgroundRepeat = 'no-repeat'
-      uploadContainer.style.backgroundPosition = 'center center'
+      if (uploadContainer) {
+        uploadContainer.style.border = '1px solid white'
+        uploadContainer.style.backgroundImage = 'url(' + this.imageUrl + ')'
+        uploadContainer.style.backgroundSize = 'cover'
+        uploadContainer.style.backgroundRepeat = 'no-repeat'
+        uploadContainer.style.backgroundPosition = 'center center'
+      }
     }
   },
   computed: {
+    formData () {
+      if (this.$store.appsReady) {
+        return {
+          appName: this.$store.app.name,
+          appDescription: this.$store.app.details.application_description,
+          appWebhookUrl: this.$store.app.details.application_webhookurl
+        }
+      }
+      return {
+        appName: '',
+        appDescription: '',
+        appWebhookUrl: ''
+      }
+    },
     uploadDraggerStyle () {
-      return { opacity: this.uploading > 0 ? '.65' : 1 }
+      return {
+        opacity: this.uploading > 0 ? '.65' : 1
+      }
     },
     uploadContainerStyle () {
-      return { width: '200px', height: '200px', borderRadius: '7px', backgroundColor: '#fff' }
+      return {
+        width: '200px',
+        height: '200px',
+        borderRadius: '7px',
+        backgroundColor: '#fff'
+      }
     },
     curlCode () {
       return `
@@ -186,6 +243,36 @@ export default {
     }
   },
   methods: {
+    prepopulate () {
+      // EditMode means existing icon. Wait for parent to be rendered, then wait for child (icon dropzone) to be rendered
+      if (this.editMode) {
+        this.imageCdnUrl = this.generateCdnUrl(this.$store.app.details.application_icon_url)
+
+        this.$nextTick(() => {
+          this.$refs.icon.$nextTick(() => {
+            this.imageUrl = this.$store.app.details.application_icon_url
+          })
+        })
+      }
+    },
+    createForm () {
+      const options = {
+        mapPropsToFields: () => {
+          return {
+            appName: this.$form.createFormField({
+              value: this.formData.appName
+            }),
+            appDescription: this.$form.createFormField({
+              value: this.formData.appDescription
+            }),
+            appWebhookUrl: this.$form.createFormField({
+              value: this.formData.appWebhookUrl
+            })
+          }
+        }
+      }
+      this.form = this.$form.createForm(this, options)
+    },
     copied () {
       this.$message.success('Copied to clipboard')
     },
@@ -204,24 +291,41 @@ export default {
           }
           this.submitting = true
           try {
-            const response = await this.$store.api('post', 'console/app', {
+            const response = await this.$store.api('post', 'console/app' + (this.editMode ? ('/' + this.$store.app.details.application_uuidv4) : ''), {
               ...values,
               appIcon: this.imageCdnUrl
             })
-            // console.log(response)
-            if (typeof response === 'object' && response !== null && typeof response.created !== 'undefined' && response.created === true) {
-              this.appDetails.uuidv4 = response.uuidv4
-              this.appDetails.name = response.name
-              this.appDetails.created = response.created
-              this.appDetails.credentials.secret = response.credentials.secret
 
-              this.$store.fetchApps(false)
+            // console.log(response)
+            if (this.editMode) {
+              if (typeof response === 'object' && response !== null && typeof response.updated !== 'undefined' && response.updated === true) {
+                this.appDetails.name = response.name
+                this.$message.success('Application "' + this.appDetails.name + '" updated')
+                this.$store.fetchApps(false)
+                this.submitting = false
+              } else {
+                throw new Error('Error updating application details')
+              }
             } else {
-              throw new Error('Response validation error')
+              if (typeof response === 'object' && response !== null && typeof response.created !== 'undefined' && response.created === true) {
+                this.appDetails.uuidv4 = response.uuidv4
+                this.appDetails.name = response.name
+                this.appDetails.created = response.created
+                this.appDetails.credentials.secret = response.credentials.secret
+
+                this.$store.fetchApps(false)
+                this.submitting = false
+              } else {
+                throw new Error('Response validation error')
+              }
             }
           } catch (e) {
             this.submitting = false
-            this.$message.error('Error while creating your application' + (e.reference ? ` (${e.reference})` : ''))
+            if (this.editMode) {
+              this.$message.error('Error updating your application' + (e.reference ? ` (${e.reference})` : ''))
+            } else {
+              this.$message.error('Error creating your application' + (e.reference ? ` (${e.reference})` : ''))
+            }
           }
         })
       }
@@ -229,6 +333,9 @@ export default {
     beforeUpload (file) {
       this.handleUpload(file)
       return false
+    },
+    generateCdnUrl (url) {
+      return 'https://xumm-cdn.imgix.net/app-logo/' + url.split('/').reverse()[0]
     },
     getBase64 (img, callback) {
       const reader = new FileReader()
@@ -262,7 +369,7 @@ export default {
           if (response.uploaded) {
             if (this.uploading === 0) {
               // this.$message.success('Logo stored successfully')
-              this.imageCdnUrl = 'https://xumm-cdn.imgix.net/' + response.file.key.split('/').slice(1).join('/')
+              this.imageCdnUrl = this.generateCdnUrl(response.file.key)
               const newImg = new Image()
               newImg.src = this.imageCdnUrl
             }

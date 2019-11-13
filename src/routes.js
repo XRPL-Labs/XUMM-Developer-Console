@@ -1,7 +1,7 @@
 import Home from './components/Home.vue'
 import NotFound from './components/404.vue'
 
-import CreateApplication from './components/CreateApplication.vue'
+import PersistApplication from './components/PersistApplication.vue'
 
 import AppSettings from './route-components/AppSettings.vue'
 import AppLogs from './route-components/AppLogs.vue'
@@ -30,7 +30,7 @@ const routes = [
   {
     path: '/create-application',
     name: 'create-application',
-    component: CreateApplication,
+    component: PersistApplication,
     meta: {
       padding: true,
       clearSelectedApp: true

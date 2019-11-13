@@ -12,9 +12,9 @@
     </a-menu-item>
     <a-sub-menu v-if="$router.currentRoute.name !== 'home' || $store.selectedApplication !== ''">
       <span slot="title" class="submenu-title-wrapper" v-if="$store.selectedApplication !== ''">
-        <a-avatar :style="{marginTop: '-3px', marginRight: '12px'}" shape="square" :src="$store.applications[$store.selectedApplication].icon" />
+        <a-avatar :style="{marginTop: '-3px', marginRight: '12px'}" shape="square" :src="$store.app.icon" />
         <!-- <a-icon type="experiment" theme="twoTone" twoToneColor="#1823F8" :style="{fontSize: '1.5em', position: 'relative', top: '0.125em'}" /> -->
-        <strong>{{ $store.applications[$store.selectedApplication].name }}</strong>
+        <strong>{{ $store.app.name }}</strong>
       </span>
       <span slot="title" class="submenu-title-wrapper" :style="{ color: '#1823F8' }" v-if="$store.selectedApplication === '' && Object.keys($store.applications).length > 0">
         <a-icon type="experiment" theme="twoTone" twoToneColor="#1823F8" :style="{fontSize: '1.5em', position: 'relative', top: '0.125em'}" />
