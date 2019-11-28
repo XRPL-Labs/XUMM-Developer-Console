@@ -1,25 +1,25 @@
 <template>
   <a-menu theme="dark" mode="inline" :selectedKeys="selectedMenuItem" :defaultSelectedKeys="selectedMenuItem">
     <a-menu-item key="app-settings">
-      <router-link to="/app-settings">
+      <router-link :to="{ name: 'app-settings', params: { appId: $store.selectedApplication } }">
         <a-icon type="setting" />
         <span class="nav-text">Settings</span>
       </router-link>
     </a-menu-item>
     <a-menu-item key="app-logs">
-      <router-link to="/app-logs">
+      <router-link :to="{ name: 'app-logs', params: { appId: $store.selectedApplication } }">
         <a-icon type="profile" />
         <span class="nav-text">Logs</span>
       </router-link>
     </a-menu-item>
     <a-menu-item key="app-payloads">
-      <router-link to="/app-payloads">
+      <router-link :to="{ name: 'app-payloads', params: { appId: $store.selectedApplication } }">
         <a-icon type="build" />
         <span class="nav-text">Payloads</span>
       </router-link>
     </a-menu-item>
     <a-menu-item key="user-tokens">
-      <router-link to="/user-tokens">
+      <router-link :to="{ name: 'user-tokens', params: { appId: $store.selectedApplication } }">
         <a-icon type="tags" />
         <span class="nav-text">User tokens</span>
       </router-link>

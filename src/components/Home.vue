@@ -58,7 +58,7 @@ export default {
     possiblyRedirectToAppSettings () {
       if (this.$store.appsLoaded && this.$store.selectedApplication !== '') {
         // If app selected: go to settings (that's home)
-        this.$router.push({ name: 'app-settings' })
+        this.$router.push({ name: 'app-settings', params: { appId: this.$store.selectedApplication } })
       } else if (this.$store.appsLoaded && this.$store.selectedApplication === '' && Object.keys(this.$store.applications).length === 1) {
         // If no app selected and only one available
         // this.$store.selectedApplication = Object.keys(this.$store.applications)[0]

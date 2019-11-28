@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="" v-if="$store.appName">
     <h3 class="mb-1">Payloads</h3>
     <h6 class="mb-3"><b>{{ $store.appName }}</b></h6>
     <p>Test</p>

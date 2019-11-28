@@ -24,7 +24,8 @@ const routes = [
     name: 'home',
     component: Home,
     meta: {
-      padding: false
+      padding: false,
+      clearSelectedApp: true
     }
   },
   {
@@ -37,7 +38,7 @@ const routes = [
     }
   },
   {
-    path: '/app-settings',
+    path: '/:appId?/app-settings',
     name: 'app-settings',
     component: AppSettings,
     meta: {
@@ -46,7 +47,7 @@ const routes = [
     }
   },
   {
-    path: '/app-logs',
+    path: '/:appId?/app-logs',
     name: 'app-logs',
     component: AppLogs,
     meta: {
@@ -55,7 +56,7 @@ const routes = [
     }
   },
   {
-    path: '/app-payloads',
+    path: '/:appId?/app-payloads',
     name: 'app-payloads',
     component: AppPayloads,
     meta: {
@@ -64,7 +65,7 @@ const routes = [
     }
   },
   {
-    path: '/user-tokens',
+    path: '/:appId?/user-tokens',
     name: 'user-tokens',
     component: AppUserTokens,
     meta: {
@@ -125,10 +126,21 @@ const routes = [
 ]
 
 // Can be used globally, VueRouter.beforeEach()
-const beforeEnter = (to, from, next) => {
+const beforeEnter = async (to, from, next) => {
   if (Object.keys(to.meta).indexOf('clearSelectedApp') > -1 && to.meta.clearSelectedApp) {
     Store.selectedApplication = ''
   }
+  if (Object.keys(to.params).indexOf('appId') > -1 && Store.selectedApplication !== to.params.appId) {
+    if (typeof Store.applications[to.params.appId] !== 'undefined') {
+      Store.selectedApplication = to.params.appId
+    } else {
+      const apps = await Store.appsLoadedPromise
+      if (apps.indexOf(to.params.appId) > -1) {
+        Store.selectedApplication = to.params.appId
+      }
+    }
+  }
+
   if (Object.keys(to.meta).indexOf('appRequired') > -1 && to.meta.appRequired && Store.selectedApplication === '') {
     next('/')
   } else {

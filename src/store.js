@@ -2,6 +2,13 @@ import Vue from 'vue'
 import axios from 'axios'
 
 const Options = {}
+const ExternalPromise = {
+  appsLoaded: { resove: null, reject: null, promise: null }
+}
+
+ExternalPromise.appsLoaded.promise = new Promise((resolve, reject) => {
+  Object.assign(ExternalPromise.appsLoaded, { resolve, reject })
+})
 
 const Store = new Vue({
   data () {
@@ -9,6 +16,7 @@ const Store = new Vue({
       someProp: 'test',
       selectedApplication: '',
       appsLoaded: false,
+      appsLoadedPromise: ExternalPromise.appsLoaded.promise,
       applications: {}
     }
   },
@@ -16,7 +24,12 @@ const Store = new Vue({
     this.$nextTick(() => {
       Options.router.app.$on('auth-registered', () => {
         // console.log('auth-registered')
+        // if (this.$auth.isAuthenticated) {
+        // console.log('auth-authenticated, fetchapps')
         this.fetchApps()
+        // } else {
+        //   console.log('auth not authenticated, skip fetchapps')
+        // }
       })
     })
   },
@@ -46,19 +59,39 @@ const Store = new Vue({
     }
   },
   watch: {
+    appsLoaded (to) {
+      if (to) {
+        ExternalPromise.appsLoaded.resolve(Object.keys(this.applications))
+      }
+    },
     selectedApplication (to, from) {
+      // Are at app details, changing to another app (still details)
+      if (Object.keys(Options.router.currentRoute.meta).indexOf('appRequired') > -1 && Options.router.currentRoute.meta.appRequired) {
+        console.log('Are at app details, changing to another app (still details)')
+        if (this.selectedApplication !== '') {
+          if (Object.keys(Options.router.currentRoute.params).indexOf('appId') < 0 || Options.router.currentRoute.params.appId !== this.selectedApplication) {
+            const newRoute = Object.assign({ ...(Options.router.currentRoute) }, {
+              params: Object.assign(Options.router.currentRoute.params, {
+                appId: this.selectedApplication
+              })
+            })
+            console.log('nr', newRoute)
+            Options.router.push(newRoute)
+          }
+        }
+      }
+
       if (Object.keys(Options.router.currentRoute.meta).indexOf('clearSelectedApp') > -1 && Options.router.currentRoute.meta.clearSelectedApp) {
-        if (to !== '') {
-          Options.router.push({ name: 'home' })
+        if (to !== '' && from === '') {
+          if (Options.router.currentRoute.name !== 'home') {
+            Options.router.push({ name: 'home', params: { appId: to } })
+          }
         }
       }
     }
   },
   methods: {
     async fetchApps (autoSelect = true) {
-      // this.$store.appsLoaded = false
-      // this.applications = {}
-
       const apps = await this.api('get', 'console/apps')
       // console.log(apps)
 
@@ -85,18 +118,19 @@ const Store = new Vue({
       }
 
       if (typeof autoSelect === 'undefined' || autoSelect) {
-        if (Object.keys(this.$store.applications).length === 1) {
-          this.selectedApplication = Object.keys(this.$store.applications)[0]
+        if (Object.keys(this.applications).length === 1) {
+          this.selectedApplication = Object.keys(this.applications)[0]
         }
       }
 
-      this.$store.appsLoaded = true
-      return this.$store.applications
+      this.appsLoaded = true
+      return this.applications
     },
     async api (method, endpoint, postData) {
       try {
         const token = await this.$auth.getTokenSilently()
         // console.log(token)
+        // console.log('token', token)
         const { data } = await axios({
           method: method.trim().toLowerCase(),
           url: this.apiEndpoint + endpoint,

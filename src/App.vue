@@ -16,14 +16,14 @@
       </a-alert>
     </div><!-- On mobile -->
 
-    <div v-if="!isMobile && ($auth.loading || !$auth.isAuthenticated)" class="h100">
+    <div v-if="!isMobile && ($auth.loading || !$store.appsLoaded || !$auth.isAuthenticated)" class="h100">
       <a-row class="h100 flex-center">
         <a-col :span="8" :offset="0">
           <a-card class="bg-title">
             <div slot="title">
               <b>xumm</b> developer dashboard
             </div>
-            <div v-if="$auth.loading">
+            <div v-if="$auth.loading || (!$store.appsLoaded && $auth.isAuthenticated)">
               <a-skeleton active :style="{marginTop: '-15px', marginBottom: '-10px'}" />
             </div>
             <div v-else>
@@ -41,7 +41,7 @@
       </a-row>
     </div><!-- Not on mobile, auth not loading (auth ready) -->
 
-    <Container v-if="!isMobile && !$auth.loading && $auth.isAuthenticated">
+    <Container v-if="!isMobile && $store.appsLoaded && !$auth.loading && $auth.isAuthenticated">
       <router-view />
     </Container><!-- Not on mobile, auth loaded, user logged in -->
   </a-layout>

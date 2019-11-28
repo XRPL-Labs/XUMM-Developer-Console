@@ -20,8 +20,7 @@
         <a-icon type="experiment" theme="twoTone" twoToneColor="#1823F8" :style="{fontSize: '1.5em', position: 'relative', top: '0.125em'}" />
         Select an app
       </span>
-      <a-menu-item class="my-0" :disabled="$store.selectedApplication === k" @click="$store.selectedApplication=k" v-for="(v, k) in $store.applications" v-bind:key="k"
-      >
+      <a-menu-item class="my-0" :disabled="$store.selectedApplication === k" @click="$store.selectedApplication = k" v-for="(v, k) in $store.applications" v-bind:key="k">
         <a-avatar :style="avatarMargins" shape="square" :src="v.icon" />
         {{ v.name }}
       </a-menu-item>
