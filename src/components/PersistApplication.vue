@@ -75,7 +75,7 @@
       <!-- </a-col> -->
       </a-layout-sider>
       <!-- <a-col> -->
-      
+
       <a-layout-content class="pl-2 overflow-visible">
         <a-form autocomplete="off" :form="form" layout="vertical" @submit="handleSubmit">
           <a-form-item label="Application name">
