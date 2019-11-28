@@ -9,35 +9,40 @@
     </div>
 
     <h3 v-if="appDetails.created">Application created</h3>
-    <a-alert v-if="appDetails.created" type="success" showIcon>
+    <a-alert v-if="appDetails.created" type="success" class="card bg-white" style="border-radius: 4px;" showIcon>
       <span slot="message"><b>{{appDetails.name}}</b></span>
       <span slot="description">
         Your app has been created. You can now start interacting with the <b>xumm</b> API. Your API keys are displayed below.
+        <b class="mt-3 text-primary">
+          Please copy this information and store your App Secret somewhere safe.
+          You will need your App Secret when making calls to the <b>xumm</b> API.
+        </b>
+
         <div class="mt-3">
           <a-row :gutter="16">
             <a-col :span="12">
-              <a-card title="App ID" :bordered="true">
-                <code><b>{{ appDetails.uuidv4 }}</b></code>
+              <a-card style="border-radius: 4px;" title="App ID" :bordered="true">
+                <code class="text-primary"><b>{{ appDetails.uuidv4 }}</b></code>
                 &nbsp;
                 <a-button type="dashed" v-clipboard:copy="appDetails.uuidv4" v-clipboard:success="copied" size="small"><a-icon type="copy" /> Copy</a-button>
               </a-card>
             </a-col>
             <a-col :span="12">
-              <a-card title="App Secret" :bordered="true">
-                <code><b>{{ appDetails.credentials.secret }}</b></code>
+              <a-card style="border-radius: 4px;" title="App Secret" :bordered="true">
+                <code class="text-primary"><b>{{ appDetails.credentials.secret }}</b></code>
                 &nbsp;
                 <a-button type="dashed" v-clipboard:copy="appDetails.credentials.secret" v-clipboard:success="copied" size="small"><a-icon type="copy" /> Copy</a-button>
               </a-card>
             </a-col>
           </a-row>
         </div>
-        <p class="mt-3">
-          Please copy them and store your App Secret somewhere safe.
-          You will need your App Secret when making calls to the <b>xumm</b> API.
+        <p class="mt-5">
+          If you want to test the API with a curl request, just copy/paste the code below and run it in your terminal (Mac / Linux). You can find more info
+          and examples in the <a href="https://xumm.readme.io/docs/call-api" target="_blank"><b><u>docs</u></b></a>.
         </p>
-        <a-card title="Call the API using CURL" :bordered="true" class="px-0 py-0">
+        <a-card style="border-radius: 4px;" title="Call the API using CURL" :bordered="true" class="px-0 py-0">
           <div slot="cover" class="hljs-padding">
-            <highlight-code lang="bash" class="mb-0 pb-0" style="cursor: pointer" v-clipboard:copy="curlCode" v-clipboard:success="copied">
+            <highlight-code lang="bash" class="mb-0 pb-0" style="cursor: pointer; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;" v-clipboard:copy="curlCode" v-clipboard:success="copied">
               {{ curlCode }}
             </highlight-code>
           </div>
