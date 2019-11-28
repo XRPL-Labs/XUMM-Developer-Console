@@ -66,7 +66,7 @@
         <a-icon slot="icon" type="exclamation-circle" class="text-danger" />
         <a-button type="danger" size="small">Destroy</a-button>
       </a-popconfirm>
-      this application. 
+      this application.
     </p>
 
     <!-- <h3>Update app credentials</h3> -->
