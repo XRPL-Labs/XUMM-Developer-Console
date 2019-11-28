@@ -75,10 +75,11 @@
       <!-- </a-col> -->
       </a-layout-sider>
       <!-- <a-col> -->
+      
       <a-layout-content class="pl-2 overflow-visible">
         <a-form autocomplete="off" :form="form" layout="vertical" @submit="handleSubmit">
           <a-form-item label="Application name">
-            <a-input size="large" v-focus v-decorator="[
+            <a-input size="large" v-focus="!editMode" v-decorator="[
               'appName',
               { rules: [
                 { required: true, min: 3, max: 60, whitespace: true, message: 'Please enter a catchy name for your app (max. 60 characters)' }
@@ -156,10 +157,12 @@ export default {
   },
   directives: {
     focus: {
-      inserted (el) {
-        const input = el.querySelector('.ant-input')
-        if (input && !this.editMode) {
-          input.focus()
+      inserted (el, e) {
+        if (typeof e.value === 'undefined' || e.value !== false) {
+          const input = el.querySelector('.ant-input')
+          if (input) {
+            input.focus()
+          }
         }
       }
     }
