@@ -26,27 +26,9 @@
     </a-menu-item>
 
     <a-menu-item-group key="g1" class="mt-5">
-      <template slot="title">
-        <a-icon type="tool" /> <span> <b>&nbsp;<u>Development</u></b></span>
-      </template>
       <a-menu-item key="a">
         <router-link to="/a">
-          <span class="nav-text">A Routed C</span>
-        </router-link>
-      </a-menu-item>
-      <a-menu-item key="b">
-        <router-link :to="{ name: 'b', params: { id: 123 } }">
-          <span class="nav-text">Nav B</span>
-        </router-link>
-      </a-menu-item>
-      <a-menu-item key="c">
-        <router-link :to="{ name: 'c', params: { id: 456 } }">
-          <span class="nav-text">Nav C</span>
-        </router-link>
-      </a-menu-item>
-      <a-menu-item key="d">
-        <router-link :to="{ name: 'd', params: { id: 456 } }">
-          <span class="nav-text">CallSomething</span>
+          <span class="nav-text">Dev Page</span>
         </router-link>
       </a-menu-item>
     </a-menu-item-group>
