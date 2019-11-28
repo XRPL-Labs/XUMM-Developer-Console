@@ -158,7 +158,7 @@ export default {
     focus: {
       inserted (el) {
         const input = el.querySelector('.ant-input')
-        if (input) {
+        if (input && !this.editMode) {
           input.focus()
         }
       }
