@@ -1,7 +1,7 @@
 <template>
   <div class="" v-if="$store.appName">
     <h3 class="mb-1">Settings</h3>
-    <h4 class="mb-3"><a-icon type="build" />&nbsp;<b>{{ $store.appName }}</b></h4>
+    <h5 class="mb-3"><a-icon type="build" />&nbsp;{{ $store.appName }}</h5>
     <p>
       You can find your API Key below, for reference purposes. If your API Secret is compromised
       or lost, you can regenerate your API Secret. You will have to update your API Secret in your application.
