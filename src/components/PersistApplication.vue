@@ -57,7 +57,7 @@
     </div>
 
     <!-- <a-row :gutter="16" class="mt-5" v-if="!appDetails.created"> -->
-    <a-layout class="mt-5" v-if="!appDetails.created">
+    <a-layout :class="{ 'mt-5': !editMode }" :style="editMode ? {backgroundColor: 'transparent'} : {}" v-if="!appDetails.created">
       <!-- <a-col :style="{ width: '200px' }"> -->
       <a-layout-sider theme="light" :style="{ width: '210px', maxWidth: '210px', flex: '0 0 210px', backgroundColor: 'transparent' }">
         <a-form layout="vertical">
@@ -112,7 +112,7 @@
             </a-input>
           </a-form-item>
 
-          <a-form-item>
+          <a-form-item :class="{ 'mb-0': editMode }">
             <a-button :class="{ 'mt-4': !editMode }" class="float-right" :loading="uploading > 0 || submitting" size="large" type="primary" html-type="submit">
               <span v-if="uploading > 0">Processing upload</span>
               <span v-else>
@@ -394,5 +394,4 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
 </style>

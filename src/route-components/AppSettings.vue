@@ -49,7 +49,12 @@
       the <q>Update application</q> button. Settings will take effect immediately after saving the changes.
     </p>
 
-    <PersistApplication :editMode="true" />
+    <a-card class="form-padding-sm">
+      <span slot="title">
+        <b><a-icon type="setting" /> Application details</b>
+      </span>
+      <PersistApplication :editMode="true" />
+    </a-card>
 
     <hr />
     <h5 class="text-muted">Danger zone</h5>

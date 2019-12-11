@@ -2,15 +2,26 @@
   <div class="" v-if="$store.appName">
     <h3 class="mb-1">Logging</h3>
     <h5 class="mb-3"><a-icon type="build" />&nbsp;{{ $store.appName }}</h5>
-    <p>Test</p>
-    <div class="card px-2 py-1">
-      <pre class="mx-1 my-1">{{ record || null }}</pre>
+    <!-- <p>Test</p> -->
+    <div class="alert alert-warning text-center">
+      Work in progress...
     </div>
 
-    <br />
+    <div v-if="record && record.payload_uuidv4" class="pb-2">
+      <router-link tag="a-button" :to="{ name: 'app-payloads', params: { appId: $store.selectedApplication, record: record.payload_uuidv4 } }">
+        <a-icon type="build" />
+        <span class="nav-text">Corresponding payload</span>
+      </router-link>
+    </div>
+
+    <div class="card px-2 py-1">
+      <pre class="mx-1 my-1">{{ record || 'Select a record' }}</pre>
+    </div>
+
+    <!-- <br />
     <a-button type="primary" @click="visible = true">
       Open panel
-    </a-button>
+    </a-button> -->
 
     <a-drawer
       title="Multi-level drawer"
