@@ -6,7 +6,7 @@ import PersistApplication from './components/PersistApplication.vue'
 import AppSettings from './route-components/AppSettings.vue'
 import AppLogs from './route-components/AppLogs.vue'
 import AppPayloads from './route-components/AppPayloads.vue'
-import AppUserTokens from './route-components/AppUserTokens.vue'
+// import AppUserTokens from './route-components/AppUserTokens.vue'
 
 import RouteSidebarRecords from './route-components/RouteSidebarRecords.vue'
 
@@ -80,25 +80,25 @@ const routes = [
       appRequired: true
     }
   },
-  {
-    path: '/:appId?/user-tokens/:record?',
-    name: 'user-tokens',
-    component: RouteSidebarRecords,
-    children: [
-      {
-        name: 'user-tokens',
-        path: '',
-        component: AppUserTokens,
-        meta: {
-          appRequired: true
-        }
-      }
-    ],
-    meta: {
-      padding: true,
-      appRequired: true
-    }
-  },
+  // {
+  //   path: '/:appId?/user-tokens/:record?',
+  //   name: 'user-tokens',
+  //   component: RouteSidebarRecords,
+  //   children: [
+  //     {
+  //       name: 'user-tokens',
+  //       path: '',
+  //       component: AppUserTokens,
+  //       meta: {
+  //         appRequired: true
+  //       }
+  //     }
+  //   ],
+  //   meta: {
+  //     padding: true,
+  //     appRequired: true
+  //   }
+  // },
   {
     path: '*',
     component: NotFound,

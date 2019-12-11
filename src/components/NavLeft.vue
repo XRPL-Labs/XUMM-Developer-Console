@@ -18,7 +18,7 @@
         <span class="nav-text">Payloads</span>
       </router-link>
     </a-menu-item>
-    <a-menu-item key="user-tokens">
+    <a-menu-item key="user-tokens" v-if="false">
       <router-link :to="{ name: 'user-tokens', params: { appId: $store.selectedApplication } }">
         <a-icon type="tags" />
         <span class="nav-text">User tokens</span>
