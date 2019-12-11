@@ -43,7 +43,7 @@ const routes = [
     }
   },
   {
-    path: '/:appId?/app-logs/:record?',
+    path: '/:appId?/app-logs/:record([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89ABab][0-9a-fA-F]{3}-[0-9a-fA-F]{12})?',
     name: 'app-logs',
     component: RouteSidebarRecords,
     children: [
@@ -62,7 +62,7 @@ const routes = [
     }
   },
   {
-    path: '/:appId?/app-payloads/:record?',
+    path: '/:appId?/app-payloads/:record([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89ABab][0-9a-fA-F]{3}-[0-9a-fA-F]{12})?',
     name: 'app-payloads',
     component: RouteSidebarRecords,
     children: [
@@ -81,7 +81,7 @@ const routes = [
     }
   },
   // {
-  //   path: '/:appId?/user-tokens/:record?',
+  //   path: '/:appId?/user-tokens/:record([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89ABab][0-9a-fA-F]{3}-[0-9a-fA-F]{12})?',
   //   name: 'user-tokens',
   //   component: RouteSidebarRecords,
   //   children: [
