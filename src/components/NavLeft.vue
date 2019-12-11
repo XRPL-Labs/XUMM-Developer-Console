@@ -24,14 +24,6 @@
         <span class="nav-text">User tokens</span>
       </router-link>
     </a-menu-item>
-
-    <a-menu-item-group key="g1" class="mt-5">
-      <a-menu-item key="a">
-        <router-link to="/a">
-          <span class="nav-text">Dev Page</span>
-        </router-link>
-      </a-menu-item>
-    </a-menu-item-group>
   </a-menu>
 </template>
 

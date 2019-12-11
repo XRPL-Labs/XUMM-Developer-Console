@@ -8,8 +8,7 @@ import AppLogs from './route-components/AppLogs.vue'
 import AppPayloads from './route-components/AppPayloads.vue'
 import AppUserTokens from './route-components/AppUserTokens.vue'
 
-import RouteA from './route-components/SomeRouteA.vue'
-import RouteB from './route-components/SomeRouteB.vue'
+import RouteSidebarRecords from './route-components/RouteSidebarRecords.vue'
 
 import { Store } from './store'
 
@@ -44,45 +43,61 @@ const routes = [
     }
   },
   {
-    path: '/:appId?/app-logs',
+    path: '/:appId?/app-logs/:record?',
     name: 'app-logs',
-    component: AppLogs,
-    meta: {
-      padding: true,
-      appRequired: true
-    }
-  },
-  {
-    path: '/:appId?/app-payloads',
-    name: 'app-payloads',
-    component: AppPayloads,
-    meta: {
-      padding: true,
-      appRequired: true
-    }
-  },
-  {
-    path: '/:appId?/user-tokens',
-    name: 'user-tokens',
-    component: AppUserTokens,
-    meta: {
-      padding: true,
-      appRequired: true
-    }
-  },
-  {
-    path: '/a/:id?',
-    component: RouteA,
+    component: RouteSidebarRecords,
     children: [
       {
-        name: 'a',
+        name: 'app-logs',
         path: '',
-        component: RouteB,
+        component: AppLogs,
         meta: {
           appRequired: true
         }
       }
-    ]
+    ],
+    meta: {
+      padding: true,
+      appRequired: true
+    }
+  },
+  {
+    path: '/:appId?/app-payloads/:record?',
+    name: 'app-payloads',
+    component: RouteSidebarRecords,
+    children: [
+      {
+        name: 'app-payloads',
+        path: '',
+        component: AppPayloads,
+        meta: {
+          appRequired: true
+        }
+      }
+    ],
+    meta: {
+      padding: true,
+      appRequired: true
+    }
+  },
+  {
+    path: '/:appId?/user-tokens/:record?',
+    name: 'user-tokens',
+    component: RouteSidebarRecords,
+    children: [
+      {
+        name: 'user-tokens',
+        path: '',
+        component: AppUserTokens,
+        meta: {
+          appRequired: true
+        }
+      }
+    ],
+    meta: {
+      padding: true,
+      appRequired: true
+    }
   },
   {
     path: '*',

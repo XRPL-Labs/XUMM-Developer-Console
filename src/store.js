@@ -17,7 +17,27 @@ const Store = new Vue({
       selectedApplication: '',
       appsLoaded: false,
       appsLoadedPromise: ExternalPromise.appsLoaded.promise,
-      applications: {}
+      applications: {},
+      appData: {
+        'app-logs': {
+          loading: false,
+          connected: false,
+          connection: null,
+          data: []
+        },
+        'app-payloads': {
+          loading: false,
+          connected: false,
+          connection: null,
+          data: []
+        },
+        'user-tokens': {
+          loading: false,
+          connected: false,
+          connection: null,
+          data: []
+        }
+      }
     }
   },
   async created () {
