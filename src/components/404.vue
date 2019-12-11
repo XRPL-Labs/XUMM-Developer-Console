@@ -124,16 +124,16 @@ export default {
             screen.fillStyle = 'rgb(240, 242, 245)'
             screen.fillRect(0, 0, gameSize.width, gameSize.height)
 
-            screen.font = '55px Lucida Console'
+            screen.font = '55px proxima-nova, sans-serif'
             screen.textAlign = 'center'
             screen.fillStyle = 'black'
             screen.fillText('You lost', gameSize.width / 2, gameSize.height / 2)
-            screen.font = '20px Lucida Console'
+            screen.font = '20px proxima-nova, sans-serif'
             screen.fillText('Points: ' + kills, gameSize.width / 2, gameSize.height / 2 + 30)
           } else {
             screen.clearRect(0, 0, gameSize.width, gameSize.height)
 
-            screen.font = '15px Lucida Console'
+            screen.font = '15px proxima-nova, sans-serif'
             screen.textAlign = 'right'
             screen.fillText('Points: ' + kills, gameSize.width, gameSize.height - 12)
           }
