@@ -34,6 +34,12 @@
               <div class="ip-and-agent no-overflow">{{ r.call_ip }} {{ r.call_useragent ? '@' : '' }} {{ r.call_useragent }}</div>
             </div>
           </div>
+          <div class="logs" v-if="$route.name === 'app-payloads'">
+            <span class="indicator" :class="bgColor($router.currentRoute.name, r)"></span>
+            <code class="badge text-dark text-left guid">{{ r.call_uuidv4 }}</code>
+            <div class="data">
+            </div>
+          </div>
         </router-link>
       </a-card>
     </a-layout-sider>
