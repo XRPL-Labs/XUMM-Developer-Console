@@ -9,12 +9,31 @@
             record: r.call_uuidv4
           }
         }">
-          <code class="badge text-dark text-left" style="position: absolute; left: 10px; top: 10px; right: 10px;">{{ r.call_uuidv4 }}</code>
-          <br />
-          {{ r.call_method }}
-          {{ r.call_url }}
-          {{ r.call_httpcode }}
-          {{ r.call_emessage ? '[[E]]' : '' }}
+          <div class="logs" v-if="$route.name === 'app-logs'">
+            <div class="icons">
+              <a-tooltip class="icon" v-if="r.call_emessage" placement="right" title="Error reference attached">
+                <a-icon type="sound" :class="bgColor($router.currentRoute.name, r)" theme="filled" />
+              </a-tooltip>
+              <a-tooltip class="icon" v-if="!r.call_emessage && r.call_httpcode !== 200" placement="right" title="Non HTTP200 response code">
+                <a-icon type="warning" :class="bgColor($router.currentRoute.name, r)" theme="filled" />
+              </a-tooltip>
+              <a-tooltip class="icon" v-if="r.payload_uuidv4" placement="right" title="Payload stored">
+                <a-icon type="build" :class="bgColor($router.currentRoute.name, r)" theme="filled" />
+              </a-tooltip>
+              <a-tooltip class="icon" v-if="r.token_accesstoken" placement="right" title="Pushed using client access token">
+                <a-icon type="alert" :class="bgColor($router.currentRoute.name, r)" theme="filled" />
+              </a-tooltip>
+            </div>
+            <span class="indicator" :class="bgColor($router.currentRoute.name, r)"></span>
+            <code class="badge text-dark text-left guid">{{ r.call_uuidv4 }}</code>
+            <div class="data">
+              <div class="no-overflow correct-code-lh">
+                <span class="badge mr-1" :class="{ 'badge-dark': r.call_method === 'POST',  'badge-secondary': r.call_method !== 'POST' }">{{ r.call_method }}</span>
+                <code class="text-dark">{{ r.call_url }}</code>
+              </div>
+              <div class="ip-and-agent no-overflow">{{ r.call_ip }} {{ r.call_useragent ? '@' : '' }} {{ r.call_useragent }}</div>
+            </div>
+          </div>
         </router-link>
       </a-card>
     </a-layout-sider>
@@ -61,6 +80,24 @@ export default {
     }
   },
   methods: {
+    bgColor (route, record) {
+      if (route === 'app-logs') {
+        if (record.call_httpcode === 200) {
+          if (record.call_endpoint === 'payload') {
+            return 'bg-primary'
+          }
+          return 'bg-success'
+        } else {
+          if (record.call_endpoint === 'payload') {
+          }
+          return 'bg-danger'
+        }
+      }
+      if (route === 'app-payloads') {
+        return 'bg-primary'
+      }
+      return ''
+    },
     async fetchData (forcedRecord) {
       let api = this.$route.name.replace(/^app-/, '')
       if (api === 'logs') {
@@ -102,6 +139,84 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  .badge {
+    &.guid {
+      position: absolute;
+      font-size: 0.9em;
+      font-weight: normal;
+      left: 10px;
+      top: 10px;
+      right: 40px;
+      // border: 1px solid grey;
+      padding-left: 0;
+      // background-color: #fff;
+    }
+  }
+
+  .icons {
+    line-height: 1em;
+    width: 20px;
+    // border: 1px solid red;
+    position: absolute;
+    right: 11px;
+    top: 9px;
+
+    .icon {
+      // border: 1px solid grey;
+      // background-color: black;
+      color: white;
+      border-radius: 3px;
+      padding: 2px;
+      margin: 0;
+      margin-bottom: 2px;
+    }
+  }
+
+  .data {
+    position: relative;
+    left: -14px;
+    padding-top: 5px;
+    margin-right: -3px;
+    // margin-right: 113px;
+    margin-bottom: -12px;
+    // border: 1px solid red;
+
+    .no-overflow {
+      line-height: 1em;
+      padding-bottom: 0px;
+      overflow: visible;
+      overflow-x: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+
+      &.correct-code-lh code {
+        line-height: 0.8em;
+        top: 1px;
+        position: relative;
+      }
+
+      .badge {
+        position: relative;
+      }
+
+      &.ip-and-agent {
+        padding-top: 12px;
+        font-size: .85em;
+      }
+    }
+  }
+
+  .indicator {
+    position: absolute;
+    top: 8px;
+    border-radius: 10px;
+    bottom: 8px;
+    right: 5px;
+    width: 5px;
+    display: block;
+    float: right;
+  }
+
   .center-middle {
     height: 100%;
     width: 100%;
