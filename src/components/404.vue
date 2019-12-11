@@ -399,7 +399,7 @@ export default {
         initGameStart()
         loop()
       }
-      invaderAsset.src = '//stillh.art/project/spaceInvaders/invader.gif'
+      invaderAsset.src = '/404/invader.gif'
 
       window.addEventListener('resize', function () {
         initGameStart()
