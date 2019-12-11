@@ -101,6 +101,7 @@ const routes = [
   // },
   {
     path: '*',
+    name: 'FourOhFour',
     component: NotFound,
     meta: {
       padding: true

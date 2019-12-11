@@ -1,7 +1,7 @@
 <template>
-  <div class="text-center">
-    <h2 class="pb-0 mb-0"><strong>404</strong> Space Invadors destroyed this page!</h2>
-    <h6 class="mt-0"><b>Take revenge on them!</b></h6>
+  <div class="text-center pt-4">
+    <img src="/logo/xumm-logo.svg" alt="" width="200" />
+    <h2 class="mt-3 pb-0 mb-0"><strong>404</strong> Space Invadors destroyed this page!</h2>
     <p class="text-center pb-2">
       <br/>
       Use <span class="label label-danger">Space</span> to shoot and <span class="label label-danger">←</span>&#160;<span class="label label-danger">→</span> to move,

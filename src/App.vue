@@ -16,7 +16,7 @@
       </a-alert>
     </div><!-- On mobile -->
 
-    <div v-if="!isMobile && ($auth.loading || !$store.appsLoaded || !$auth.isAuthenticated)" class="h100">
+    <div v-if="!isMobile && ($auth.loading || !$store.appsLoaded || !$auth.isAuthenticated) && $route.name !== 'FourOhFour'" class="h100">
       <a-row class="h100 flex-center">
         <a-col :span="8" :offset="0">
           <a-card class="bg-title">
@@ -41,9 +41,11 @@
       </a-row>
     </div><!-- Not on mobile, auth not loading (auth ready) -->
 
-    <Container v-if="!isMobile && $store.appsLoaded && !$auth.loading && $auth.isAuthenticated">
+    <Container v-if="!isMobile && $store.appsLoaded && !$auth.loading && $auth.isAuthenticated && $route.name !== 'FourOhFour'">
       <router-view />
     </Container><!-- Not on mobile, auth loaded, user logged in -->
+
+    <router-view v-if="!isMobile && $route.name === 'FourOhFour'" />
   </a-layout>
 </template>
 
