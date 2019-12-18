@@ -1,29 +1,63 @@
 <template>
   <div class="" v-if="$store.appName">
-    <h3 class="mb-1">Logging</h3>
+    <h3 class="mb-1">API Call logging</h3>
     <h5 class="mb-3"><a-icon type="build" />&nbsp;{{ $store.appName }}</h5>
-    <!-- <p>Test</p> -->
-    <div class="alert alert-warning text-center">
-      Work in progress...
+
+    <div class="alert alert-warning" v-if="!record">
+      <a-icon type="arrow-left" />
+      Please select a API call to inspect the call details.
     </div>
 
-    <div v-if="record && record.payload_uuidv4" class="pb-2">
-      <router-link tag="a-button" :to="{ name: 'app-payloads', params: { appId: $store.selectedApplication, record: record.payload_uuidv4 } }">
-        <a-icon type="build" />
-        <span class="nav-text">Corresponding payload</span>
-      </router-link>
+    <a-card v-if="record" :bodyStyle="{padding:'0'}">
+      <table class="mb-0 table" v-if="record">
+        <thead>
+          <tr>
+            <th class="border-top-0" width="200">Detail</th>
+            <th class="border-top-0">Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="k in Object.keys(record).filter(k => record[k]).filter(k => hiddenKeys.indexOf(k) < 0)" v-bind:key="k">
+            <td>{{ translateKey(k) }}</td>
+            <td v-if="k === 'payload_uuidv4'">
+              <a-icon type="link" />&nbsp;
+              <router-link tag="a" class="btn-sm btn btn-primary py-0 alert-primary" :to="{ name: 'app-payloads', params: { appId: $store.selectedApplication, record: record.payload_uuidv4 } }">
+                <code style="line-height: .8em;">{{ record[k] }}</code>
+                &nbsp;<a-icon type="arrow-right" />
+              </router-link>
+            </td>
+            <td v-else-if="k.match(/uuidv4|accesstoken/)">
+              <code>{{ record[k] }}</code>
+            </td>
+            <td v-else-if="k.match(/^call_e(message|code)/)" class="alert-danger">
+              <code class="text-danger">
+                <a-icon type="exclamation-circle" />
+                {{ record[k] }}
+              </code>
+            </td>
+            <td v-else>
+              <code class="text-dark">{{ record[k] }}</code>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </a-card>
+
+    <div class="mt-2" v-if="record">
+      <ul class="list-unstyled">
+        <li><b>*1</b> The call reference ID is present in the HTTP response header <code>X-Call-Ref</code>.</li>
+        <li><b>*2</b> A client access token allows you to directly deliver new payloads with a push notification to the client: <a href="https://xumm.readme.io/docs/push-workflow" target="_blank"><b>read more in the developer docs</b></a>.</li>
+      </ul>
     </div>
 
-    <div class="card px-2 py-1">
-      <pre class="mx-1 my-1">{{ record || 'Select a record' }}</pre>
-    </div>
+    <!-- Todo: click present client token ID and open drawer to send a custom push notification -->
 
     <!-- <br />
     <a-button type="primary" @click="visible = true">
       Open panel
     </a-button> -->
 
-    <a-drawer
+    <!-- <a-drawer
       title="Multi-level drawer"
       width=520
       :closable="false"
@@ -53,8 +87,7 @@
           Submit
         </a-button>
       </div>
-    </a-drawer>
-
+    </a-drawer> -->
   </div>
 </template>
 
@@ -64,7 +97,12 @@ export default {
   components: {},
   data () {
     return {
-      visible: false
+      visible: false,
+      hiddenKeys: [
+        'call_type',
+        'call_version',
+        'call_endpoint'
+      ]
     }
   },
   props: {
@@ -75,6 +113,30 @@ export default {
   computed: {
   },
   methods: {
+    translateKey (key) {
+      const translations = {
+        call_uuidv4: 'Call reference ID *1',
+        call_moment: 'Call moment',
+        call_ip: 'Client remote address',
+        call_method: 'HTTP method',
+        call_contenttype: 'HTTP content type',
+        call_useragent: 'Client user agent',
+        call_url: 'Called API endpoint',
+        call_httpcode: 'HTTP response code',
+        payload_uuidv4: 'Stored payload ID',
+        token_issued: 'Client token issued',
+        token_expiration: 'Client token expires',
+        token_accesstoken: 'Client access token *2',
+        token_days_valid: 'Token validity (days)',
+        call_ecode: 'Internal error code',
+        call_emessage: 'Error (detail) message',
+        _: '_'
+      }
+      if (Object.keys(translations).indexOf(key) > -1) {
+        return translations[key]
+      }
+      return key
+    }
     // fetch (params = {}) {
     //   // console.log('params:', params)
     //   this.loading = true
@@ -94,4 +156,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  thead tr {
+    background-image: url('/theme/blue-repeat.png');
+    background-size: 300px;
+    color: #fff;
+  }
 </style>

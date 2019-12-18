@@ -1,7 +1,7 @@
 <template>
-  <a-layout :style="{maxHeight: 'inherit', minHeight: 'inherit'}">
-    <a-layout-sider id="record-scroller" v-show="!loading && data.length > 0" width="300" theme="light" :style="{maxHeight: 'inherit', overflow: 'auto', borderRight: '1px solid #e8e8e8', backgroundColor: '#FCFCFC'}">
-      <a-card :bodyStyle="{padding: '0'}" :style="{marginTop: '-2px', marginLeft: '-2px', marginBottom: '-1px', borderRight: 'none'}">
+  <a-layout :style="{maxHeight: 'calc(100vh - 64px)', minHeight: 'inherit'}">
+    <a-layout-sider id="record-scroller" v-show="!loading && data.length > 0" width="300" theme="light" :style="{maxHeight: 'inherit', overflow: 'hidden', borderRight: '1px solid #e8e8e8', backgroundColor: '#FCFCFC'}">
+      <a-card :bodyStyle="{padding: '0', height: 'inherit', overflow: 'scroll'}" :style="{overflow: 'hidden', height: 'calc(100vh - 61px)', marginTop: '-2px', marginBottom: '-1px', marginLeft: '-2px', borderRight: 'none'}">
         <router-link :id="r.call_uuidv4" tag="a-card-grid" style="position: relative;" :class="{active: r === selectedRecord}" v-for="r in data" v-bind:key="r.call_uuidv4" :to="{
           name: $router.currentRoute.name,
           params: {
