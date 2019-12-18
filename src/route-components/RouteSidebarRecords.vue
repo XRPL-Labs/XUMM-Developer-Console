@@ -90,6 +90,9 @@ export default {
       if (route === 'app-logs') {
         if (record.call_httpcode === 200) {
           if (record.call_endpoint === 'payload') {
+            if (record.call_method === 'GET') {
+              return 'bg-success'
+            }
             return 'bg-primary'
           }
           return 'bg-success'
