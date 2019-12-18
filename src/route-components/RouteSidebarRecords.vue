@@ -89,11 +89,11 @@ export default {
     bgColor (route, record) {
       if (route === 'app-logs') {
         if (record.call_httpcode === 200) {
-          if (record.call_endpoint === 'payload') {
-            if (record.call_method === 'GET') {
-              return 'bg-success'
-            }
+          if (record.call_endpoint === 'payload' && record.call_method === 'POST') {
             return 'bg-primary'
+          }
+          if (record.call_endpoint === 'payload' && record.call_method === 'PATCH') {
+            return 'bg-info'
           }
           return 'bg-success'
         } else {
