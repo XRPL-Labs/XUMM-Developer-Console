@@ -87,6 +87,10 @@ export default {
     // -moz-osx-font-smoothing: grayscale;
   }
 
+  code, pre, div.vjs-tree, div.vjs-tree * {
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  }
+
   h1, h2, h3, h4, h5, h6 { color: #333; }
 
   .ant-card {
