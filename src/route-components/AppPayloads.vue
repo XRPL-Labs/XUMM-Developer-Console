@@ -43,8 +43,15 @@
             <td v-else-if="k.match(/return_url/)">
               <code>{{ record[k] }}</code>
             </td>
+            <!-- TX Hash -->
+            <td v-else-if="k === 'payload_response_txid'">
+              <code>{{ record[k] }}</code>
+              &nbsp; <a-icon type="link" />&nbsp;
+              <a :href="'https://xrpscan.com/tx/' + record[k]" target="_blank"><b><u>XRPScan</u></b></a>&nbsp;/&nbsp;
+              <a :href="'https://bithomp.com/explorer/' + record[k]" target="_blank"><b><u>Bithomp</u></b></a>
+            </td>
             <!-- Account -->
-            <td v-else-if="k === 'payload_tx_destination'">
+            <td v-else-if="['payload_tx_destination', 'payload_response_account', 'payload_response_multisign_account'].indexOf(k) > -1">
               <code>{{ record[k] }}</code>
               &nbsp; <a-icon type="link" />&nbsp;
               <a :href="'https://xrpscan.com/account/' + record[k]" target="_blank"><b><u>XRPScan</u></b></a>&nbsp;/&nbsp;
