@@ -31,13 +31,27 @@
                 <span class="badge mr-1" :class="{ 'badge-primary': r.call_method === 'POST', 'badge-success': r.call_method === 'GET', 'badge-secondary': ['GET', 'POST'].indexOf(r.call_method) < 0 }">{{ r.call_method }}</span>
                 <code class="text-dark">{{ r.call_url }}</code>
               </div>
-              <div class="ip-and-agent no-overflow">{{ r.call_ip }} {{ r.call_useragent ? '@' : '' }} {{ r.call_useragent }}</div>
+              <div class="ip-and-agent no-overflow">
+                <vue-moments-ago v-if="r.call_moment" prefix="" suffix="ago from" :date="(new Date(r.call_moment_ts * 1000)).toISOString()" lang="en" />
+                {{ r.call_ip }} {{ r.call_useragent ? ' (' : '' }}{{ r.call_useragent }}{{ r.call_useragent ? ')' : '' }}
+              </div>
             </div>
           </div>
           <div class="logs" v-if="$route.name === 'app-payloads'">
+            <!-- <span class="indicator" :class="bgColor($router.currentRoute.name, r)"></span> -->
+            <!-- <code class="badge text-dark text-left guid">{{ r.call_uuidv4 }}</code> -->
+            <!-- <div class="data"></div> -->
             <span class="indicator" :class="bgColor($router.currentRoute.name, r)"></span>
             <code class="badge text-dark text-left guid">{{ r.call_uuidv4 }}</code>
-            <div class="data">
+            <div class="data wide">
+              <div class="no-overflow correct-code-lh">
+                <code class="text-dark pt-1 pr-2"><b>{{ r.payload_tx_type }}</b></code>
+                <span v-if="r.payload_response_hex" class="badge float-right alert-success ml-1 badge-success"><a-icon type="like" /> Signed</span>
+                <span v-if="r.payload_app_opencount" class="badge float-right alert-primary ml-1 badge-primary"><a-icon type="mobile" /> Opened</span>
+              </div>
+              <div class="ip-and-agent pt-1 no-overflow">
+                <vue-moments-ago v-if="r.payload_created" prefix="" suffix="ago" :date="(new Date(r.payload_created_ts * 1000)).toISOString()" lang="en" />
+              </div>
             </div>
           </div>
         </router-link>
@@ -61,8 +75,13 @@
 </template>
 
 <script>
+import VueMomentsAgo from 'vue-moments-ago'
+
 export default {
   name: 'RouteSidebarRecords',
+  components: {
+    VueMomentsAgo
+  },
   data () {
     return {
       loading: true,
@@ -103,7 +122,16 @@ export default {
         }
       }
       if (route === 'app-payloads') {
-        return 'bg-primary'
+        if (record.payload_tx_type === 'SignIn') {
+          return 'bg-success'
+        }
+        if (record.payload_tx_type === 'Payment') {
+          return 'bg-primary'
+        }
+        if (record.payload_tx_type === null) {
+          return 'bg-danger'
+        }
+        return 'bg-secondary'
       }
       return ''
     },
@@ -189,6 +217,15 @@ export default {
     // margin-right: 113px;
     margin-bottom: -12px;
     // border: 1px solid red;
+
+    &.wide {
+      margin-right: -20px;
+      .no-overflow {
+        &.correct-code-lh code {
+          line-height: 1em !important;
+        }
+      }
+    }
 
     .no-overflow {
       line-height: 1em;

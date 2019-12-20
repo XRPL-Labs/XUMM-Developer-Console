@@ -9,6 +9,7 @@
     </div>
 
     <a-card v-if="record" :bodyStyle="{padding:'0'}">
+      <!-- <pre>{{ record }}</pre> -->
       <table class="mb-0 table" v-if="record">
         <thead>
           <tr>
@@ -182,6 +183,7 @@ export default {
         payload_response_txid: 'Signed tx hash',
         payload_response_account: 'Account (transaction)',
         payload_response_multisign_account: 'Account (multisign)',
+        payload_request_json: 'Payload JSON',
         _: '_'
       }
       if (Object.keys(translations).indexOf(key) > -1) {
