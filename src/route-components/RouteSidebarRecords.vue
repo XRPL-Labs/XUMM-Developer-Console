@@ -2,7 +2,7 @@
   <a-layout :style="{maxHeight: 'calc(100vh - 64px)', minHeight: 'inherit'}">
     <a-layout-sider id="record-scroller" v-show="!loading && data.length > 0" width="300" theme="light" :style="{maxHeight: 'inherit', overflow: 'hidden', borderRight: '1px solid #e8e8e8', backgroundColor: '#FCFCFC'}">
       <a-card :bodyStyle="{padding: '0', height: 'inherit', overflow: 'scroll'}" :style="{overflow: 'hidden', height: 'calc(100vh - 61px)', marginTop: '-2px', marginBottom: '-1px', marginLeft: '-2px', borderRight: 'none'}">
-        <router-link :id="r.call_uuidv4" tag="a-card-grid" style="position: relative;" :class="{active: r === selectedRecord}" v-for="r in data" v-bind:key="r.call_uuidv4" :to="{
+        <router-link :id="r.call_uuidv4" tag="a-card-grid" style="position: relative;" :class="{new: typeof r.new !== 'undefined', active: r === selectedRecord}" v-for="r in data" v-bind:key="r.call_uuidv4" :to="{
           name: $router.currentRoute.name,
           params: {
             appId: $store.selectedApplication,
@@ -85,7 +85,9 @@ export default {
   data () {
     return {
       loading: true,
-      data: []
+      data: [],
+      websocket: null,
+      missedRecords: 0
     }
   },
   computed: {
@@ -99,12 +101,102 @@ export default {
   watch: {
     '$route.name' () {
       this.fetchData()
+      this.missedRecords = 0
     },
     '$store.selectedApplication' () {
       this.fetchData()
     }
   },
   methods: {
+    handleUpdate (message) {
+      if (this.$route.name === 'app-payloads' && message.endpoint !== 'payload') {
+        return
+      }
+      // console.log('WS message @ ' + this.$route.name, message)
+      this.missedRecords++
+      this.$notification.open({
+        key: 'ws_update',
+        message: () => {
+          return <span>Updated data (<b>{this.missedRecords}</b>)</span>
+        },
+        description: () => {
+          const reload = async () => {
+            this.$notification.close('ws_update')
+            this.missedRecords = 0
+            const existingRecords = this.data.map(r => r.call_uuidv4)
+            const data = await this.$store.api('get', 'console/' + this.api() + '/' + this.$store.selectedApplication)
+            this.data.forEach(r => {
+              r.new = undefined
+            })
+            data.filter(r => {
+              return existingRecords.indexOf(r.call_uuidv4) < 0
+            }).forEach(r => {
+              this.data.unshift(Object.assign(r, { new: true }))
+            })
+            if (this.data.length > 250) {
+              this.data = this.data.slice(0, 50)
+            }
+            this.$nextTick(() => {
+              document.getElementById('record-scroller').querySelector('.ant-card-body').scrollTo({
+                top: 0
+              })
+            })
+          }
+          const btn = this.$createElement('a-button', {
+            props: {
+              type: 'primary',
+              size: 'small'
+            },
+            on: {
+              click: reload
+            }
+          }, 'Reload')
+          return <div>
+            There are new record(s) available since you opened this page.
+            <div class="text-right">{btn}</div>
+          </div>
+        },
+        placement: 'bottomRight',
+        duration: 10
+      })
+    },
+    closeWebsocket () {
+      if (this.websocket !== null) {
+        try {
+          this.websocket.close()
+          this.websocket = null
+        } catch (e) {}
+      }
+    },
+    async connectWebsocket () {
+      this.closeWebsocket()
+
+      const token = await this.$auth.getTokenSilently()
+      this.websocket = new WebSocket(this.$store.apiEndpoint.replace(/^http/, 'ws').split('/').slice(0, 3).join('/') + '/app/' + this.$store.selectedApplication)
+      this.websocket.onopen = () => {
+        console.log('WS opened')
+        this.websocket.send(JSON.stringify({ auth: 'Bearer ' + token }))
+      }
+      this.websocket.onclose = e => {
+        if (!e.wasClean) {
+          console.log('WS closed -RECONNECT-')
+          // Retry, disconnected
+          setTimeout(() => {
+            this.connectWebsocket()
+          }, 3000)
+        } else {
+          console.log('WS closed intentionally')
+        }
+      }
+      this.websocket.onmessage = message => {
+        try {
+          const data = JSON.parse(message.data)
+          if (typeof data.message === 'undefined') {
+            this.handleUpdate(data)
+          }
+        } catch (e) {}
+      }
+    },
     bgColor (route, record) {
       if (route === 'app-logs') {
         if (record.call_httpcode === 200) {
@@ -135,14 +227,16 @@ export default {
       }
       return ''
     },
-    async fetchData (forcedRecord) {
+    api () {
       let api = this.$route.name.replace(/^app-/, '')
       if (api === 'logs') {
         api = 'calls'
       }
-
+      return api
+    },
+    async fetchData (forcedRecord) {
       this.loading = true
-      const data = await this.$store.api('get', 'console/' + api + '/' + this.$store.selectedApplication + '/' + (forcedRecord || ''))
+      const data = await this.$store.api('get', 'console/' + this.api() + '/' + this.$store.selectedApplication + '/' + (forcedRecord || ''))
       this.data = []
       if (data.length > 0) {
         if (!forcedRecord && this.$route.params.record && data.filter(r => {
@@ -158,7 +252,7 @@ export default {
             this.$nextTick(() => {
               const domSelectedRecord = document.getElementById(this.selectedRecord.call_uuidv4)
               if (domSelectedRecord) {
-                document.getElementById('record-scroller').scrollTo({
+                document.getElementById('record-scroller').querySelector('.ant-card-body').scrollTo({
                   top: domSelectedRecord.offsetTop
                 })
               }
@@ -169,8 +263,12 @@ export default {
       this.loading = false
     }
   },
+  async destroyed () {
+    this.closeWebsocket()
+  },
   async mounted () {
     this.fetchData()
+    this.connectWebsocket()
   }
 }
 </script>
@@ -230,8 +328,7 @@ export default {
     .no-overflow {
       line-height: 1em;
       padding-bottom: 0px;
-      overflow: visible;
-      overflow-x: hidden;
+      overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
 
@@ -276,6 +373,9 @@ export default {
     cursor: pointer;
     -webkit-transition: all 0.15s;
     transition: all 0.15s;
+    &.new {
+      background-color: rgb(243, 250, 244);
+    }
     &.active {
       background-color: #fef9ed;
       -webkit-box-shadow: inset 2px 3px 3px rgba(0,0,0,.05);
