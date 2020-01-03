@@ -27,7 +27,7 @@
             <span class="indicator" :class="bgColor($router.currentRoute.name, r)"></span>
             <code class="badge text-dark text-left guid">{{ r.call_uuidv4 }}</code>
             <div class="data">
-              <div class="no-overflow correct-code-lh">
+              <div class="no-overflow correct-code-lh mh-badge">
                 <span class="badge mr-1" :class="{ 'badge-primary': r.call_method === 'POST', 'badge-success': r.call_method === 'GET', 'badge-secondary': ['GET', 'POST'].indexOf(r.call_method) < 0 }">{{ r.call_method }}</span>
                 <code class="text-dark">{{ r.call_url }}</code>
               </div>
@@ -44,7 +44,7 @@
             <span class="indicator" :class="bgColor($router.currentRoute.name, r)"></span>
             <code class="badge text-dark text-left guid">{{ r.call_uuidv4 }}</code>
             <div class="data wide">
-              <div class="no-overflow correct-code-lh">
+              <div class="no-overflow correct-code-lh mh-badge">
                 <code class="text-dark pt-1 pr-2"><b>{{ r.payload_tx_type }}</b></code>
                 <span v-if="r.payload_response_hex" class="badge float-right alert-success ml-1 badge-success"><a-icon type="like" /> Signed</span>
                 <span v-if="r.payload_app_opencount" class="badge float-right alert-primary ml-1 badge-primary"><a-icon type="mobile" /> Opened</span>
@@ -108,9 +108,25 @@ export default {
     }
   },
   methods: {
+    async liveDataUpdate () {
+      const data = await this.$store.api('get', 'console/' + this.api() + '/' + this.$store.selectedApplication)
+      data.forEach(r => {
+        const existingRecord = this.data.filter(_r => {
+          return _r.call_uuidv4 === r.call_uuidv4
+        })
+        if (existingRecord.length > 0) {
+          Object.assign(existingRecord[0], r)
+        }
+      })
+    },
     handleUpdate (message) {
       if (this.$route.name === 'app-payloads' && message.endpoint !== 'payload') {
         return
+      }
+      // PATCH / GET from app
+      if (this.$route.name === 'app-payloads' && message.type === 'app' && this.data.map(r => r.call_uuidv4).indexOf(message.call) > -1) {
+        console.log('Update for listed payload')
+        return this.liveDataUpdate()
       }
       // console.log('WS message @ ' + this.$route.name, message)
       this.missedRecords++
@@ -315,6 +331,11 @@ export default {
     // margin-right: 113px;
     margin-bottom: -12px;
     // border: 1px solid red;
+
+    .mh-badge {
+      min-height: 19px;
+      // border: 1px solid red;
+    }
 
     &.wide {
       margin-right: -20px;
