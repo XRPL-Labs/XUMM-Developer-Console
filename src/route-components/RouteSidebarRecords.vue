@@ -128,6 +128,17 @@ export default {
         console.log('Update for listed payload')
         return this.liveDataUpdate()
       }
+      console.log(message)
+      // Call = reference
+      if (this.$route.name === 'app-payloads' && this.data.map(r => r.call_uuidv4).indexOf(message.call) > -1) {
+        // Payload, but the payload is already known (and we're here so it didn't pass the "liveDataUpdate"-conditions)
+        return
+      }
+      // GET + URL based, look for external reference
+      if (this.$route.name === 'app-payloads' && typeof message.extRef === 'string' && this.data.map(r => r.call_uuidv4).indexOf(message.extRef.split('(').reverse()[0].split(')')[0]) > -1) {
+        // Payload, but the payload is already known (and we're here so it didn't pass the "liveDataUpdate"-conditions)
+        return
+      }
       // console.log('WS message @ ' + this.$route.name, message)
       this.missedRecords++
       this.$notification.open({
