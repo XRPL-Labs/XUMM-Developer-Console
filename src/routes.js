@@ -7,6 +7,7 @@ import AppSettings from './route-components/AppSettings.vue'
 import AppLogs from './route-components/AppLogs.vue'
 import AppPayloads from './route-components/AppPayloads.vue'
 // import AppUserTokens from './route-components/AppUserTokens.vue'
+import Docs from './route-components/Docs.vue'
 
 import RouteSidebarRecords from './route-components/RouteSidebarRecords.vue'
 
@@ -63,7 +64,6 @@ const routes = [
   },
   {
     path: '/:appId?/app-payloads/:record([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89ABab][0-9a-fA-F]{3}-[0-9a-fA-F]{12})?',
-    // name: 'app-payloads',
     component: RouteSidebarRecords,
     children: [
       {
@@ -77,6 +77,15 @@ const routes = [
     ],
     meta: {
       padding: true,
+      appRequired: true
+    }
+  },
+  {
+    path: '/:appId?/docs',
+    name: 'docs',
+    component: Docs,
+    meta: {
+      padding: false,
       appRequired: true
     }
   },

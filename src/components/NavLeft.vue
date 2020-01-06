@@ -24,6 +24,12 @@
         <span class="nav-text">User tokens</span>
       </router-link>
     </a-menu-item>
+    <a-menu-item key="docs">
+      <router-link :to="{ name: 'docs', params: { appId: $store.selectedApplication } }">
+        <a-icon type="book" />
+        <span class="nav-text">Developer Docs</span>
+      </router-link>
+    </a-menu-item>
   </a-menu>
 </template>
 
