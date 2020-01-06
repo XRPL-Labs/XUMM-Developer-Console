@@ -1,13 +1,13 @@
 <template>
   <a-layout :style="{maxHeight: 'calc(100vh - 64px)', height: 'calc(100vh - 64px)'}">
     <a-layout-content v-if="$store.appName" :style="{padding: '12px 16px'}">
-      <!-- <div class="center-middle">
+      <div class="center-middle">
         <a-icon type="loading" class="mr-2" /> Redirecting...
-      </div> -->
-      <a-button type="primary" size="small" @click="getJwt">Get new JWT token</a-button>
+      </div>
+      <!-- <a-button type="primary" size="small" @click="getJwt">Get new JWT token</a-button>
       <br />
       <br />
-      <a-button v-if="docsUrl" size="large" :href="docsUrl" target="_blank">Open the docs</a-button>
+      <a-button v-if="docsUrl" size="large" :href="docsUrl" target="_blank">Open the docs</a-button> -->
       <!-- <code class="badge badge-primary">{{ $store.selectedApplication }}</code> -->
     </a-layout-content>
   </a-layout>
@@ -25,9 +25,11 @@ export default {
   props: {
   },
   async mounted () {
-    // this.getJwt()
-    // window.open(data.finalUrl)
-    // Todo: window.location
+    await this.getJwt()
+    // console.log()
+    history.replaceState({}, '', this.$router.currentRoute.fullPath.replace(/docs/, 'app-settings'))
+    window.location.href = this.docsUrl
+    // this.$router.replace({ name: 'app-settings', params: { appId: this.$store.selectedApplication } })
   },
   computed: {
   },
