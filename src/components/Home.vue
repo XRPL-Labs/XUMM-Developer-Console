@@ -58,6 +58,18 @@ export default {
     possiblyRedirectToAppSettings () {
       if (this.$store.appsLoaded && this.$store.selectedApplication !== '') {
         // If app selected: go to settings (that's home)
+        console.log('Moving on from "Home.vue"', {
+          name: this.$router.currentRoute.name,
+          query: this.$router.currentRoute.query
+        })
+        if (typeof this.$router.currentRoute.query.next !== 'undefined') {
+          const nextRoute = this.$router.matcher.match({ name: this.$router.currentRoute.query.next })
+          if (nextRoute && Object.keys(nextRoute).indexOf('name') > -1) {
+            console.log('Next route (instead of app-settings)', nextRoute)
+            this.$router.push({ name: nextRoute.name, params: { appId: this.$store.selectedApplication } })
+            return
+          }
+        }
         this.$router.push({ name: 'app-settings', params: { appId: this.$store.selectedApplication } })
       } else if (this.$store.appsLoaded && this.$store.selectedApplication === '' && Object.keys(this.$store.applications).length === 1) {
         // If no app selected and only one available

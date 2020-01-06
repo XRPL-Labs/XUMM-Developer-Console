@@ -126,7 +126,13 @@ const beforeEnter = async (to, from, next) => {
   }
 
   if (Object.keys(to.meta).indexOf('appRequired') > -1 && to.meta.appRequired && Store.selectedApplication === '') {
-    next('/')
+    // console.log(to)
+    next({
+      path: '/',
+      query: {
+        next: to.name
+      }
+    })
   } else {
     next()
   }
