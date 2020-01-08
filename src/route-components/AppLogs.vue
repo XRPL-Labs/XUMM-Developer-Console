@@ -35,6 +35,10 @@
                 {{ record[k] }}
               </code>
             </td>
+            <td v-else-if="k === 'call_ip'" class="alert-danger">
+              <!-- If x-forwarded-for chained -->
+              {{ record[k].split(',')[0] }}
+            </td>
             <td v-else>
               <code class="text-dark">{{ record[k] }}</code>
             </td>
@@ -101,7 +105,8 @@ export default {
       hiddenKeys: [
         'call_type',
         'call_version',
-        'call_endpoint'
+        'call_endpoint',
+        'call_moment_ts'
       ]
     }
   },

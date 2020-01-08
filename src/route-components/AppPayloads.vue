@@ -143,8 +143,8 @@ export default {
     return {
       visible: false,
       hiddenKeys: [
-        'payload_handler'
-        // 'call_version',
+        'payload_handler',
+        'payload_created_ts'
         // 'call_endpoint'
       ]
     }
@@ -172,6 +172,7 @@ export default {
         payload_expiration: 'Payload expiration moment',
         payload_web_opencount: 'Open count (web)',
         payload_ws_opencount: 'Open count (websocket)',
+        payload_api_opencount: 'Open count (API)',
         payload_app_opencount: 'Open count (app)',
         payload_submit: 'Auto-submit after signing',
         payload_return_url_app: 'Return URL (app client)',
