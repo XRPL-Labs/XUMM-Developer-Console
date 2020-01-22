@@ -1,6 +1,18 @@
 <template>
   <div class="home-container py-3">
-    <a-card :loading="!$store.appsLoaded" class="no-apps bg-title">
+    <a-card v-if="unverified" class="no-apps bg-title">
+      <div slot="title">
+        <a-icon type="mail" class="d-inline-block mr-2" />
+        <b>Unverified</b>
+      </div>
+      <a-empty>
+        <div slot="description">
+          Please verify your e-mail address first. Check your mailbox (<b>{{$auth.user.email}}</b>) and click the <code>Verify your account</code> button.
+        </div>
+        <a-button @click="$auth.loginWithRedirect()" icon="rocket" size="large" v-if="$store.appsLoaded && Object.keys($store.applications).length < 1" type="primary">I verified my e-mail address</a-button>
+      </a-empty>
+    </a-card>
+    <a-card v-if="!unverified" :loading="!$store.appsLoaded" class="no-apps bg-title">
       <div slot="title" v-if="!$store.appsLoaded">
         <a-icon type="loading" class="d-inline-block mr-2" spin />
         <b>Loading applications</b>
@@ -53,6 +65,11 @@ export default {
   },
   mounted () {
     this.possiblyRedirectToAppSettings()
+  },
+  computed: {
+    unverified () {
+      return typeof this.$auth !== 'undefined' && (Object.keys(this.$auth.user).indexOf('email_verified') > -1 && !this.$auth.user.email_verified)
+    }
   },
   methods: {
     possiblyRedirectToAppSettings () {
