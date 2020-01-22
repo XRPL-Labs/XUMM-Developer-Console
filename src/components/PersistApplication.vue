@@ -13,7 +13,7 @@
       <span slot="message"><b>{{appDetails.name}}</b></span>
       <span slot="description">
         Your app has been created. You can now start interacting with the <b>xumm</b> API. Your API keys are displayed below.
-        <b class="mt-3 text-primary">
+        <b class="mt-3 text-danger">
           Please copy this information and store your App Secret somewhere safe.
           You will need your App Secret when making calls to the <b>xumm</b> API.
         </b>
@@ -36,17 +36,19 @@
             </a-col>
           </a-row>
         </div>
-        <p class="mt-5">
+        <p class="mt-4 mb-3 h6">
           If you want to test the API with a curl request, just copy/paste the code below and run it in your terminal (Mac / Linux). You can find more info
-          and examples in the <a href="https://xumm.readme.io/docs/call-api" target="_blank"><b><u>docs</u></b></a>.
+          and examples in the <a href="https://xumm.readme.io/reference/post-payload" target="_blank"><b><u>docs</u></b></a>.
         </p>
-        <a-card style="border-radius: 4px;" title="Call the API using CURL" :bordered="true" class="px-0 py-0">
+        <a-card style="border-radius: 4px;" title="Sample commandline call using CURL" :bordered="true" class="px-0 py-0">
           <div slot="cover" class="hljs-padding">
             <highlight-code lang="bash" class="mb-0 pb-0" style="cursor: pointer; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;" v-clipboard:copy="curlCode" v-clipboard:success="copied">
               {{ curlCode }}
             </highlight-code>
           </div>
         </a-card>
+        <br />
+        <p class="h5">Please <a href="https://xumm.readme.io/docs/payload-workflow" target="_blank">read the docs</a> for more details about the API, how to call the API and delivering a payload (sign request) to your users.</p>
       </span>
     </a-alert>
 
