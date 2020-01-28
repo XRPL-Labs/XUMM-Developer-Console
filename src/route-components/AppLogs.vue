@@ -19,10 +19,14 @@
         <tbody>
           <tr v-for="k in Object.keys(record).filter(k => record[k]).filter(k => hiddenKeys.indexOf(k) < 0)" v-bind:key="k">
             <td>{{ translateKey(k) }}</td>
-            <td v-if="k === 'payload_uuidv4'">
+            <td v-if="k === 'payload_uuidv4' || (k === 'call_extref' && record[k].match(/^payloads\(([a-f0-9-]+)\)/))">
               <a-icon type="link" />&nbsp;
-              <router-link tag="a" class="btn-sm btn btn-primary py-0 alert-primary" :to="{ name: 'app-payloads', params: { appId: $store.selectedApplication, record: record.payload_uuidv4 } }">
-                <code style="line-height: .8em;">{{ record[k] }}</code>
+              <router-link tag="a" class="btn-sm btn btn-primary py-0 alert-primary" :to="{ name: 'app-payloads', params: {
+                appId: $store.selectedApplication,
+                record: k === 'payload_uuidv4' ? record.payload_uuidv4 : record[k].replace(/^payloads\(([a-f0-9-]+)\)/, '$1')
+              }}">
+                <code v-if="k === 'payload_uuidv4'" style="line-height: .8em;">{{ record[k] }}</code>
+                <code v-if="k === 'call_extref'" style="line-height: .8em;">{{ record[k].replace(/^payloads\(([a-f0-9-]+)\)/, '$1') }}</code>
                 &nbsp;<a-icon type="arrow-right" />
               </router-link>
             </td>
@@ -35,7 +39,7 @@
                 {{ record[k] }}
               </code>
             </td>
-            <td v-else-if="k === 'call_ip'" class="alert-danger">
+            <td v-else-if="k === 'call_ip'" class="alert-success">
               <!-- If x-forwarded-for chained -->
               {{ record[k].split(',')[0] }}
             </td>
@@ -135,6 +139,7 @@ export default {
         token_days_valid: 'Token validity (days)',
         call_ecode: 'Internal error code',
         call_emessage: 'Error (detail) message',
+        call_extref: 'External reference',
         _: '_'
       }
       if (Object.keys(translations).indexOf(key) > -1) {
