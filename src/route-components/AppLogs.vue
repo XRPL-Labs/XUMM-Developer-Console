@@ -39,7 +39,7 @@
                 {{ record[k] }}
               </code>
             </td>
-            <td v-else-if="k === 'call_ip'" class="alert-success">
+            <td v-else-if="k === 'call_ip'">
               <!-- If x-forwarded-for chained -->
               {{ record[k].split(',')[0] }}
             </td>
