@@ -143,6 +143,7 @@ export default {
     return {
       visible: false,
       hiddenKeys: [
+        'call_uuidv4_bin',
         'payload_handler',
         'payload_created_ts'
         // 'call_endpoint'

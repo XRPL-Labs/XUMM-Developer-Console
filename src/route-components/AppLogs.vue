@@ -108,6 +108,7 @@ export default {
       visible: false,
       hiddenKeys: [
         'call_type',
+        'call_uuidv4_bin',
         'call_version',
         'call_endpoint',
         'call_moment_ts'
