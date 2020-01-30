@@ -28,7 +28,7 @@
             <code class="badge text-dark text-left guid">{{ r.call_uuidv4 }}</code>
             <div class="data">
               <div class="no-overflow correct-code-lh mh-badge">
-                <span class="badge mr-1" :class="{ 'badge-primary': r.call_method === 'POST', 'badge-success': r.call_method === 'GET', 'badge-secondary': ['GET', 'POST'].indexOf(r.call_method) < 0 }">{{ r.call_method }}</span>
+                <span class="badge mr-1" :class="{ 'badge-primary': r.call_method === 'POST', 'badge-success': r.call_method === 'GET', 'badge-danger': r.call_method === 'DELETE', 'badge-secondary': ['GET', 'POST'].indexOf(r.call_method) < 0 }">{{ r.call_method }}</span>
                 <code class="text-dark">{{ r.call_url }}</code>
               </div>
               <div class="ip-and-agent no-overflow">
@@ -232,6 +232,9 @@ export default {
           }
           if (record.call_endpoint === 'payload' && record.call_method === 'PATCH') {
             return 'bg-info'
+          }
+          if (record.call_endpoint === 'payload' && record.call_method === 'DELETE') {
+            return 'bg-danger'
           }
           return 'bg-success'
         } else {
