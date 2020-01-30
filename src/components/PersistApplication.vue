@@ -115,6 +115,11 @@
           </a-form-item>
 
           <a-form-item :class="{ 'mb-0': editMode }">
+            <div class="float-left mt-4">
+              <a-button @click="$router.go(-1)" v-if="!editMode" class="mt-2 text-muted" size="small" type="link" html-type="button">
+                <a-icon type="arrow-left" /> Cancel (go back)
+              </a-button>
+            </div>
             <a-button :class="{ 'mt-4': !editMode }" class="float-right" :loading="uploading > 0 || submitting" size="large" type="primary" html-type="submit">
               <span v-if="uploading > 0">Processing upload</span>
               <span v-else>
