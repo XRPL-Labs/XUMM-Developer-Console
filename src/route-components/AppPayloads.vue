@@ -42,21 +42,17 @@
             </td>
             <!-- URL -->
             <td v-else-if="k.match(/return_url/)">
-              <code>{{ record[k] }}</code>
+              <code>{{ record[k].replace('{id}', record['call_uuidv4']) }}</code>
             </td>
             <!-- TX Hash -->
-            <td v-else-if="k === 'payload_response_txid'">
-              <code>{{ record[k] }}</code>
-              &nbsp; <a-icon type="link" />&nbsp;
-              <a :href="'https://xrpscan.com/tx/' + record[k]" target="_blank"><b><u>XRPScan</u></b></a>&nbsp;/&nbsp;
-              <a :href="'https://bithomp.com/explorer/' + record[k]" target="_blank"><b><u>Bithomp</u></b></a>
+            <td v-else-if="k === 'payload_response_txid' || k === 'payload_response_hex'">
+              <code :class="{ 'text-primary': k === 'payload_response_hex' }">{{ record[k] }}</code>
+              <a-button class="ml-2" size="small" v-clipboard:copy="record[k]" v-clipboard:success="copied">Copy</a-button>
             </td>
             <!-- Account -->
             <td v-else-if="['payload_tx_destination', 'payload_response_account', 'payload_response_multisign_account'].indexOf(k) > -1">
               <code>{{ record[k] }}</code>
-              &nbsp; <a-icon type="link" />&nbsp;
-              <a :href="'https://xrpscan.com/account/' + record[k]" target="_blank"><b><u>XRPScan</u></b></a>&nbsp;/&nbsp;
-              <a :href="'https://bithomp.com/explorer/' + record[k]" target="_blank"><b><u>Bithomp</u></b></a>
+              <a-button class="ml-2" size="small" v-clipboard:copy="record[k]" v-clipboard:success="copied">Copy</a-button>
             </td>
             <!-- TX Type -->
             <td v-else-if="k === 'payload_tx_type'">
@@ -132,7 +128,11 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import VueClipboard from 'vue-clipboard2'
 import VueJsonPretty from 'vue-json-pretty'
+
+Vue.use(VueClipboard)
 
 export default {
   name: 'AppPayloads',
@@ -157,6 +157,9 @@ export default {
   computed: {
   },
   methods: {
+    copied (c) {
+      this.$message.success('Copied "' + c.text + '" to clipboard')
+    },
     translateKey (key) {
       const translations = {
         call_uuidv4: 'Call reference ID *1',
