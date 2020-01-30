@@ -1,5 +1,6 @@
 <template>
   <a-layout :style="{maxHeight: 'calc(100vh - 64px)', height: 'calc(100vh - 64px)'}">
+    <!-- Replaced by sidebar window.open, reprecated. -->
     <a-layout-content v-if="$store.appName" :style="{padding: '12px 16px'}">
       <div class="center-middle">
         <a-icon type="loading" class="mr-2" /> Redirecting...

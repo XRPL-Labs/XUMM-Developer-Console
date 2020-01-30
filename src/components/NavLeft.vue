@@ -24,11 +24,14 @@
         <span class="nav-text">User tokens</span>
       </router-link>
     </a-menu-item>
-    <a-menu-item key="docs">
-      <router-link :to="{ name: 'docs', params: { appId: $store.selectedApplication } }">
+    <a-menu-item key="docs" @click="openDocs">
+      <a-icon type="book" />
+      <span class="nav-text">Developer Docs</span>
+      <!-- Router link & page replaced by window.open -->
+      <!-- <router-link :to="{ name: 'docs', params: { appId: $store.selectedApplication } }">
         <a-icon type="book" />
         <span class="nav-text">Developer Docs</span>
-      </router-link>
+      </router-link> -->
     </a-menu-item>
   </a-menu>
 </template>
@@ -51,7 +54,12 @@ export default {
     }
   },
   mounted () {},
-  methods: {}
+  methods: {
+    async openDocs () {
+      const data = await this.$store.api('GET', 'console/docs-jwt/' + this.$store.selectedApplication)
+      window.open(data.finalUrl, '_blank')
+    }
+  }
 }
 </script>
 
