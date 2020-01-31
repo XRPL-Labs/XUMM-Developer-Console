@@ -184,6 +184,7 @@ export default {
         payload_resolved: 'Payload resolved (moment)',
         payload_dispatched_to: 'Signed tx dispatched to',
         payload_dispatched_result: 'Tx submission result',
+        payload_dispatched_nodetype: 'Tx submission Node Type',
         payload_response_hex: 'Signed tx blob (HEX)',
         payload_response_txid: 'Signed tx hash',
         payload_response_account: 'Account (transaction)',
