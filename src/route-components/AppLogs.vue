@@ -111,7 +111,8 @@ export default {
         'call_uuidv4_bin',
         'call_version',
         'call_endpoint',
-        'call_moment_ts'
+        'call_moment_ts',
+        'call_idempotence'
       ]
     }
   },
