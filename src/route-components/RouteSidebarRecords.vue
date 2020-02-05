@@ -46,6 +46,7 @@
             <div class="data wide">
               <div class="no-overflow correct-code-lh mh-badge">
                 <code class="text-dark pt-1 pr-2"><b>{{ r.payload_tx_type }}</b></code>
+                <span v-if="(r.__payload_expired || 0 > 0) && !r.payload_response_hex" class="badge float-right alert-danger ml-1 badge-danger">Expired</span>
                 <span v-if="r.payload_response_hex" class="badge float-right alert-success ml-1 badge-success"><a-icon type="like" /> Signed</span>
                 <span v-if="r.payload_app_opencount" class="badge float-right alert-primary ml-1 badge-primary"><a-icon type="mobile" /> Opened</span>
               </div>

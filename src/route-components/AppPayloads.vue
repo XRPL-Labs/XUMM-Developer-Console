@@ -60,7 +60,7 @@
               <a :href="'https://xrpl.org/' + record[k].toLowerCase() + '.html'" target="_blank"><b><u>{{ record[k] }}</u></b></a>
             </td>
             <!-- Bool -->
-            <td v-else-if="k === 'payload_submit'" :class="{ 'text-success': record[k] > 0, 'text-danger': record[k] < 1 }">
+            <td v-else-if="['payload_submit','__payload_expired','payload_multisign'].indexOf(k) > -1" :class="{ 'text-success': record[k] > 0, 'text-danger': record[k] < 1 }">
               <a-icon :type="record[k] > 0 ? 'check' : 'close'" />
               {{ record[k] > 0 ? 'Yes' : 'No' }}
             </td>
@@ -145,7 +145,8 @@ export default {
       hiddenKeys: [
         'call_uuidv4_bin',
         'payload_handler',
-        'payload_created_ts'
+        'payload_created_ts',
+        'new'
         // 'call_endpoint'
       ]
     }
@@ -172,6 +173,7 @@ export default {
         call_emessage: 'Error (detail) message',
         payload_tx_type: 'Transaction type',
         payload_tx_destination: 'Destination account',
+        payload_tx_destination_tag: 'Destination tag',
         payload_created: 'Payload create moment',
         payload_expiration: 'Payload expiration moment',
         payload_web_opencount: 'Open count (web)',
@@ -190,6 +192,8 @@ export default {
         payload_response_account: 'Account (transaction)',
         payload_response_multisign_account: 'Account (multisign)',
         payload_request_json: 'Payload JSON',
+        payload_multisign: 'Sign for multisign',
+        __payload_expired: 'Payload expired',
         _: '_'
       }
       if (Object.keys(translations).indexOf(key) > -1) {
