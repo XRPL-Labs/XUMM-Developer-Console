@@ -107,6 +107,7 @@ export default {
     return {
       visible: false,
       hiddenKeys: [
+        'call_uuidv4_txt',
         'call_type',
         'call_uuidv4_bin',
         'call_version',
