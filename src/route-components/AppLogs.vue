@@ -54,7 +54,7 @@
     <div class="mt-2" v-if="record">
       <ul class="list-unstyled">
         <li><b>*1</b> The call reference ID is present in the HTTP response header <code>X-Call-Ref</code>.</li>
-        <li><b>*2</b> A client access token allows you to directly deliver new payloads with a push notification to the client: <a href="https://xumm.readme.io/docs/push-workflow" target="_blank"><b>read more in the developer docs</b></a>.</li>
+        <li><b>*2</b> A client access token allows you to directly deliver new payloads with a push notification to the client: <a href="https://xumm.readme.io/docs/pushing-sign-requests" target="_blank"><b>read more in the developer docs</b></a>.</li>
       </ul>
     </div>
 
