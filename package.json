@@ -6,9 +6,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "now": "npm run build; cd dist; now; cd ..",
-    "publish": "npm run build; cd dist; now --prod; cd .."
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.12.1",
