@@ -142,6 +142,7 @@ export default {
         token_days_valid: 'Token validity (days)',
         call_ecode: 'Internal error code',
         call_emessage: 'Error (detail) message',
+        call_emessage_debug: 'Causing error message',
         call_extref: 'External reference',
         _: '_'
       }
