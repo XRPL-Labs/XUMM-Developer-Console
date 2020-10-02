@@ -21,9 +21,9 @@
     "vue": "^2.6.12",
     "vue-clipboard2": "^0.3.1",
     "vue-highlight.js": "^3.1.0",
-    "vue-json-pretty": "^1.6.7",
+    "vue-json-pretty": "^1.7.0",
     "vue-moments-ago": "git+https://github.com/WietseWind/vue-moments-ago.git",
-    "vue-router": "^3.4.3"
+    "vue-router": "^3.4.5"
   },
   "devDependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.11.0",
