@@ -9,10 +9,10 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@auth0/auth0-spa-js": "^1.12.1",
+    "@auth0/auth0-spa-js": "^1.13.0",
     "ant-design-vue": "^1.6.5",
     "axios": "^0.19.2",
-    "babel-plugin-import": "^1.13.0",
+    "babel-plugin-import": "^1.13.1",
     "core-js": "^2.6.11",
     "highlight.js": "^9.18.3",
     "less": "^3.12.2",
@@ -21,15 +21,15 @@
     "vue": "^2.6.12",
     "vue-clipboard2": "^0.3.1",
     "vue-highlight.js": "^3.1.0",
-    "vue-json-pretty": "^1.7.0",
+    "vue-json-pretty": "^1.7.1",
     "vue-moments-ago": "git+https://github.com/WietseWind/vue-moments-ago.git",
-    "vue-router": "^3.4.5"
+    "vue-router": "^3.4.7"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-optional-chaining": "^7.11.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.12.1",
     "@vue/cli-plugin-babel": "^3.12.1",
     "@vue/cli-plugin-eslint": "^3.12.1",
-    "@vue/cli-service": "^4.5.6",
+    "@vue/cli-service": "^4.5.8",
     "@vue/eslint-config-standard": "^4.0.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^5.16.0",
