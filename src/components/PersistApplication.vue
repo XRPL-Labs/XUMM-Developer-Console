@@ -21,14 +21,14 @@
         <div class="mt-3">
           <a-row :gutter="16">
             <a-col :span="12">
-              <a-card style="border-radius: 4px;" title="App ID" :bordered="true">
+              <a-card style="border-radius: 4px;" title="API Key" :bordered="true">
                 <code class="text-primary"><b>{{ appDetails.uuidv4 }}</b></code>
                 &nbsp;
                 <a-button type="dashed" v-clipboard:copy="appDetails.uuidv4" v-clipboard:success="copied" size="small"><a-icon type="copy" /> Copy</a-button>
               </a-card>
             </a-col>
             <a-col :span="12">
-              <a-card style="border-radius: 4px;" title="App Secret" :bordered="true">
+              <a-card style="border-radius: 4px;" title="API Secret" :bordered="true">
                 <code class="text-primary"><b>{{ appDetails.credentials.secret }}</b></code>
                 &nbsp;
                 <a-button type="dashed" v-clipboard:copy="appDetails.credentials.secret" v-clipboard:success="copied" size="small"><a-icon type="copy" /> Copy</a-button>
