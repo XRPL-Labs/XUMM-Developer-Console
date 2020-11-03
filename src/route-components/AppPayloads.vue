@@ -18,7 +18,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="k in Object.keys(record).filter(k => record[k]).filter(k => hiddenKeys.indexOf(k) < 0)" v-bind:key="k">
+          <tr v-for="k in Object.keys(record).filter(k => record[k] || forceShowKeys.indexOf(k) > -1).filter(k => hiddenKeys.indexOf(k) < 0)" v-bind:key="k">
             <td>{{ translateKey(k) }}</td>
             <!-- Refer UUID button -->
             <td v-if="k === 'call_uuidv4'">
@@ -63,6 +63,15 @@
             <td v-else-if="['payload_submit','__payload_expired','payload_multisign'].indexOf(k) > -1" :class="{ 'text-success': record[k] > 0, 'text-danger': record[k] < 1 }">
               <a-icon :type="record[k] > 0 ? 'check' : 'close'" />
               {{ record[k] > 0 ? 'Yes' : 'No' }}
+            </td>
+            <!-- Bool or null -->
+            <td v-else-if="['_opened_by_deeplink'].indexOf(k) > -1" :class="{
+              'text-success': typeof record[k] === 'number' && record[k] > 0,
+              'text-danger': typeof record[k] === 'number' && record[k] < 1,
+              'text-muted': typeof record[k] === null
+            }">
+              <a-icon v-if="record[k] !== null" :type="record[k] > 0 ? 'check' : 'close'" />
+              {{ typeof record[k] === 'number' ? (record[k] > 0 ? 'Yes' : 'No') : 'Not opened yet...' }}
             </td>
             <!-- Error -->
             <td v-else-if="k.match(/^call_e(message|code)/)" class="alert-danger">
@@ -144,6 +153,10 @@ export default {
   data () {
     return {
       visible: false,
+      forceShowKeys: [
+        '_opened_by_deeplink',
+        '__payload_expired'
+      ],
       hiddenKeys: [
         'call_uuidv4_txt',
         'call_uuidv4_bin',
