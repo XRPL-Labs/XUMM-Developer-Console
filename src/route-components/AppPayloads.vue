@@ -196,6 +196,7 @@ export default {
         payload_response_multisign_account: 'Account (multisign)',
         payload_request_json: 'Payload JSON',
         payload_multisign: 'Sign for multisign',
+        _opened_by_deeplink: 'Client opened: Deeplink',
         __payload_expired: 'Payload expired',
         _: '_'
       }
