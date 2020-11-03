@@ -132,6 +132,8 @@ import Vue from 'vue'
 import VueClipboard from 'vue-clipboard2'
 import VueJsonPretty from 'vue-json-pretty'
 
+import 'vue-json-pretty/lib/styles.css'
+
 Vue.use(VueClipboard)
 
 export default {
