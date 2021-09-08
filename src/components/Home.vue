@@ -31,7 +31,8 @@
         <div slot="description" v-if="$store.appsLoaded && Object.keys($store.applications).length > 0 && $store.selectedApplication === ''">
           <a-menu class="text-left" style="border: none;">
             <a-menu-item style="border: 1px solid #f0f0f0; border-radius: 3px;" @click="$store.selectedApplication=k" v-for="(v, k) in $store.applications" v-bind:key="k">
-              <a-avatar :style="{marginTop: '-3px', marginLeft: '-13px', marginRight: '5px'}" shape="square" :src="v.icon" />
+              <a-avatar :style="{marginTop: '-3px', marginLeft: '-13px', marginRight: '5px', borderRadius: '4px'}" shape="square" :src="v.icon" />
+              <img v-if="v.details.application_xapp_identifier" src="/icon_xapp.png" alt="" style="height: 9px;" class="float-right mt-3 ml-2 img-responsive">
               {{ v.name }}
             </a-menu-item>
           </a-menu>

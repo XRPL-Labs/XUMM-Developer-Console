@@ -1,6 +1,6 @@
 <template>
   <div class="" v-if="$store.appName">
-    <h3 class="mb-1">API Call logging</h3>
+    <h3 class="mb-1">API call log</h3>
     <h5 class="mb-3"><a-icon type="build" />&nbsp;{{ $store.appName }}</h5>
 
     <div class="alert alert-warning" v-if="!record">

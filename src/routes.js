@@ -6,6 +6,7 @@ import PersistApplication from './components/PersistApplication.vue'
 import AppSettings from './route-components/AppSettings.vue'
 import AppLogs from './route-components/AppLogs.vue'
 import AppPayloads from './route-components/AppPayloads.vue'
+import AppXapp from './route-components/AppXapp.vue'
 // import AppUserTokens from './route-components/AppUserTokens.vue'
 import Docs from './route-components/Docs.vue'
 
@@ -38,6 +39,15 @@ const routes = [
     path: '/:appId?/app-settings',
     name: 'app-settings',
     component: AppSettings,
+    meta: {
+      padding: true,
+      appRequired: true
+    }
+  },
+  {
+    path: '/:appId?/app-xapp',
+    name: 'app-xapp',
+    component: AppXapp,
     meta: {
       padding: true,
       appRequired: true

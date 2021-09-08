@@ -22,6 +22,7 @@
       </span>
       <a-menu-item class="my-0" :disabled="$store.selectedApplication === k" @click="$store.selectedApplication = k" v-for="(v, k) in $store.applications" v-bind:key="k">
         <a-avatar :style="avatarMargins" shape="square" :src="v.icon" />
+        <img v-if="v.details.application_xapp_identifier" src="/icon_xapp.png" alt="" style="height: 9px;" class="float-right mt-3 ml-3 img-responsive">
         {{ v.name }}
       </a-menu-item>
       <a-menu-item class="my-0" :disabled="$router.currentRoute.name === 'create-application'"
@@ -71,7 +72,7 @@ export default {
   },
   computed: {
     avatarMargins () {
-      return { marginTop: '-3px', marginLeft: '-8px', marginRight: '5px' }
+      return { marginTop: '-3px', marginLeft: '-8px', marginRight: '5px', borderRadius: '5px' }
     }
   },
   methods: {

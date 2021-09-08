@@ -18,6 +18,12 @@
         <span class="nav-text">Payloads</span>
       </router-link>
     </a-menu-item>
+    <a-menu-item key="app-xapp">
+      <router-link :to="{ name: 'app-xapp', params: { appId: $store.selectedApplication } }">
+        <a-icon type="code" />
+        <span class="nav-text">xApp</span>
+      </router-link>
+    </a-menu-item>
     <a-menu-item key="user-tokens" v-if="false">
       <router-link :to="{ name: 'user-tokens', params: { appId: $store.selectedApplication } }">
         <a-icon type="tags" />
