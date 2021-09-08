@@ -132,6 +132,7 @@ export default {
   props: {},
   watch: {
     '$store.selectedApplication' () {
+      this.stats = {}
       this.fetchStats()
     }
   },
