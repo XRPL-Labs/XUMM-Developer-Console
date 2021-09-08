@@ -92,21 +92,21 @@
             <a-skeleton v-if="Object.keys(stats).indexOf('all_time') < 0" class="mt-2" active :title="false" :paragraph="{ rows: 2 }" />
             <a-row v-else>
               <a-col :span="8">
-                <a-statistic title="Opened / 24h" :value="stats.d1.c" style="margin-right: 50px" class="bg-light rounded px-3 py-2">
+                <a-statistic groupSeparator="" title="Opened / 24h" :value="stats.d1.c" style="margin-right: 50px" class="bg-light rounded px-3 py-2">
                   <template #suffix>
                     <span class="text-secondary"> / {{ stats.d1.u }}</span>
                   </template>
                 </a-statistic>
               </a-col>
               <a-col :span="8">
-                <a-statistic title="Opened / 30d" :value="stats.d30.c" style="margin-right: 50px" class="bg-light rounded px-3 py-2">
+                <a-statistic groupSeparator="" title="Opened / 30d" :value="stats.d30.c" style="margin-right: 50px" class="bg-light rounded px-3 py-2">
                   <template #suffix>
                     <span class="text-secondary"> / {{ stats.d30.u }}</span>
                   </template>
                 </a-statistic>
               </a-col>
               <a-col :span="8">
-                <a-statistic title="Opened / all time" :value="stats.all_time.c" class="bg-light rounded px-3 py-2" />
+                <a-statistic groupSeparator="" title="Opened / all time" :value="stats.all_time.c" class="bg-light rounded px-3 py-2" />
               </a-col>
             </a-row>
           </a-form>
