@@ -40,6 +40,8 @@
       <a-card class="form-padding-sm mt-3">
         <span slot="title">
           <b><a-icon type="tool" /> xApp Details</b>
+          <br />
+          <small>To change any of the xApp related settings, please <a href="https://support.xumm.app/hc/en-us/requests/new" target="_blank"><b>submit a support ticket here</b></a>.</small>
         </span>
         <div class="form-label-left form-line-height-sm">
           <a-form autocomplete="off" :form="form" layout="vertical" @submit="handleSubmit">
@@ -49,10 +51,10 @@
             >
               <span slot="label"><div :class="{ 'mt-2': k === 'application_xapp_debug_device_uuidv4_bin' }">{{ xAppDataFieldName[k] }}</div></span>
               <span v-if="k === 'application_xapp_identifier'" class="d-inline-block ml-1 mr-2 text-primary">
-                <a-icon type="link" /> <a :href="'https://xumm.app/detect/xapp:' + xAppData['application_xapp_identifier']" class="text-primary" target='_blank'><b><u>{{ xAppData[k] }}</u></b></a>
+                <a-icon type="link" /> <a :href="'https://xumm.app/detect/xapp:' + xAppData['application_xapp_identifier']" class="text-primary" target='_blank'><b><u>{{ 'https://xumm.app/detect/xapp:' + xAppData['application_xapp_identifier'] }}</u></b></a>
               </span>
-              <span v-else-if="k === 'application_xapp_url'" class="d-inline-block ml-1 mr-2 text-primary">
-                <a-icon type="link" /> <a :href="xAppUrl" class="text-primary" target='_blank'><b><u>{{ xAppData[k] }}</u></b></a>
+              <span v-else-if="k === 'application_xapp_url'" class="d-inline-block ml-1 mr-2 text-muted">
+                <a-icon type="link" /> <a :href="xAppUrl" class="text-muted" target='_blank'><u>{{ xAppData[k] }}</u></a>
               </span>
               <span v-else-if="k === 'application_xapp_listed' || k === 'application_xapp_featured' || k === 'application_allow_fetch_kyc_data' || k === 'application_allow_ott_appauth'" class="d-inline-block ml-1 mr-2 text-primary">
                 <div class="text-success" v-if="xAppData[k] && xAppData[k] > 0"><a-icon theme="filled" type="check-circle" /> Yes</div>
@@ -151,7 +153,7 @@ export default {
     },
     xAppDataFieldName () {
       return {
-        application_xapp_identifier: 'Identifier',
+        application_xapp_identifier: 'Deeplink / QR Value',
         application_xapp_url: 'WebApp URL',
         application_xapp_listed: 'Listed',
         application_xapp_featured: 'Featured',
