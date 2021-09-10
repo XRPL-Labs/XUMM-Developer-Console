@@ -57,7 +57,8 @@
             <!-- TX Type -->
             <td v-else-if="k === 'payload_tx_type'">
               <a-icon type="link" />&nbsp;
-              <a :href="'https://xrpl.org/' + record[k].toLowerCase() + '.html'" target="_blank"><b><u>{{ record[k] }}</u></b></a>
+              <a v-if="record[k].toLowerCase() === 'signin'" href="https://xumm.readme.io/docs/user-sign-in" target="_blank"><b><u>{{ record[k] }}</u></b></a>
+              <a v-else :href="'https://xrpl.org/' + record[k].toLowerCase() + '.html'" target="_blank"><b><u>{{ record[k] }}</u></b></a>
             </td>
             <!-- Bool -->
             <td v-else-if="['payload_submit','__payload_expired','payload_multisign'].indexOf(k) > -1" :class="{ 'text-success': record[k] > 0, 'text-danger': record[k] < 1 }">
