@@ -62,19 +62,20 @@
               </span>
               <span v-else-if="k === 'application_token_exp_days'" class="d-inline-block ml-1 mr-2 text-primary">{{ xAppData[k] }} days after last use (per <code>user_token</code>)</span>
               <div v-else-if="k === 'application_xapp_debug_device_uuidv4_bin'" class="d-inline-block ml-1 mr-2 text-primary d-block">
-                <a-input size="large" v-decorator="[ 'devUuid', { rules: [
+                <a-input @change="devUuidChange" size="large" v-decorator="[ 'devUuid', { rules: [
                   {
                     pattern: /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89ABab][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/,
                     required: false,
                     min: 36, max: 36,
                     whitespace: false,
-                    message: 'Please enter a valid Device ID (36 char. UUIDv4, App: Settings - Advanced)'
+                    message: 'Please enter a valid Device ID (36 char. UUIDv4, App: Settings - Advanced)',
                   }
                 ] } ]" placeholder="XUMM device ID (App: Settings - Advanced) allowed to re-fetch OTT data">
                   <a-icon slot="prefix" type="tag" style="color: rgba(0,0,0,.25)" />
                 </a-input>
                 <!-- TODO: Remove this note when this feature is live (JWT, etc.) -->
                 <!-- <div class="text-muted">All OTT's originally created by opening your xApp on the device with the Device ID whitelisted above <b>will be allowed re-fetching for local browser xApp debugging &amp; testing</b>.</div> -->
+                <button v-if="debugIdChanged && !form.getFieldError('devUuid')" @click="handleSubmit" class="float-right ant-btn ant-btn-primary ant-btn-md mt-2">Save</button>
               </div>
               <span v-else-if="!xAppData[k]" class="d-inline-block ml-1 mr-2 text-primary">-</span>
               <span v-else class="d-inline-block ml-1 mr-2 text-primary">{{ xAppData[k] }}</span>
@@ -114,6 +115,7 @@
       </a-card>
       <!-- <pre>{{ xAppData }}</pre> -->
     </div>
+    {{debugIdChanged}}
   </div>
 </template>
 
@@ -126,7 +128,9 @@ export default {
   },
   data () {
     return {
-      stats: {}
+      stats: {},
+      originalDebugId: '',
+      debugIdChanged: false
     }
   },
   props: {},
@@ -138,6 +142,7 @@ export default {
   },
   created () {
     this.createForm()
+    this.tempDebugId(Buffer.from(this.$store.app.details.application_xapp_debug_device_uuidv4_bin.data).toString('hex').toUpperCase())
   },
   mounted () {
     this.fetchStats()
@@ -180,6 +185,19 @@ export default {
     clearInterval(statsFetcher)
   },
   methods: {
+    tempDebugId (r) {
+      this.originalDebugId = r
+      this.devUuidChange()
+    },
+    devUuidChange () {
+      this.$nextTick(() => {
+        if (this.originalDebugId !== this.form.getFieldValue('devUuid').toUpperCase().replace(/[^A-F0-9]/g, '')) {
+          this.debugIdChanged = true
+          return
+        }
+        this.debugIdChanged = false
+      })
+    },
     createForm () {
       const options = {
         mapPropsToFields: () => {
@@ -216,6 +234,7 @@ export default {
             ...values
           })
           console.log(response)
+          this.tempDebugId(this.form.getFieldValue('devUuid').toUpperCase().replace(/[^A-F0-9]/g, ''))
         } catch (e) {
           this.$message.error('Error creating your application' + (e.reference ? ` (${e.reference})` : ''))
         }
