@@ -187,6 +187,7 @@ export default {
   methods: {
     tempDebugId (r) {
       this.originalDebugId = r
+      this.$store.app.details.application_xapp_debug_device_uuidv4_bin = Buffer.from(this.originalDebugId, 'hex')
       this.devUuidChange()
     },
     devUuidChange () {
