@@ -115,7 +115,6 @@
       </a-card>
       <!-- <pre>{{ xAppData }}</pre> -->
     </div>
-    {{debugIdChanged}}
   </div>
 </template>
 
