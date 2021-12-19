@@ -163,17 +163,14 @@ export default {
     '$store.selectedApplication' () {
       this.stats = {}
       this.fetchStats()
+      this.$store.appsLoadedPromise.then(() => {
+        console.log('Apps loaded')
+        this._created()
+      })
     }
   },
   created () {
-    this.createForm()
-    if (this.$store.app.details.application_xapp_debug_device_uuidv4_bin?.data) {
-      this.tempDebugId(Buffer.from(this.$store.app.details.application_xapp_debug_device_uuidv4_bin.data).toString('hex').toUpperCase())
-    }
-    // console.log(this.$store.app.details)
-    if (this.$store.app.details.application_xapp_url) {
-      this.tempxAppUrl(this.$store.app.details.application_xapp_url)
-    }
+    this._created()
   },
   mounted () {
     this.fetchStats()
@@ -220,6 +217,15 @@ export default {
     clearInterval(statsFetcher)
   },
   methods: {
+    _created () {
+      if (this.$store.app.details.application_xapp_debug_device_uuidv4_bin?.data) {
+        this.tempDebugId(Buffer.from(this.$store.app.details.application_xapp_debug_device_uuidv4_bin.data).toString('hex').toUpperCase())
+      }
+      if (this.$store.app.details.application_xapp_url) {
+        this.tempxAppUrl(this.$store.app.details.application_xapp_url)
+      }
+      this.createForm()
+    },
     async xAppSandboxActivate () {
       const response = await this.$store.api('POST', 'console/xapp/' + this.$store.selectedApplication + '/activate', {})
       if (response?.valid) {
@@ -229,7 +235,6 @@ export default {
       }
     },
     tempxAppUrl (r) {
-      console.log({ r })
       this.originalxAppDestinationUrl = r
       this.$store.app.details.application_xapp_url = r
       this.xAppDestinationUrlChanged = false
