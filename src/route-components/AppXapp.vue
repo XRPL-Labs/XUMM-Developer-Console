@@ -9,19 +9,30 @@
     </p>
     <a-alert v-if="!$store.app.details.application_xapp_identifier" message="xApp features not enabled" type="info" show-icon>
       <div slot="description">
-        For your WebApp to be opened in XUMM as xApp (listed or unlisted), xApp features need to be manually enabled by XRPL Labs first. Please
-        <a href="https://support.xumm.app/hc/en-us/requests/new" target="_blank"><b>submit a support ticket here</b></a>.
-        <br />
-        <br />
-        <b>In your support ticket, mention <u>at least</u>:</b>
+        <!-- For your WebApp to be opened in XUMM as xApp (listed or unlisted), xApp features need to be manually enabled by XRPL Labs first. Please
+        <a href="https://support.xumm.app/hc/en-us/requests/new" target="_blank"><b>submit a support ticket here</b></a>. -->
+        <!-- <br /> -->
+        <!-- <br /> -->
+        <!-- <b>In your support ticket, mention <u>at least</u>:</b> -->
+        <h6 class="text-danger">To enable xApp features, <b>please read the rules</b> below <b><u>carefully</u></b>:</h6>
         <ul>
-          <li>The API Key of this application:<br /><code class="text-primary"><b>{{ $store.app.details.application_uuidv4 }}</b></code></li>
-          <li>Your frontend &amp; backend coding experience</li>
-          <li>What you are planning on building</li>
-          <li>If your app will be open source (if so: please add a Github link)</li>
-          <li>How end users will interact with your xApp</li>
-          <li>The data you will store in your backend (if this applies)</li>
+          <!-- <li>The API Key of this application:<br /><code class="text-primary"><b>{{ $store.app.details.application_uuidv4 }}</b></code></li> -->
+          <!-- <li>Your frontend &amp; backend coding experience</li> -->
+          <!-- <li>What you are planning on building</li> -->
+          <!-- <li>If your app will be open source (if so: please add a Github link)</li> -->
+          <!-- <li>How end users will interact with your xApp</li> -->
+          <!-- <li>The data you will store in your backend (if this applies)</li> -->
+          <li>You can enroll for a <b>sandbox xApp</b></li>
+          <li>Only <b>you</b> can use your own <b>sandbox xApp</b> from a specific XUMM installation you can whitelist after activating xApp features.</li>
+          <li>To build an xApp, you need to have experience with Frontend Web Developent as xApps are WebApps (loaded in XUMM)</li>
+          <li>xApps need to add value to a significant share of the XUMM user base</li>
+          <li>xApps need to be self explanatory to have clear instructions for end users</li>
+          <li>xApps need to be designed in a way where users can not make dangerous mistakes: users need to be protected</li>
+          <li>xApps developers can not be anonymous (accountability)</li>
+          <li>Promition of speculation, pushing users towards buying tokens <b>is not allowed</b> (see: user protection)</li>
+          <li>Activating xApp features and building a <b>sandbox xApp</b> does <b><u>NOT</u></b> guarantee your xApp will be going live in the future. To take your xApp live, it will be audited by XRPL Labs. The rules above apply, security &amp; usability will be tested. If you want to have more certainty in advance, please reach out to XRPL Labs. <a href="https://support.xumm.app/hc/en-us/requests/new" target="_blank"><b>Submit a support ticket here</b></a></li>
         </ul>
+        <button @click="xAppSandboxActivate" class="ant-btn ant-btn-primary ant-btn-md mt-2">I agree. Please activate xApp features</button>
       </div>
     </a-alert>
 
@@ -49,19 +60,20 @@
               :label-col="{ sm: { span: 12 }, md: { span: 8 }, lg: { span: 6 }, xl: { span: 4 } }"
               :wrapper-col="{ sm: { span: 24 - 12 }, md: { span: 24 - 8 }, lg: { span: 24 - 6 }, xl: { span: 24 - 4 } }"
             >
-              <span slot="label"><div :class="{ 'mt-2': k === 'application_xapp_debug_device_uuidv4_bin' }">{{ xAppDataFieldName[k] }}</div></span>
+              <span slot="label"><div :class="{ 'mt-2': k === 'application_xapp_debug_device_uuidv4_bin' || (k === 'application_xapp_url' && sandbox) }">{{ xAppDataFieldName[k] }}</div></span>
               <span v-if="k === 'application_xapp_identifier'" class="d-inline-block ml-1 mr-2 text-primary">
                 <a-icon type="link" /> <a :href="'https://xumm.app/detect/xapp:' + xAppData['application_xapp_identifier']" class="text-primary" target='_blank'><b><u>{{ 'https://xumm.app/detect/xapp:' + xAppData['application_xapp_identifier'] }}</u></b></a>
               </span>
-              <span v-else-if="k === 'application_xapp_url'" class="d-inline-block ml-1 mr-2 text-muted">
+              <span v-else-if="k === 'application_xapp_url' && !sandbox" class="d-inline-block ml-1 mr-2 text-muted">
                 <a-icon type="link" /> <a :href="xAppUrl" class="text-muted" target='_blank'><u>{{ xAppData[k] }}</u></a>
               </span>
-              <span v-else-if="k === 'application_xapp_listed' || k === 'application_xapp_featured' || k === 'application_allow_fetch_kyc_data' || k === 'application_allow_ott_appauth'" class="d-inline-block ml-1 mr-2 text-primary">
-                <div class="text-success" v-if="xAppData[k] && xAppData[k] > 0"><a-icon theme="filled" type="check-circle" /> Yes</div>
+              <span v-else-if="k === '_sandbox' || k === 'application_xapp_listed' || k === 'application_xapp_featured' || k === 'application_allow_fetch_kyc_data' || k === 'application_allow_ott_appauth'" class="d-inline-block ml-1 mr-2 text-primary">
+                <div class="text-success" v-if="(!sandbox && xAppData[k] && xAppData[k] > 0) || sandbox"><a-icon theme="filled" type="check-circle" /> Yes</div>
                 <div class="text-danger" v-else><a-icon type="minus-circle" theme="filled" /> No</div>
               </span>
               <span v-else-if="k === 'application_token_exp_days'" class="d-inline-block ml-1 mr-2 text-primary">{{ xAppData[k] }} days after last use (per <code>user_token</code>)</span>
-              <div v-else-if="k === 'application_xapp_debug_device_uuidv4_bin'" class="d-inline-block ml-1 mr-2 text-primary d-block">
+              <div v-else-if="k === 'application_xapp_debug_device_uuidv4_bin'" class="d-inline-block ml-1 mr-2 text-primary d-block" style="position: relative;">
+                <button v-if="debugIdChanged && !form.getFieldError('devUuid')" @click="handleSubmit" class="ant-btn ant-btn-primary ant-btn-lg mt-0" style="position: absolute; right: 0px; z-index: 2;">Save</button>
                 <a-input @change="devUuidChange" size="large" v-decorator="[ 'devUuid', { rules: [
                   {
                     pattern: /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89ABab][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/,
@@ -75,7 +87,19 @@
                 </a-input>
                 <!-- TODO: Remove this note when this feature is live (JWT, etc.) -->
                 <!-- <div class="text-muted">All OTT's originally created by opening your xApp on the device with the Device ID whitelisted above <b>will be allowed re-fetching for local browser xApp debugging &amp; testing</b>.</div> -->
-                <button v-if="debugIdChanged && !form.getFieldError('devUuid')" @click="handleSubmit" class="float-right ant-btn ant-btn-primary ant-btn-md mt-2">Save</button>
+              </div>
+              <div v-else-if="k === 'application_xapp_url' && sandbox" class="d-inline-block ml-1 mr-2 text-primary d-block" style="position: relative;">
+                <button v-if="xAppDestinationUrlChanged && !form.getFieldError('xAppDestinationUrl')" @click="handleSubmit" class="ant-btn ant-btn-primary ant-btn-lg mt-0" style="position: absolute; right: 0px; z-index: 2;">Save</button>
+                <a-input @change="xAppDestinationUrlChange" size="large" v-decorator="[ 'xAppDestinationUrl', { rules: [
+                  {
+                    type: 'url',
+                    message: 'This field must be a valid url.'
+                  }
+                ] } ]" placeholder="xApp destination URL">
+                  <a-icon slot="prefix" type="tag" style="color: rgba(0,0,0,.25)" />
+                </a-input>
+                <!-- TODO: Remove this note when this feature is live (JWT, etc.) -->
+                <!-- <div class="text-muted">All OTT's originally created by opening your xApp on the device with the Device ID whitelisted above <b>will be allowed re-fetching for local browser xApp debugging &amp; testing</b>.</div> -->
               </div>
               <span v-else-if="!xAppData[k]" class="d-inline-block ml-1 mr-2 text-primary">-</span>
               <span v-else class="d-inline-block ml-1 mr-2 text-primary">{{ xAppData[k] }}</span>
@@ -129,7 +153,9 @@ export default {
     return {
       stats: {},
       originalDebugId: '',
-      debugIdChanged: false
+      originalxAppDestinationUrl: '',
+      debugIdChanged: false,
+      xAppDestinationUrlChanged: false
     }
   },
   props: {},
@@ -141,7 +167,13 @@ export default {
   },
   created () {
     this.createForm()
-    this.tempDebugId(Buffer.from(this.$store.app.details.application_xapp_debug_device_uuidv4_bin.data).toString('hex').toUpperCase())
+    if (this.$store.app.details.application_xapp_debug_device_uuidv4_bin?.data) {
+      this.tempDebugId(Buffer.from(this.$store.app.details.application_xapp_debug_device_uuidv4_bin.data).toString('hex').toUpperCase())
+    }
+    // console.log(this.$store.app.details)
+    if (this.$store.app.details.application_xapp_url) {
+      this.tempxAppUrl(this.$store.app.details.application_xapp_url)
+    }
   },
   mounted () {
     this.fetchStats()
@@ -150,6 +182,9 @@ export default {
     }, 30 * 1000)
   },
   computed: {
+    sandbox () {
+      return this.$store.app.details.application_xapp_identifier.match(/sandbox/)
+    },
     xAppUrl () {
       return this.$store.app.details.application_xapp_url +
         (this.$store.app.details.application_xapp_url.match(/\?/) ? '&' : '?') +
@@ -158,6 +193,7 @@ export default {
     },
     xAppDataFieldName () {
       return {
+        _sandbox: 'Sandboxed',
         application_xapp_identifier: 'Deeplink / QR Value',
         application_xapp_url: 'WebApp URL',
         application_xapp_listed: 'Listed',
@@ -184,10 +220,34 @@ export default {
     clearInterval(statsFetcher)
   },
   methods: {
+    async xAppSandboxActivate () {
+      const response = await this.$store.api('POST', 'console/xapp/' + this.$store.selectedApplication + '/activate', {})
+      if (response?.valid) {
+        this.$store.fetchApps()
+      } else {
+        this.$message.error('Your xApp could not be activated')
+      }
+    },
+    tempxAppUrl (r) {
+      console.log({ r })
+      this.originalxAppDestinationUrl = r
+      this.$store.app.details.application_xapp_url = r
+      this.xAppDestinationUrlChanged = false
+    },
     tempDebugId (r) {
       this.originalDebugId = r
       this.$store.app.details.application_xapp_debug_device_uuidv4_bin = Buffer.from(this.originalDebugId, 'hex')
       this.devUuidChange()
+    },
+    xAppDestinationUrlChange () {
+      this.$nextTick(() => {
+        // originalxAppDestinationUrl xAppDestinationUrl xAppDestinationUrlChange
+        if (this.originalxAppDestinationUrl !== this.form.getFieldValue('xAppDestinationUrl')) {
+          this.xAppDestinationUrlChanged = true
+          return
+        }
+        this.xAppDestinationUrlChanged = false
+      })
     },
     devUuidChange () {
       this.$nextTick(() => {
@@ -215,6 +275,9 @@ export default {
           return {
             devUuid: this.$form.createFormField({
               value: uuid
+            }),
+            xAppDestinationUrl: this.$form.createFormField({
+              value: this.$store.app.details.application_xapp_url
             })
           }
         }
@@ -229,14 +292,16 @@ export default {
           this.$message.error('Please check all required form fields')
           return
         }
+        console.log(values)
         try {
           const response = await this.$store.api('POST', 'console/xapp/' + this.$store.selectedApplication + '/debug', {
             ...values
           })
           console.log(response)
+          this.tempxAppUrl(this.form.getFieldValue('xAppDestinationUrl'))
           this.tempDebugId(this.form.getFieldValue('devUuid').toUpperCase().replace(/[^A-F0-9]/g, ''))
         } catch (e) {
-          this.$message.error('Error creating your application' + (e.reference ? ` (${e.reference})` : ''))
+          this.$message.error('Error updating your application' + (e.reference ? ` (${e.reference})` : ''))
         }
       })
     },
