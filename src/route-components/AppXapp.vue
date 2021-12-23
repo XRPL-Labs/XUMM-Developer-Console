@@ -24,12 +24,13 @@
           <!-- <li>The data you will store in your backend (if this applies)</li> -->
           <li>You can enroll for a <b>sandbox xApp</b></li>
           <li>Only <b>you</b> can use your own <b>sandbox xApp</b> from a specific XUMM installation you can whitelist after activating xApp features.</li>
+          <li>The fact that you got a sandbox xApp is not to be presented anywhere as an endorsement (e.g. in communcation like on social media, etc.))</li>
           <li>To build an xApp, you need to have experience with Frontend Web Developent as xApps are WebApps (loaded in XUMM)</li>
           <li>xApps need to add value to a significant share of the XUMM user base</li>
           <li>xApps need to be self explanatory to have clear instructions for end users</li>
           <li>xApps need to be designed in a way where users can not make dangerous mistakes: users need to be protected</li>
           <li>xApps developers can not be anonymous (accountability)</li>
-          <li>Promition of speculation, pushing users towards buying tokens <b>is not allowed</b> (see: user protection)</li>
+          <li>Promotion of speculation, pushing users towards buying tokens <b>is not allowed</b> (see: user protection)</li>
           <li>Activating xApp features and building a <b>sandbox xApp</b> does <b><u>NOT</u></b> guarantee your xApp will be going live in the future. To take your xApp live, it will be audited by XRPL Labs. The rules above apply, security &amp; usability will be tested. If you want to have more certainty in advance, please reach out to XRPL Labs. <a href="https://support.xumm.app/hc/en-us/requests/new" target="_blank"><b>Submit a support ticket here</b></a></li>
         </ul>
         <button @click="xAppSandboxActivate" class="ant-btn ant-btn-primary ant-btn-md mt-2">I agree. Please activate xApp features</button>
