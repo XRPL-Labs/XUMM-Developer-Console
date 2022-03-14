@@ -96,14 +96,14 @@
             </a-input>
           </a-form-item>
           <a-form-item label="Application description">
-            <a-textarea :autosize="{ minRows: 1, maxRows: 6 }" size="large" :style="{ fontSize: '16px', padding: '7px 11px' }" v-decorator="[
+            <a-textarea :autosize="{ minRows: 3, maxRows: 6 }" size="large" :style="{ fontSize: '16px', padding: '7px 11px' }" v-decorator="[
               'appDescription',
               { rules: [
                 { required: true, whitespace: true, min: 10, message: 'Please type a description of your app for app users' }
               ] }
             ]" placeholder="Simplify this and that using My Super Cool App" />
           </a-form-item>
-          <a-form-item>
+          <a-form-item v-if="editMode">
             <span slot="label">
               Webhook URL for callbacks. You can get a URL at <a href="https://webhook.site/" target="_blank" tabindex="-1"><b>https://webhook.site</b></a> for testing purposes
             </span>
@@ -112,6 +112,20 @@
             ]" placeholder="https://my-super-cool-app.dev/xumm-hooks">
               <a-icon slot="prefix" type="link" style="color: rgba(0,0,0,.25)" />
             </a-input>
+          </a-form-item>
+          <a-form-item v-if="editMode">
+            <span slot="label">
+              Redirect URIs (one per line) to use <a href="https://xumm.readme.io/docs/user-sign-in#sign-in-with-xumm-using-oauth2--openid-connect" target="_blank"><b>Sign in with XUMM over OAuth2 / OpenID Connect</b></a>.
+            </span>
+            <a-textarea :autosize="{ minRows: 3, maxRows: 6 }" size="large" :style="{ fontSize: '16px', padding: '7px 11px' }" v-decorator="[
+              'redirectUris',
+              { rules: [
+                {
+                  required: false, whitespace: true, message: 'Please enter one valid redirect URI per line',
+                  pattern: /((^|\n)^[a-z0-9]+:\/\/[^\n]+){1,}$/gms,
+                }
+              ] }
+            ]" placeholder="https://mysite.local/redir?auth=true" />
           </a-form-item>
 
           <a-form-item :class="{ 'mb-0': editMode }">
@@ -225,13 +239,15 @@ export default {
         return {
           appName: this.$store.app.name,
           appDescription: this.$store.app.details.application_description,
-          appWebhookUrl: this.$store.app.details.application_webhookurl
+          appWebhookUrl: this.$store.app.details.application_webhookurl,
+          redirectUris: this.$store.app.details.application_redirect_uris
         }
       }
       return {
         appName: '',
         appDescription: '',
-        appWebhookUrl: ''
+        appWebhookUrl: '',
+        redirectUris: ''
       }
     },
     uploadDraggerStyle () {
@@ -282,6 +298,9 @@ export default {
             }),
             appWebhookUrl: this.$form.createFormField({
               value: this.formData.appWebhookUrl
+            }),
+            redirectUris: this.$form.createFormField({
+              value: this.formData.redirectUris
             })
           }
         }
