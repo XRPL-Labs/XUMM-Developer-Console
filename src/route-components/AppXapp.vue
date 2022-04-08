@@ -89,6 +89,21 @@
                 <!-- TODO: Remove this note when this feature is live (JWT, etc.) -->
                 <!-- <div class="text-muted">All OTT's originally created by opening your xApp on the device with the Device ID whitelisted above <b>will be allowed re-fetching for local browser xApp debugging &amp; testing</b>.</div> -->
               </div>
+              <div v-else-if="sandbox && k === 'application_xapp_debug_devices_uuids'" class="d-inline-block ml-1 mr-2 text-primary d-block" style="position: relative;">
+                <span slot="label">
+                  Guest Device ID's (max. 10, allowed to access your sandboxed xApp)
+                </span>
+                <a-textarea @change="sandboxUuidsChange" :autosize="{ minRows: 2, maxRows: 12 }" size="large" :style="{ fontSize: '16px', padding: '7px 11px' }" v-decorator="[
+                  'sandboxUuids',
+                  { rules: [
+                    {
+                      required: false, whitespace: true, message: 'Please enter one valid Device UUID per line, max. 10',
+                      pattern: /^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89ABab][0-9a-fA-F]{3}-[0-9a-fA-F]{12}[\n]{0,1}){1,10}$/
+                    }
+                  ] }
+                ]" placeholder="d5017a35-83f6-42e2-b83e-d95ea3028b47" />
+                <button v-if="sandboxUuidsChanged && !form.getFieldError('sandboxUuids')" @click="handleSubmit" class="ant-btn ant-btn-primary ant-btn-lg mt-0" style="position: absolute; right: 0px; bottom: 0; z-index: 2;">Save</button>
+              </div>
               <div v-else-if="k === 'application_xapp_url' && sandbox" class="d-inline-block ml-1 mr-2 text-primary d-block" style="position: relative;">
                 <button v-if="xAppDestinationUrlChanged && !form.getFieldError('xAppDestinationUrl')" @click="handleSubmit" class="ant-btn ant-btn-primary ant-btn-lg mt-0" style="position: absolute; right: 0px; z-index: 2;">Save</button>
                 <a-input @change="xAppDestinationUrlChange" size="large" v-decorator="[ 'xAppDestinationUrl', { rules: [
@@ -154,8 +169,10 @@ export default {
     return {
       stats: {},
       originalDebugId: '',
+      originalsandboxUuids: '',
       originalxAppDestinationUrl: '',
       debugIdChanged: false,
+      sandboxUuidsChanged: false,
       xAppDestinationUrlChanged: false
     }
   },
@@ -200,7 +217,8 @@ export default {
         // application_allow_ott_appauth: 'OTT for App Endpoints',
         application_token_exp_days: 'User Token Expiration',
         // application_trusted_ips: 'KYC fetching IP whitelist',
-        application_xapp_debug_device_uuidv4_bin: 'Debug Device ID'
+        application_xapp_debug_device_uuidv4_bin: 'Debug Device ID',
+        ...(this.sandbox ? { application_xapp_debug_devices_uuids: 'Guest Device IDs' } : {})
       }
     },
     xAppData () {
@@ -221,6 +239,9 @@ export default {
     _created () {
       if (this.$store.app.details.application_xapp_debug_device_uuidv4_bin?.data) {
         this.tempDebugId(Buffer.from(this.$store.app.details.application_xapp_debug_device_uuidv4_bin.data).toString('hex').toUpperCase())
+      }
+      if (this.$store.app.details.application_xapp_debug_devices_uuids) {
+        this.tempsandboxUuids((this.$store.app.details.application_xapp_debug_devices_uuids || '').toUpperCase())
       }
       if (this.$store.app.details.application_xapp_url) {
         this.tempxAppUrl(this.$store.app.details.application_xapp_url)
@@ -245,6 +266,11 @@ export default {
       this.$store.app.details.application_xapp_debug_device_uuidv4_bin = Buffer.from(this.originalDebugId, 'hex')
       this.devUuidChange()
     },
+    tempsandboxUuids (r) {
+      this.originalsandboxUuids = r
+      this.$store.app.details.application_xapp_debug_devices_uuids = this.originalsandboxUuids.toUpperCase()
+      this.sandboxUuidsChange()
+    },
     xAppDestinationUrlChange () {
       this.$nextTick(() => {
         // originalxAppDestinationUrl xAppDestinationUrl xAppDestinationUrlChange
@@ -262,6 +288,15 @@ export default {
           return
         }
         this.debugIdChanged = false
+      })
+    },
+    sandboxUuidsChange () {
+      this.$nextTick(() => {
+        if (this.originalsandboxUuids.toUpperCase() !== this.form.getFieldValue('sandboxUuids').toUpperCase()) {
+          this.sandboxUuidsChanged = true
+          return
+        }
+        this.sandboxUuidsChanged = false
       })
     },
     createForm () {
@@ -284,6 +319,9 @@ export default {
             }),
             xAppDestinationUrl: this.$form.createFormField({
               value: this.$store.app.details.application_xapp_url
+            }),
+            sandboxUuids: this.$form.createFormField({
+              value: this.$store.app.details.application_xapp_debug_devices_uuids
             })
           }
         }
@@ -306,6 +344,7 @@ export default {
           console.log(response)
           this.tempxAppUrl(this.form.getFieldValue('xAppDestinationUrl'))
           this.tempDebugId(this.form.getFieldValue('devUuid').toUpperCase().replace(/[^A-F0-9]/g, ''))
+          this.tempsandboxUuids(this.form.getFieldValue('sandboxUuids').toUpperCase())
         } catch (e) {
           this.$message.error('Error updating your application' + (e.reference ? ` (${e.reference})` : ''))
         }
