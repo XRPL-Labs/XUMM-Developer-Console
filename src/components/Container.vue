@@ -46,12 +46,12 @@ export default {
   },
   mounted () {
     if (this.$auth.isAuthenticated) {
-      window.Intercom('boot', {
-        app_id: 'nq9rb5du',
-        email: this.$auth.user.email,
-        name: this.$auth.user.name || this.$auth.user.nickname,
-        user_id: this.$auth.user.sub
-      })
+      // window.Intercom('boot', {
+      //   app_id: 'nq9rb5du',
+      //   email: this.$auth.user.email,
+      //   name: this.$auth.user.name || this.$auth.user.nickname,
+      //   user_id: this.$auth.user.sub
+      // })
     }
   },
   methods: {
