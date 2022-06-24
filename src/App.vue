@@ -250,6 +250,9 @@ export default {
   .ant-menu-submenu.ant-menu-submenu-popup {
     /* White by default, annoying */
     background-color: transparent;
+    max-height: calc(100vh - 169px);
+    overflow-y: auto;
+    box-shadow: 2px 4px 12px -2px rgba(0,0,0,0.32);
   }
 
   ul.ant-menu.ant-menu-vertical.ant-menu-sub.ant-menu-submenu-content {
