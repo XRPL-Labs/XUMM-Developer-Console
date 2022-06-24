@@ -96,13 +96,65 @@
             </a-input>
           </a-form-item>
           <a-form-item label="Application description">
-            <a-textarea :autosize="{ minRows: 3, maxRows: 6 }" size="large" :style="{ fontSize: '16px', padding: '7px 11px' }" v-decorator="[
+            <a-textarea :autoSize="{ minRows: 3, maxRows: 6 }" size="large" :style="{ fontSize: '16px', padding: '7px 11px' }" v-decorator="[
               'appDescription',
               { rules: [
                 { required: true, whitespace: true, min: 10, message: 'Please type a description of your app for app users' }
               ] }
             ]" placeholder="Simplify this and that using My Super Cool App" />
           </a-form-item>
+
+          <a-form-item label="Project homepage" class="my-0">
+            <a-input size="default" v-decorator="[
+              'infourlHomepage',
+              { rules: [
+                { required: true, type: 'url', message: 'Please enter a valid URL for your project homepage' }
+              ] }
+            ]" placeholder="https://my-project.com">
+              <a-icon slot="prefix" type="tag" style="color: rgba(0,0,0,.25)" />
+            </a-input>
+          </a-form-item>
+          <a-form-item label="Your Support URL (Help Center / Discord / ...)" class="my-0">
+            <a-input size="default" v-decorator="[
+              'infourlSupport',
+              { rules: [
+                { required: true, type: 'url', message: 'Please enter a valid URL linking to your Support page' }
+              ] }
+            ]" placeholder="https://my-project.com/support">
+              <a-icon slot="prefix" type="tag" style="color: rgba(0,0,0,.25)" />
+            </a-input>
+          </a-form-item>
+          <a-form-item label="Your email address (so we can reach you)" class="my-0">
+            <a-input size="default" v-decorator="[
+              'devEmail',
+              { rules: [
+                { required: true, type: 'email', message: 'Please enter the email address we can reach you on' }
+              ] }
+            ]" placeholder="My Super Cool App">
+              <a-icon slot="prefix" type="tag" style="color: rgba(0,0,0,.25)" />
+            </a-input>
+          </a-form-item>
+          <a-form-item label="Your Terms of Service" class="my-0">
+            <a-input size="default" v-decorator="[
+              'infourlTerms',
+              { rules: [
+                { required: false, type: 'url', message: 'Please enter a valid URL linking to your Terms of Service' }
+              ] }
+            ]" placeholder="https://my-project.com/terms">
+              <a-icon slot="prefix" type="tag" style="color: rgba(0,0,0,.25)" />
+            </a-input>
+          </a-form-item>
+          <a-form-item label="Privacy Policy URL" class="mt-0 mb-4">
+            <a-input size="default" v-decorator="[
+              'infourlPrivacy',
+              { rules: [
+                { required: false, type: 'url', message: 'Please enter a valid URL linking to your Privacy Policy / Statement' }
+              ] }
+            ]" placeholder="https://my-project.com/privacy">
+              <a-icon slot="prefix" type="tag" style="color: rgba(0,0,0,.25)" />
+            </a-input>
+          </a-form-item>
+
           <a-form-item v-if="editMode">
             <span slot="label">
               Webhook URL for callbacks. You can get a URL at <a href="https://webhook.site/" target="_blank" tabindex="-1"><b>https://webhook.site</b></a> for testing purposes
@@ -113,11 +165,12 @@
               <a-icon slot="prefix" type="link" style="color: rgba(0,0,0,.25)" />
             </a-input>
           </a-form-item>
+
           <a-form-item v-if="editMode">
             <span slot="label">
               Redirect URIs (one per line) to use <a href="https://xumm.readme.io/docs/user-sign-in#sign-in-with-xumm-using-oauth2--openid-connect" target="_blank"><b>Sign in with XUMM over OAuth2 / OpenID Connect</b></a>.
             </span>
-            <a-textarea :autosize="{ minRows: 3, maxRows: 6 }" size="large" :style="{ fontSize: '16px', padding: '7px 11px' }" v-decorator="[
+            <a-textarea :autoSize="{ minRows: 3, maxRows: 6 }" size="large" :style="{ fontSize: '16px', padding: '7px 11px' }" v-decorator="[
               'redirectUris',
               { rules: [
                 {
@@ -240,14 +293,26 @@ export default {
           appName: this.$store.app.name,
           appDescription: this.$store.app.details.application_description,
           appWebhookUrl: this.$store.app.details.application_webhookurl,
-          redirectUris: this.$store.app.details.application_redirect_uris
+          redirectUris: this.$store.app.details.application_redirect_uris,
+
+          infourlHomepage: this.$store.app.details.application_infourl_homepage,
+          infourlTerms: this.$store.app.details.application_infourl_terms,
+          infourlSupport: this.$store.app.details.application_infourl_support,
+          infourlPrivacy: this.$store.app.details.application_infourl_privacy,
+          devEmail: this.$store.app.details.application_dev_email || (this.$auth.user?.email || '')
         }
       }
       return {
         appName: '',
         appDescription: '',
         appWebhookUrl: '',
-        redirectUris: ''
+        redirectUris: '',
+
+        infourlHomepage: '',
+        infourlTerms: '',
+        infourlSupport: '',
+        infourlPrivacy: '',
+        devEmail: this.$auth.user?.email || ''
       }
     },
     uploadDraggerStyle () {
@@ -301,6 +366,21 @@ export default {
             }),
             redirectUris: this.$form.createFormField({
               value: this.formData.redirectUris
+            }),
+            infourlHomepage: this.$form.createFormField({
+              value: this.formData.infourlHomepage
+            }),
+            infourlTerms: this.$form.createFormField({
+              value: this.formData.infourlTerms
+            }),
+            infourlSupport: this.$form.createFormField({
+              value: this.formData.infourlSupport
+            }),
+            infourlPrivacy: this.$form.createFormField({
+              value: this.formData.infourlPrivacy
+            }),
+            devEmail: this.$form.createFormField({
+              value: this.formData.devEmail
             })
           }
         }
