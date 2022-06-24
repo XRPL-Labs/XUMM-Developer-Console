@@ -69,7 +69,8 @@
                 <a-icon type="link" /> <a :href="xAppUrl" class="text-muted" target='_blank'><u>{{ xAppData[k] }}</u></a>
               </span>
               <span v-else-if="k === '_sandbox' || k === 'application_xapp_listed' || k === 'application_xapp_featured' || k === 'application_allow_fetch_kyc_data' || k === 'application_allow_ott_appauth' || k === 'application_permissions_xapp_push'" class="d-inline-block ml-1 mr-2 text-primary">
-                <div class="text-success" v-if="(!sandbox && xAppData[k] && xAppData[k] > 0) || sandbox"><a-icon theme="filled" type="check-circle" /> Yes</div>
+                <pre>x{{ xAppData[k] }}x</pre>
+                <div class="text-success" v-if="(!sandbox && xAppData[k] && xAppData[k] > 0) || (k === '_sandbox' && sandbox)"><a-icon theme="filled" type="check-circle" /> Yes</div>
                 <div class="text-danger" v-else><a-icon type="minus-circle" theme="filled" /> No</div>
               </span>
               <span v-else-if="k === 'application_token_exp_days'" class="d-inline-block ml-1 mr-2 text-primary">{{ xAppData[k] }} days after last use (per <code>user_token</code>)</span>
