@@ -168,13 +168,13 @@
 
           <a-form-item v-if="editMode">
             <span slot="label">
-              Redirect URIs (one per line) to use <a href="https://xumm.readme.io/docs/user-sign-in#sign-in-with-xumm-using-oauth2--openid-connect" target="_blank"><b>Sign in with XUMM over OAuth2 / OpenID Connect</b></a>.
+              Origin/Redirect URIs (one per line) to use <a href="https://xumm.readme.io/docs/user-sign-in#sign-in-with-xumm-using-oauth2--openid-connect" target="_blank"><b>Sign in with XUMM over OAuth2 / OpenID Connect</b></a>.
             </span>
             <a-textarea :autoSize="{ minRows: 3, maxRows: 6 }" size="large" :style="{ fontSize: '16px', padding: '7px 11px' }" v-decorator="[
               'redirectUris',
               { rules: [
                 {
-                  required: false, whitespace: true, message: 'Please enter one valid redirect URI per line',
+                  required: false, whitespace: true, message: 'Please enter one valid Origin/Redirect URI per line',
                   pattern: /((^|\n)^[a-z0-9]+:\/\/[^\n]+){1,}$/gms,
                 }
               ] }
