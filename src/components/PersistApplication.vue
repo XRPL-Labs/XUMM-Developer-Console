@@ -124,13 +124,15 @@
               <a-icon slot="prefix" type="tag" style="color: rgba(0,0,0,.25)" />
             </a-input>
           </a-form-item>
-          <a-form-item label="Your email address (so we can reach you)" class="my-0">
+          <a-form-item class="my-0">
+            <span slot="label">Your email address (so we can reach you). <b>This needs to be an email that is monitored by a human. Important system
+            messages that could affect your service will be sent here.</b></span>
             <a-input size="default" v-decorator="[
               'devEmail',
               { rules: [
                 { required: true, type: 'email', message: 'Please enter the email address we can reach you on' }
               ] }
-            ]" placeholder="My Super Cool App">
+            ]" placeholder="email@example.com">
               <a-icon slot="prefix" type="tag" style="color: rgba(0,0,0,.25)" />
             </a-input>
           </a-form-item>
