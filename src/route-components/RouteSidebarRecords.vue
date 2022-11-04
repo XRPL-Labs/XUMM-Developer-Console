@@ -35,8 +35,8 @@
                 <code class="text-dark">{{ r.call_url }}</code>
               </div>
               <div class="ip-and-agent no-overflow">
-                <vue-moments-ago v-if="r.call_moment" prefix="" suffix="ago from" :date="(new Date(r.call_moment_ts * 1000)).toISOString()" lang="en" />
-                {{ r.call_ip }} {{ r.call_useragent ? ' (' : '' }}{{ r.call_useragent }}{{ r.call_useragent ? ')' : '' }}
+                <vue-moments-ago v-if="r.call_moment" prefix="" suffix="ago" :date="(new Date(r.call_moment_ts * 1000)).toISOString()" lang="en" />
+                {{ r.call_useragent ? ' (' : '' }}{{ r.call_useragent }}{{ r.call_useragent ? ')' : '' }}
               </div>
             </div>
           </div>
