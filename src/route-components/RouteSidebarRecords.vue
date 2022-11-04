@@ -48,10 +48,15 @@
             <code class="badge text-dark text-left guid">{{ r.call_uuidv4 }}</code>
             <div class="data wide">
               <div class="no-overflow correct-code-lh mh-badge">
-                <code class="text-dark pt-1 pr-2"><b>{{ r.payload_tx_type }}</b></code>
-                <span v-if="(r.__payload_expired || 0 > 0) && !r.payload_response_hex" class="badge float-right alert-danger ml-1 badge-danger">Expired</span>
-                <span v-if="r.payload_response_hex" class="badge float-right alert-success ml-1 badge-success"><a-icon type="like" /> Signed</span>
-                <span v-if="r.payload_app_opencount" class="badge float-right alert-primary ml-1 badge-primary"><a-icon type="mobile" /> Opened</span>
+                <div class="pt-1 pr-2 d-inline-block">
+                  <b>{{ r.payload_tx_type }}</b>
+                  <code v-if="String(r.meta_string || '') !== ''" class="meta-str">
+                    {{ r.meta_string }}
+                  </code>
+                </div>
+                <span v-if="(r.__payload_expired || 0 > 0) && !r.payload_response_hex" class="badge float-right alert-danger ml-1 mt-1 badge-danger">Expired</span>
+                <span v-if="r.payload_response_hex" class="badge float-right alert-success ml-1 mt-1 badge-success"><a-icon type="like" /> Signed</span>
+                <span v-if="r.payload_app_opencount" class="badge float-right alert-primary ml-1 mt-1 badge-primary"><a-icon type="mobile" /> Opened</span>
               </div>
               <div class="ip-and-agent pt-1 no-overflow">
                 <vue-moments-ago v-if="r.payload_created" prefix="" suffix="ago" :date="(new Date(r.payload_created_ts * 1000)).toISOString()" lang="en" />
@@ -320,6 +325,17 @@ export default {
       padding-left: 0;
       // background-color: #fff;
     }
+  }
+
+  .meta-str {
+    max-width: 80px;
+    overflow: hidden;
+    display: inline-block;
+    position: absolute !important;
+    margin-left: 7px;
+    margin-top: 10px;
+    font-size: .85em;
+    text-overflow: ellipsis;
   }
 
   .icons {
