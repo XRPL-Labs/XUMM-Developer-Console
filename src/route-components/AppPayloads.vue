@@ -29,7 +29,7 @@
               </router-link>
             </td>
             <!-- JSON tree -->
-            <td v-else-if="k === 'payload_request_json'">
+            <td v-else-if="k === 'payload_request_json' || (k === 'meta_blob' && String(record[k] || '') !== '')">
               <vue-json-pretty :data="JSON.parse(record[k])" :showDoubleQuotes="false" />
             </td>
             <!-- GUID -->
@@ -210,6 +210,9 @@ export default {
         payload_response_multisign_account: 'Account (multisign)',
         payload_request_json: 'Payload JSON',
         payload_multisign: 'Sign for multisign',
+        meta_string: 'Custom Identifier',
+        meta_blob: 'Meta data (Blob)',
+        meta_user_instruction: 'User instruction',
         _opened_by_deeplink: 'Client opened: Deeplink',
         __payload_expired: 'Payload expired',
         _: '_'
