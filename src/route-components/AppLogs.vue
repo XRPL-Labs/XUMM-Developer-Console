@@ -39,10 +39,6 @@
                 {{ record[k] }}
               </code>
             </td>
-            <td v-else-if="k === 'call_ip'">
-              <!-- If x-forwarded-for chained -->
-              {{ record[k].split(',')[0] }}
-            </td>
             <td v-else>
               <code class="text-dark">{{ record[k] }}</code>
             </td>
@@ -129,7 +125,6 @@ export default {
       const translations = {
         call_uuidv4: 'Call reference ID *1',
         call_moment: 'Call moment',
-        call_ip: 'Client remote address',
         call_method: 'HTTP method',
         call_contenttype: 'HTTP content type',
         call_useragent: 'Client user agent',
