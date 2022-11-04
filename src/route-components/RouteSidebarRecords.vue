@@ -1,7 +1,19 @@
 <template>
   <a-layout :style="{maxHeight: 'calc(100vh - 64px)', minHeight: 'inherit'}">
     <a-layout-sider id="record-scroller" v-show="!loading && data.length > 0" width="300" theme="light" :style="{maxHeight: 'inherit', overflow: 'hidden', borderRight: '1px solid #e8e8e8', backgroundColor: '#FCFCFC'}">
-      <a-card :bodyStyle="{padding: '0', height: 'inherit', overflow: 'scroll'}" :style="{overflow: 'hidden', height: 'calc(100vh - 61px)', marginTop: '-2px', marginBottom: '-1px', marginLeft: '-2px', borderRight: 'none'}">
+      <div class="bg-light shadow-sm pl-2 pr-0 mr-0 py-2" style="margin-bottom: -1px; height: 47px; position: relative;">
+        <a-input-group style="position: absolute; top: 7px; left: 8px; bottom: 0; right: 0;">
+          <a-row :gutter="3">
+            <a-col :span="20">
+              <a-input v-on:keydown.enter="searchByUuid" v-model="searchUuid" placeholder="Search / Retrieve by UUID" default-value="" />
+            </a-col>
+            <a-col :span="4">
+              <a-button :disabled="!validSearchUuid" @click="searchByUuid" type="primary" icon="search"></a-button>
+            </a-col>
+          </a-row>
+        </a-input-group>
+      </div>
+      <a-card :bodyStyle="{padding: '0', height: 'inherit', overflow: 'scroll'}" :style="{overflow: 'hidden', height: 'calc(100vh - 61px - 47px)', marginTop: '-2px', marginBottom: '-1px', marginLeft: '-2px', borderRight: 'none'}">
         <router-link :id="r.call_uuidv4" tag="a-card-grid" style="position: relative;" :class="{new: typeof r.new !== 'undefined', active: r === selectedRecord}" v-for="r in data" v-bind:key="r.call_uuidv4" :to="{
           name: $router.currentRoute.name,
           params: {
@@ -96,7 +108,8 @@ export default {
       loading: true,
       data: [],
       websocket: null,
-      missedRecords: 0
+      missedRecords: 0,
+      searchUuid: ''
     }
   },
   computed: {
@@ -105,6 +118,9 @@ export default {
         return String(this.$route.params.record) === r.call_uuidv4
       })
       return record.length === 1 ? record[0] : null
+    },
+    validSearchUuid () {
+      return this.searchUuid.match(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i)
     }
   },
   watch: {
@@ -117,6 +133,34 @@ export default {
     }
   },
   methods: {
+    async searchByUuid () {
+      if (this.validSearchUuid && this.$router.currentRoute.params?.record !== this.searchUuid) {
+        this.$router.push({
+          name: this.$router.currentRoute.name,
+          params: {
+            appId: this.$store.selectedApplication,
+            record: this.searchUuid
+          }
+        })
+
+        const record = await this.$store.api('get', 'console/' + this.api() + '/' + this.$store.selectedApplication + '/' + this.searchUuid.toLowerCase() + '?one=true')
+        if (Array.isArray(record) && record.length === 1) {
+          this.data.unshift(record[0])
+        } else {
+          this.$notification.open({
+            key: 'record_no_found',
+            message: () => {
+              return <span>Record not found</span>
+            },
+            description: () => {
+              return <code>{this.searchUuid.toLowerCase()}</code>
+            },
+            placement: 'bottomRight',
+            duration: 10
+          })
+        }
+      }
+    },
     async liveDataUpdate () {
       const data = await this.$store.api('get', 'console/' + this.api() + '/' + this.$store.selectedApplication)
       data.forEach(r => {
@@ -311,6 +355,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  .ant-input-group-addon, .ant-input-group-wrap, .ant-input-group > .ant-input {
+    display: block !important;
+  }
+</style>
 
 <style scoped lang="scss">
   .badge {
