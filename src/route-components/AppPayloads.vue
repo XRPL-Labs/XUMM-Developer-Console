@@ -215,6 +215,7 @@ export default {
         meta_user_instruction: 'User instruction',
         payload_reject_initiator: 'Payload rejected by',
         payload_origintype: 'Payload Origin',
+        payload_signmethod: 'Signed using (method)',
         _opened_by_deeplink: 'Client opened: Deeplink',
         __payload_expired: 'Payload expired',
         _: '_'
