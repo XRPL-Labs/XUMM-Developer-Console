@@ -145,7 +145,9 @@ export default {
 
         const record = await this.$store.api('get', 'console/' + this.api() + '/' + this.$store.selectedApplication + '/' + this.searchUuid.toLowerCase() + '?one=true')
         if (Array.isArray(record) && record.length === 1) {
-          this.data.unshift(record[0])
+          if (this.data.filter(d => d.call_uuidv4 === record[0].call_uuidv4).length < 1) {
+            this.data.unshift(record[0])
+          }
         } else {
           this.$notification.open({
             key: 'record_no_found',
