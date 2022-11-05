@@ -213,6 +213,8 @@ export default {
         meta_string: 'Custom Identifier',
         meta_blob: 'Meta data (Blob)',
         meta_user_instruction: 'User instruction',
+        payload_reject_initiator: 'Payload rejected by',
+        payload_origintype: 'Payload Origin',
         _opened_by_deeplink: 'Client opened: Deeplink',
         __payload_expired: 'Payload expired',
         _: '_'
