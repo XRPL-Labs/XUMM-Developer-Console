@@ -99,7 +99,7 @@
             <a-textarea :autoSize="{ minRows: 3, maxRows: 6 }" size="large" :style="{ fontSize: '16px', padding: '7px 11px' }" v-decorator="[
               'appDescription',
               { rules: [
-                { required: true, whitespace: true, min: 10, message: 'Please type a description of your app for app users' }
+                { required: true, whitespace: true, min: 10, max: 450, message: 'Please type a description of your app for app users' }
               ] }
             ]" placeholder="Simplify this and that using My Super Cool App" />
           </a-form-item>
