@@ -12,7 +12,7 @@
       <table class="mb-0 table" v-if="record">
         <thead>
           <tr>
-            <th class="border-top-0" width="200">Detail</th>
+            <th class="border-top-0" width="200">Property</th>
             <th class="border-top-0">Value</th>
           </tr>
         </thead>
