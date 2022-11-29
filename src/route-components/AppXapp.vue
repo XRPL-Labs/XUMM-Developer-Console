@@ -374,7 +374,7 @@ export default {
       try {
         this.$store.api('GET', 'console/xapp/' + this.$store.selectedApplication + '/xapp-events')
           .then(r => {
-            this.pending_events = r?.event_count
+            this.pending_events = r?.['event_count']
           })
         this.stats = await this.$store.api('GET', 'console/xapp/' + this.$store.selectedApplication + '/stats')
         if (Object.keys(this.stats).length > 0) {
