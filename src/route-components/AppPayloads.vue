@@ -64,9 +64,9 @@
                     <a v-else :href="'https://xrpl.org/' + record[k].toLowerCase() + '.html'" target="_blank"><b><u>{{ record[k] }}</u></b></a>
                   </td>
                   <!-- Bool -->
-                  <td v-else-if="['payload_submit','__payload_expired','payload_multisign'].indexOf(k) > -1" :class="{ 'text-success': record[k] > 0, 'text-danger': record[k] < 1 }">
-                    <a-icon :type="record[k] > 0 ? 'check' : 'close'" />
-                    {{ record[k] > 0 ? 'Yes' : 'No' }}
+                  <td v-else-if="['payload_submit','__payload_expired','payload_multisign','payload_pathfinding'].indexOf(k) > -1" :class="{ 'text-success': record[k] > 0, 'text-danger': record[k] < 1 }">
+                    <a-icon :type="Number(record[k] || 0) > 0 ? 'check' : 'close'" />
+                    {{ Number(record[k] || 0) > 0 ? 'Yes' : 'No' }}
                   </td>
                   <!-- Bool or null -->
                   <td v-else-if="['_opened_by_deeplink'].indexOf(k) > -1" :class="{
@@ -263,6 +263,7 @@ export default {
         payload_api_opencount: 'Open count (API)',
         payload_app_opencount: 'Open count (app)',
         payload_submit: 'Auto-submit after signing',
+        payload_pathfinding: 'Allow Pathfinding',
         payload_return_url_app: 'Return URL (app client)',
         payload_return_url_web: 'Return URL (web client)',
         payload_resolved: 'Payload resolved (moment)',
