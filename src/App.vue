@@ -2,15 +2,15 @@
   <a-layout id="components-layout" class="h100">
     <div id="mobile" v-if="isMobile">
       <img class="logo-icon rounded mb-1" src="./assets/icon.png" />
-      <h1 class="py-0 my-0"><b>xumm</b></h1>
-      <h6 class="py-0 text-secondary">developer dashboard</h6>
+      <h1 class="py-0 my-0"><b>Xumm</b></h1>
+      <h6 class="py-0 text-secondary">zd</h6>
       <a-alert type="warning" class="mt-5">
         <div slot="message" class="text-dark">
           <!-- <a-icon type="exclamation-circle" theme="filled" class="mr-1" /> -->
           <b>Screen real estate required</b>
         </div>
         <div slot="description" class="text-secondary">
-          The <b>xumm</b> developer dashboard is not available on mobile devices.
+          The <b>Xumm</b> developer dashboard is not available on mobile devices.
           Please visit the developer console on your desktop.
         </div>
       </a-alert>
@@ -21,7 +21,7 @@
         <a-col :span="8" :offset="0">
           <a-card class="bg-title">
             <div slot="title">
-              <b>xumm</b> developer dashboard
+              <b>Xumm</b> developer dashboard
             </div>
             <div v-if="$auth.loading || (!$store.appsLoaded && $auth.isAuthenticated)">
               <a-skeleton active :style="{marginTop: '-15px', marginBottom: '-10px'}" />

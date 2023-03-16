@@ -3,7 +3,7 @@
     <h3 class="mb-1">xApp</h3>
     <h5 class="mb-3"><a-icon type="code" />&nbsp;{{ $store.appName }}</h5>
     <p>
-      xApps are WebApps, embedded in XUMM for a great user experience. They add value (tooling, wizards) for end users, using
+      xApps are WebApps, embedded in Xumm for a great user experience. They add value (tooling, wizards) for end users, using
       Sign Requests and their Web UI to help users perform tasks on the XRPL and beyond.
       <a href="https://xumm.readme.io/docs/what-are-xapps" target="_blank"><b>Read more about xApps in the Developer Docs</b></a>.
     </p>
@@ -23,10 +23,10 @@
           <!-- <li>How end users will interact with your xApp</li> -->
           <!-- <li>The data you will store in your backend (if this applies)</li> -->
           <li>You can enroll for a <b>sandbox xApp</b></li>
-          <li>Only <b>you</b> can use your own <b>sandbox xApp</b> from a specific XUMM installation you can whitelist after activating xApp features.</li>
+          <li>Only <b>you</b> can use your own <b>sandbox xApp</b> from a specific Xumm installation you can whitelist after activating xApp features.</li>
           <li>The fact that you got a sandbox xApp is not to be presented anywhere as an endorsement (e.g. in communcation like on social media, etc.))</li>
-          <li>To build an xApp, you need to have experience with Frontend Web Developent as xApps are WebApps (loaded in XUMM)</li>
-          <li>xApps need to add value to a significant share of the XUMM user base</li>
+          <li>To build an xApp, you need to have experience with Frontend Web Developent as xApps are WebApps (loaded in Xumm)</li>
+          <li>xApps need to add value to a significant share of the Xumm user base</li>
           <li>xApps need to be self explanatory to have clear instructions for end users</li>
           <li>xApps need to be designed in a way where users can not make dangerous mistakes: users need to be protected</li>
           <li>xApps developers can not be anonymous (accountability)</li>
@@ -44,7 +44,7 @@
         show-icon
       >
         <div slot="description">
-          This application is xApp enabled: you can load your WebApp in XUMM and use xApp related
+          This application is xApp enabled: you can load your WebApp in Xumm and use xApp related
           <a href="https://xumm.readme.io/docs/xapps" target="_blank"><b>features</b></a> 🎉
         </div>
       </a-alert>
@@ -83,7 +83,7 @@
                     whitespace: false,
                     message: 'Please enter a valid Device ID (36 char. UUIDv4, App: Settings - Advanced)',
                   }
-                ] } ]" placeholder="XUMM device ID (App: Settings - Advanced) allowed to re-fetch OTT data">
+                ] } ]" placeholder="Xumm device ID (App: Settings - Advanced) allowed to re-fetch OTT data">
                   <a-icon slot="prefix" type="tag" style="color: rgba(0,0,0,.25)" />
                 </a-input>
                 <!-- TODO: Remove this note when this feature is live (JWT, etc.) -->

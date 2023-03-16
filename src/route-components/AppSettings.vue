@@ -56,8 +56,7 @@
       <PersistApplication :editMode="true" />
     </a-card>
 
-    <hr />
-    <h5 class="text-muted">Danger zone</h5>
+    <h5 class="text-muted mt-3">Danger zone</h5>
     <p class="text-muted">
       If you no longer wish to use this app, you can
       <a-popconfirm
