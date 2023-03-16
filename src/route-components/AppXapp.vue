@@ -166,7 +166,6 @@
 </template>
 
 <script>
-let statsFetcher
 
 export default {
   name: 'AppXapp',
