@@ -200,9 +200,9 @@ export default {
   },
   mounted () {
     this.fetchStats()
-    statsFetcher = setInterval(() => {
-      this.fetchStats()
-    }, 60 * 1000)
+    // statsFetcher = setInterval(() => {
+    //   this.fetchStats()
+    // }, 60 * 1000)
   },
   computed: {
     sandbox () {
@@ -242,7 +242,7 @@ export default {
     }
   },
   destroyed () {
-    clearInterval(statsFetcher)
+    // clearInterval(statsFetcher)
   },
   methods: {
     purgePendingEvents () {
