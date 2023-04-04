@@ -38,10 +38,13 @@ export default {
       return this.$store.appsLoaded && Object.keys(this.$store.applications).length > 0 && this.$store.selectedApplication !== ''
     },
     routeLayoutStyle () {
-      if (this.$route.meta.padding) {
-        return { padding: '12px 16px' }
+      const defaultRouteStyle = {
+        // backgroundColor: '#cfcfcf'
       }
-      return {}
+      if (this.$route.meta.padding) {
+        return { padding: '12px 16px', ...defaultRouteStyle }
+      }
+      return { ...defaultRouteStyle }
     }
   },
   mounted () {

@@ -7,14 +7,11 @@ import AppSettings from './route-components/AppSettings.vue'
 import AppLogs from './route-components/AppLogs.vue'
 import AppPayloads from './route-components/AppPayloads.vue'
 import AppXapp from './route-components/AppXapp.vue'
-// import AppUserTokens from './route-components/AppUserTokens.vue'
 import Docs from './route-components/Docs.vue'
 
 import RouteSidebarRecords from './route-components/RouteSidebarRecords.vue'
 
 import { Store } from './store'
-
-// import { AuthGuard } from './auth/guard'
 
 const routes = [
   {

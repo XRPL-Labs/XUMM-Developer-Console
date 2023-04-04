@@ -65,6 +65,13 @@
               <span v-if="k === 'application_xapp_identifier'" class="d-inline-block ml-1 mr-2 text-primary">
                 <a-icon type="link" /> <a :href="'https://xumm.app/detect/xapp:' + xAppData['application_xapp_identifier']" class="text-primary" target='_blank'><b><u>{{ 'https://xumm.app/detect/xapp:' + xAppData['application_xapp_identifier'] }}</u></b></a>
               </span>
+              <span v-else-if="k === 'application_xummloader'" class="d-inline-block ml-1 mr-2 text-muted">
+                <a-checkbox :disabled="String($store.app.details.application_infourl_support || '') === ''" v-bind:key="k" @change="xummLoaderChange" v-decorator="[ 'xummLoader', { valuePropName: 'checked', initialValue: true, }, ]">
+                  Xumm loader till SDK <code>ready()</code> is called
+                  <br />
+                  <b><small class="d-inline-block mb-0 pb-0 pl-4 text-primary ml-1">Xumm 2.5.0 and higher</small></b>
+                </a-checkbox>
+              </span>
               <span v-else-if="k === 'application_xapp_url' && !sandbox" class="d-inline-block ml-1 mr-2 text-muted">
                 <a-icon type="link" /> <a :href="xAppUrl" class="text-muted" target='_blank'><u>{{ xAppData[k] }}</u></a>
               </span>
@@ -218,6 +225,7 @@ export default {
         _sandbox: 'Sandboxed',
         application_xapp_identifier: 'Deeplink / QR Value',
         application_xapp_url: 'WebApp URL',
+        application_xummloader: 'Xumm Loader Screen',
         application_xapp_listed: 'Listed',
         application_xapp_featured: 'Featured',
         application_permissions_xapp_push: 'Push permission',
@@ -297,6 +305,12 @@ export default {
         this.xAppDestinationUrlChanged = false
       })
     },
+    xummLoaderChange (e) {
+      this.$nextTick(async () => {
+        this.$store.app.details.application_xummloader = Number(this.form.getFieldValue('xummLoader'))
+        this.handleSubmit(e)
+      })
+    },
     devUuidChange () {
       this.$nextTick(() => {
         if (this.originalDebugId !== this.form.getFieldValue('devUuid').toUpperCase().replace(/[^A-F0-9]/g, '')) {
@@ -338,6 +352,9 @@ export default {
             }),
             sandboxUuids: this.$form.createFormField({
               value: this.$store.app.details.application_xapp_debug_devices_uuids
+            }),
+            xummLoader: this.$form.createFormField({
+              value: Number(this.$store.app.details.application_xummloader || 0) === 1
             })
           }
         }
@@ -354,9 +371,7 @@ export default {
         }
         console.log(values)
         try {
-          const response = await this.$store.api('POST', 'console/xapp/' + this.$store.selectedApplication + '/debug', {
-            ...values
-          })
+          const response = await this.$store.api('POST', 'console/xapp/' + this.$store.selectedApplication + '/debug', { ...values })
           console.log(response)
           this.tempxAppUrl(this.form.getFieldValue('xAppDestinationUrl'))
           this.tempDebugId(this.form.getFieldValue('devUuid').toUpperCase().replace(/[^A-F0-9]/g, ''))

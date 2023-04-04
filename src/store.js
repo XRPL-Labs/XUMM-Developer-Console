@@ -46,7 +46,9 @@ const Store = new Vue({
         // console.log('auth-registered')
         // if (this.$auth.isAuthenticated) {
         // console.log('auth-authenticated, fetchapps')
-        this.fetchApps()
+        this.fetchApps().catch(e => {
+          console.log(e.message)
+        })
         // } else {
         //   console.log('auth not authenticated, skip fetchapps')
         // }
