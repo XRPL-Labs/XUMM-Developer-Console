@@ -33,7 +33,12 @@
                 </span>
               </a-alert>
               <div class="text-center mt-3">
-                <a-button icon="lock" :loading="loggingIn" @click="login" size="large">Log in (or register)</a-button>
+                <a-button icon="lock" :loading="loggingIn" @click="login" class="mr-1 bg-muted text-secondary">
+                  <!-- <b class="pl-1 pr-1 text-danger">LEGACY</b> -->
+                  Sign in with email or Github
+                </a-button>
+                <!-- <div class="my-2 mx-2">- or -</div> -->
+                <!-- <a-button icon="lock" :loading="loggingInXumm" @click="loginXumm" class="ml-1 text-dark" size="large"><b class="px-2">Sign in with Xumm</b></a-button> -->
               </div>
             </div>
           </a-card>
@@ -65,13 +70,18 @@ export default {
   },
   data () {
     return {
-      loggingIn: false
+      loggingIn: false,
+      loggingInXumm: false
     }
   },
   methods: {
     login () {
       this.loggingIn = true
       this.$auth.loginWithRedirect()
+    },
+    loginXumm () {
+      this.loggingInXumm = true
+      // this.$auth.loginWithRedirect()
     }
   }
 }
