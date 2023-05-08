@@ -38,7 +38,7 @@
         </div>
         <p class="mt-4 mb-3 h6">
           If you want to test the API with a curl request, just copy/paste the code below and run it in your terminal (Mac / Linux). You can find more info
-          and examples in the <a href="https://xumm.readme.io/reference/post-payload" target="_blank"><b><u>docs</u></b></a>.
+          and examples in the <a href="https://docs.xumm.dev/" target="_blank"><b><u>docs</u></b></a>.
         </p>
         <a-card style="border-radius: 4px;" title="Sample commandline call using CURL" :bordered="true" class="px-0 py-0">
           <div slot="cover" class="hljs-padding">
@@ -48,7 +48,7 @@
           </div>
         </a-card>
         <br />
-        <p class="h5">Please <a href="https://xumm.readme.io/docs/payload-workflow" target="_blank">read the docs</a> for more details about the API, how to call the API and delivering a payload (sign request) to your users.</p>
+        <p class="h5">Please <a href="https://docs.xumm.dev/" target="_blank">read the docs</a> for more details about the API, how to call the API and delivering a payload (sign request) to your users.</p>
       </span>
     </a-alert>
 
@@ -170,7 +170,7 @@
 
           <a-form-item v-if="editMode">
             <span slot="label">
-              Origin/Redirect URIs (one per line) to use <a href="https://xumm.readme.io/docs/user-sign-in#sign-in-with-xumm-using-oauth2--openid-connect" target="_blank"><b>Sign in with XUMM over OAuth2 / OpenID Connect</b></a>.
+              Origin/Redirect URIs (one per line) to use <a href="https://docs.xumm.dev/environments/identity-oauth2-openid" target="_blank"><b>Sign in with XUMM over OAuth2 / OpenID Connect</b></a>.
             </span>
             <a-textarea :autoSize="{ minRows: 3, maxRows: 6 }" size="large" :style="{ fontSize: '16px', padding: '7px 11px' }" v-decorator="[
               'redirectUris',

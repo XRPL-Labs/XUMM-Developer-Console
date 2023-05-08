@@ -60,7 +60,7 @@
                   <!-- TX Type -->
                   <td v-else-if="k === 'payload_tx_type'">
                     <a-icon type="link" />&nbsp;
-                    <a v-if="record[k].toLowerCase() === 'signin'" href="https://xumm.readme.io/docs/user-sign-in" target="_blank"><b><u>{{ record[k] }}</u></b></a>
+                    <a v-if="record[k].toLowerCase() === 'signin'" href="https://docs.xumm.dev/environments/identity-oauth2-openid" target="_blank"><b><u>{{ record[k] }}</u></b></a>
                     <a v-else :href="'https://xrpl.org/' + record[k].toLowerCase() + '.html'" target="_blank"><b><u>{{ record[k] }}</u></b></a>
                   </td>
                   <!-- Bool -->
@@ -95,7 +95,7 @@
           <div class="mt-2" v-if="record">
             <ul class="list-unstyled">
               <li><b>*1</b> The call reference ID is present in the HTTP response header <code>X-Call-Ref</code>.</li>
-              <li><b>*2</b> A client access token allows you to directly deliver new payloads with a push notification to the client: <a href="https://xumm.readme.io/docs/pushing-sign-requests" target="_blank"><b>read more in the developer docs</b></a>.</li>
+              <li><b>*2</b> A client access token allows you to directly deliver new payloads with a push notification to the client: <a href="https://docs.xumm.dev/concepts/payloads-sign-requests/delivery/push" target="_blank"><b>read more in the developer docs</b></a>.</li>
             </ul>
           </div>
         </a-tab-pane>

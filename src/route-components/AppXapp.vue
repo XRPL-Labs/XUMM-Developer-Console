@@ -5,7 +5,7 @@
     <p>
       xApps are WebApps, embedded in Xumm for a great user experience. They add value (tooling, wizards) for end users, using
       Sign Requests and their Web UI to help users perform tasks on the XRPL and beyond.
-      <a href="https://xumm.readme.io/docs/what-are-xapps" target="_blank"><b>Read more about xApps in the Developer Docs</b></a>.
+      <a href="https://docs.xumm.dev/environments/xapps-dapps" target="_blank"><b>Read more about xApps in the Developer Docs</b></a>.
     </p>
     <a-alert v-if="!$store.app.details.application_xapp_identifier" message="xApp features not enabled" type="info" show-icon>
       <div slot="description">
@@ -45,7 +45,7 @@
       >
         <div slot="description">
           This application is xApp enabled: you can load your WebApp in Xumm and use xApp related
-          <a href="https://xumm.readme.io/docs/xapps" target="_blank"><b>features</b></a> 🎉
+          <a href="https://docs.xumm.dev/environments/xapps-dapps" target="_blank"><b>features</b></a> 🎉
         </div>
       </a-alert>
 

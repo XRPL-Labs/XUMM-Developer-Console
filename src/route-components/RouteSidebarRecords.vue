@@ -87,7 +87,7 @@
         <div class="text-center">
           <b><div class="d-block"><a-icon type="clock-circle" /> No records found.</div></b>
           <br />
-          <div class="d-block">Please check the <a href="https://xumm.readme.io/docs/your-first-payload" target="_blank" size="small" class="ant-btn ant-btn-sm">Docs</a> to learn how to get started.</div>
+          <div class="d-block">Please check the <a href="https://docs.xumm.dev/concepts/getting-started" target="_blank" size="small" class="ant-btn ant-btn-sm">Docs</a> to learn how to get started.</div>
         </div>
       </div>
       <router-view :record="selectedRecord" v-show="!loading && data.length > 0" />
