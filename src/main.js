@@ -12,6 +12,9 @@ Vue.config.productionTip = false
 Vue.use(Antd)
 Vue.use(VueRouter)
 
+const xumm = new window.Xumm(process.env.VUE_APP_XUMM_KEY)
+Vue.prototype.$xumm = xumm
+
 const router = new VueRouter({ mode: 'history', routes })
 router.beforeEach(beforeEnter)
 
