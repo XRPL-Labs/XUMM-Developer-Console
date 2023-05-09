@@ -74,14 +74,41 @@ export default {
       loggingInXumm: false
     }
   },
+  mounted () {
+    this.$xumm.on('error', async e => {
+      // console.log('error', e)
+      this.loggingInXumm = false
+      this.$notification.open({
+        key: 'xumm_signin_error',
+        message: () => {
+          return <span>Could not Sign in with Xumm</span>
+        },
+        description: () => {
+          return <span>{e.message}</span>
+        },
+        placement: 'topRight',
+        duration: 10
+      })
+    })
+
+    // this.$xumm.on('ready', () => console.log('Ready (e.g. hide loading state of page)'))
+    this.$xumm.on('success', async () => {
+      this.$xumm.user.account.then(account => {
+        console.log('Logged in', account)
+      })
+    })
+  },
   methods: {
     login () {
       this.loggingIn = true
       this.$auth.loginWithRedirect()
     },
     loginXumm () {
+      // xumm.on('logout', async () => {
+      // console.log('logged out')
+      // })
       this.loggingInXumm = true
-      // this.$auth.loginWithRedirect()
+      this.$xumm.authorize()
     }
   }
 }
