@@ -65,16 +65,21 @@ export default {
   },
   computed: {
     isMobile () {
-      return isMobile
+      return isMobile || this.windowWidth < 990
     }
   },
   data () {
     return {
       loggingIn: false,
-      loggingInXumm: false
+      loggingInXumm: false,
+      windowWidth: window.innerWidth
     }
   },
   mounted () {
+    window.addEventListener('resize', () => {
+      this.windowWidth = window.innerWidth
+    })
+
     this.$xumm.on('error', async e => {
       // console.log('error', e)
       this.loggingInXumm = false
