@@ -3,7 +3,7 @@
     <div id="mobile" v-if="isMobile">
       <img class="logo-icon rounded mb-1" src="./assets/icon.png" />
       <h1 class="py-0 my-0"><b>Xumm</b></h1>
-      <h6 class="py-0 text-secondary">zd</h6>
+      <h6 class="py-0 text-secondary">Developer Console</h6>
       <a-alert type="warning" class="mt-5">
         <div slot="message" class="text-dark">
           <!-- <a-icon type="exclamation-circle" theme="filled" class="mr-1" /> -->
