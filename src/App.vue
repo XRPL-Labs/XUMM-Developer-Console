@@ -100,6 +100,15 @@ export default {
     this.$xumm.on('success', async () => {
       this.$xumm.user.account.then(account => {
         console.log('Logged in', account)
+        this.$auth.isAuthenticated = true
+        this.$auth.$emit('ready')
+        this.$auth.loading = false
+        this.$auth.user = {
+          isXumm: true
+        }
+        this.$nextTick(() => {
+          this.$router.app.$emit('auth-registered')
+        })
       })
     })
   },

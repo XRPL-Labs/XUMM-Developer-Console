@@ -150,7 +150,15 @@ const Store = new Vue({
     },
     async api (method, endpoint, postData) {
       try {
-        const token = await this.$auth.getTokenSilently()
+        // TODO: (done?) check if Xumm sign in, if so: use that token
+        // TODO: (done?) else: use $auth
+
+        const token = this.$auth?.user?.isXumm
+          ? await this.$xumm.environment.bearer
+          : await this.$auth.getTokenSilently()
+
+        // TODO: DEV CONSOLE BACKEND: ALLOW PKCE JWT
+
         // console.log(token)
         // console.log('token', token)
         const { data } = await axios({
