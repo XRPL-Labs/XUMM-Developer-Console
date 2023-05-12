@@ -3,7 +3,7 @@
     <div v-if="!editMode">
       <h3 v-if="!appDetails.created">Create application</h3>
       <p v-if="!appDetails.created">
-        To get access to the <b>xumm</b> API (to submit signing requests) you'll need an API key. Please enter some details below to register your
+        To get access to the <b>Xumm</b> API (to submit signing requests) you'll need an API key. Please enter some details below to register your
         application and get your API key. The information entered below will be visible to your users.
       </p>
     </div>
@@ -12,10 +12,10 @@
     <a-alert v-if="appDetails.created" type="success" class="card bg-white" style="border-radius: 4px;" showIcon>
       <span slot="message"><b>{{appDetails.name}}</b></span>
       <span slot="description">
-        Your app has been created. You can now start interacting with the <b>xumm</b> API. Your API keys are displayed below.
+        Your app has been created. You can now start interacting with the <b>Xumm</b> API. Your API keys are displayed below.
         <b class="mt-3 text-danger">
           Please copy this information and store your App Secret somewhere safe.
-          You will need your App Secret when making calls to the <b>xumm</b> API.
+          You will need your App Secret when making calls to the <b>Xumm</b> API.
         </b>
 
         <div class="mt-3">

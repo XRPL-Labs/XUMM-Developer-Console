@@ -10,8 +10,8 @@
           <b>Screen real estate required</b>
         </div>
         <div slot="description" class="text-secondary">
-          The <b>Xumm</b> developer dashboard is not available on mobile devices.
-          Please visit the developer console on your desktop.
+          The <b>Xumm</b> Developer Console is not available on mobile devices.
+          Please visit the Developer Console on your desktop.
         </div>
       </a-alert>
     </div><!-- On mobile -->
@@ -21,7 +21,7 @@
         <a-col :span="8" :offset="0">
           <a-card class="bg-title">
             <div slot="title">
-              <b>Xumm</b> developer dashboard
+              <b>Xumm</b> Developer Console
             </div>
             <div v-if="$auth.loading || $auth.loadingXumm || (!$store.appsLoaded && $auth.isAuthenticated)">
               <a-skeleton active :style="{marginTop: '-15px', marginBottom: '-10px'}" />
@@ -283,7 +283,7 @@ export default {
           &:after { text-decoration: underline; }
         }
         &:after {
-          content: 'developer console';
+          content: 'Developer Console';
           display: inline;
           height: inherit;
           text-align: left;

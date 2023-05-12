@@ -24,7 +24,7 @@
       <a-empty>
         <span slot="image" style="color: #1823F8" v-if="$store.appsLoaded && Object.keys($store.applications).length > 0 && $store.selectedApplication === ''">
           <a-icon class="d-block h1 mt-4" twoToneColor="#1823F8" type="experiment" theme="twoTone" />
-          Please select an application
+          Please select an application:
         </span>
 
         <!-- If apps loaded, available and none selected -->
@@ -42,7 +42,7 @@
 
         <!-- If apps loaded but none exist -->
         <div slot="description" v-if="$store.appsLoaded && Object.keys($store.applications).length < 1">
-          You don't own any <b>xumm</b> applications.
+          You don't own any <b>Xumm</b> applications.
         </div>
         <a-button @click="$router.push({ name: 'create-application' })" icon="rocket" size="large" v-if="$store.appsLoaded && Object.keys($store.applications).length < 1" type="primary">Create new application</a-button>
 
