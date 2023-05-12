@@ -39,7 +39,7 @@
     </a-sub-menu>
     <a-sub-menu>
       <span slot="title" class="submenu-title-wrapper">
-        <a-icon type="user" />{{ ($auth.user.nickname || $auth.user.name).slice(0, 26).trim() + (($auth.user.nickname || $auth.user.name).length > 26 ? '…' : '') }}
+        <a-icon type="user" />{{ ($auth.user.nickname || $auth.user.name || '').slice(0, 26).trim() + (($auth.user.nickname || $auth.user.name || '').length > 26 ? '…' : '') }}
         <!-- <a-badge count=1> -->
         <a-avatar shape="square" size="large" :style="{ marginLeft: '15px' }" :src="$auth.user.picture" />
         <!-- </a-badge> -->
