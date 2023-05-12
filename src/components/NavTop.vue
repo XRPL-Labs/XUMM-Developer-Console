@@ -98,7 +98,7 @@ export default {
         this.$xumm.logout()
       } else {
         console.log('Logout 0auth')
-        this.$auth.logout({ returnTo: window.location.origin })
+        this.$auth.logout(this.$router.currentRoute.name !== 'home' ? { returnTo: window.location.origin } : {})
       }
     }
   }
