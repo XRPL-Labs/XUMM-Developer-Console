@@ -16,14 +16,14 @@
       </a-alert>
     </div><!-- On mobile -->
 
-    <div v-if="!isMobile && ($auth.loading || !$store.appsLoaded || !$auth.isAuthenticated) && $route.name !== 'FourOhFour'" class="h100">
+    <div v-if="!isMobile && ($auth.loading || $auth.loadingXumm || !$store.appsLoaded || !$auth.isAuthenticated) && $route.name !== 'FourOhFour'" class="h100">
       <a-row class="h100 flex-center">
         <a-col :span="8" :offset="0">
           <a-card class="bg-title">
             <div slot="title">
               <b>Xumm</b> developer dashboard
             </div>
-            <div v-if="$auth.loading || (!$store.appsLoaded && $auth.isAuthenticated)">
+            <div v-if="$auth.loading || $auth.loadingXumm || (!$store.appsLoaded && $auth.isAuthenticated)">
               <a-skeleton active :style="{marginTop: '-15px', marginBottom: '-10px'}" />
             </div>
             <div v-else>
@@ -34,11 +34,10 @@
               </a-alert>
               <div class="text-center mt-3">
                 <a-button icon="lock" :loading="loggingIn" @click="login" class="mr-1 bg-muted text-secondary">
-                  <!-- <b class="pl-1 pr-1 text-danger">LEGACY</b> -->
-                  Sign in with email or Github
+                  <b class="pl-1 pr-1 text-danger">LEGACY</b>Sign in with email or Github
                 </a-button>
-                <!-- <div class="my-2 mx-2">- or -</div> -->
-                <!-- <a-button icon="lock" :loading="loggingInXumm" @click="loginXumm" class="ml-1 text-dark" size="large"><b class="px-2">Sign in with Xumm</b></a-button> -->
+                <div class="my-2 mx-2">- or -</div>
+                <a-button icon="lock" :loading="loggingInXumm" @click="loginXumm" class="ml-1 text-dark" size="large"><b class="px-2">Sign in with Xumm</b></a-button>
               </div>
             </div>
           </a-card>
@@ -46,7 +45,7 @@
       </a-row>
     </div><!-- Not on mobile, auth not loading (auth ready) -->
 
-    <Container v-if="!isMobile && $store.appsLoaded && !$auth.loading && $auth.isAuthenticated && $route.name !== 'FourOhFour'">
+    <Container v-if="!isMobile && $store.appsLoaded && !$auth.loading && !$auth.loadingXumm && $auth.isAuthenticated && $route.name !== 'FourOhFour'">
       <router-view />
     </Container><!-- Not on mobile, auth loaded, user logged in -->
 
@@ -80,8 +79,21 @@ export default {
       this.windowWidth = window.innerWidth
     })
 
+    this.$xumm.on('logout', () => {
+      this.$auth.isAuthenticated = false
+      this.$auth.loading = false
+      this.$auth.loadingXumm = false
+      this.$auth.user = {}
+      this.$router.push({ name: 'home' })
+      this.loggingIn = false
+      this.loggingInXumm = false
+      this.$store.appsLoaded = false
+      this.$store.applications = []
+    })
+
     this.$xumm.on('error', async e => {
       // console.log('error', e)
+      this.loggingIn = false
       this.loggingInXumm = false
       this.$notification.open({
         key: 'xumm_signin_error',
@@ -96,19 +108,24 @@ export default {
       })
     })
 
-    // this.$xumm.on('ready', () => console.log('Ready (e.g. hide loading state of page)'))
+    this.$xumm.on('ready', () => {
+      this.$auth.loadingXumm = false
+    })
+
     this.$xumm.on('success', async () => {
       this.$xumm.user.account.then(account => {
         console.log('Logged in', account)
+
         this.$auth.isAuthenticated = true
         this.$auth.$emit('ready')
         this.$auth.loading = false
-        this.$auth.user = {
-          isXumm: true
-        }
-        this.$nextTick(() => {
-          this.$router.app.$emit('auth-registered')
-        })
+        this.$auth.loadingXumm = false
+
+        this.$auth.user = { isXumm: true }
+        this.$xumm.environment.jwt.then(jwt => Object.assign(this.$auth.user, jwt))
+        this.$xumm.environment.openid.then(openid => Object.assign(this.$auth.user, openid))
+
+        this.$nextTick(() => this.$router.app.$emit('auth-registered'))
       })
     })
   },

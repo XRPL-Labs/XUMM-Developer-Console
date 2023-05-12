@@ -39,12 +39,12 @@
     </a-sub-menu>
     <a-sub-menu>
       <span slot="title" class="submenu-title-wrapper">
-        <a-icon type="user" />{{ $auth.user.nickname || $auth.user.name }}
+        <a-icon type="user" />{{ ($auth.user.nickname || $auth.user.name).slice(0, 26).trim() + (($auth.user.nickname || $auth.user.name).length > 26 ? '…' : '') }}
         <!-- <a-badge count=1> -->
         <a-avatar shape="square" size="large" :style="{ marginLeft: '15px' }" :src="$auth.user.picture" />
         <!-- </a-badge> -->
       </span>
-      <a-menu-item class="my-0" v-if="$auth.user.sub.split('|')[0] === 'auth0'" @click="changePassword">
+      <a-menu-item class="my-0" v-if="$auth.user.sub && $auth.user.sub.split('|')[0] === 'auth0'" @click="changePassword">
         <a-icon type="lock" /> Change password
       </a-menu-item>
       <a-menu-item class="my-0" @click="logout">
@@ -93,9 +93,13 @@ export default {
       })
     },
     logout () {
-      this.$auth.logout({
-        returnTo: window.location.origin
-      })
+      if (this.$auth?.user?.isXumm) {
+        console.log('Logout Xumm')
+        this.$xumm.logout()
+      } else {
+        console.log('Logout 0auth')
+        this.$auth.logout({ returnTo: window.location.origin })
+      }
     }
   }
 }

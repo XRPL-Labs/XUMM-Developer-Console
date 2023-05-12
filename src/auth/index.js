@@ -24,6 +24,7 @@ export const useAuth0 = ({
     data () {
       return {
         loading: true,
+        loadingXumm: true,
         isAuthenticated: false,
         user: {},
         auth0Client: null,
