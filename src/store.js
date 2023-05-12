@@ -134,7 +134,9 @@ const Store = new Vue({
           autoSelect = false
           this.$set(this, 'selectedApplication', '')
           this.$nextTick(() => {
-            Options.router.push({ name: 'home' })
+            if (Options.router.currentRoute.name !== 'home') {
+              Options.router.push({ name: 'home' })
+            }
           })
         }
       }

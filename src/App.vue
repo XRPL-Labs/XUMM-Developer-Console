@@ -84,7 +84,9 @@ export default {
       this.$auth.loading = false
       this.$auth.loadingXumm = false
       this.$auth.user = {}
-      this.$router.push({ name: 'home' })
+      if (this.$router.currentRoute.name !== 'home') {
+        this.$router.push({ name: 'home' })
+      }
       this.loggingIn = false
       this.loggingInXumm = false
       this.$store.appsLoaded = false
