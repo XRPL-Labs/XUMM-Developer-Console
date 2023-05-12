@@ -131,7 +131,7 @@ export default {
             this.$auth.isAuthenticated = false
 
             this.$auth.user = {}
-            this.$auth.logout(this.$router.currentRoute.name !== 'home' ? { returnTo: window.location.origin } : {})
+            this.$auth.logout({ returnTo: window.location.origin })
           } catch (e) {
             this.$message.error('Error migrating your applications' + (e.reference ? ` (${e.reference})` : ''))
           }
