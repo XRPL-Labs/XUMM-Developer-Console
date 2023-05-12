@@ -2,7 +2,7 @@
   <div class="create-container" :class="{ container: !editMode }">
     <div v-if="!editMode">
       <h3 v-if="!appDetails.created">Create application</h3>
-      <p v-if="!appDetails.created">
+      <p v-if="!appDetails.created && $auth.user.isXumm">
         To get access to the <b>Xumm</b> API (to submit signing requests) you'll need an API key. Please enter some details below to register your
         application and get your API key. The information entered below will be visible to your users.
       </p>
@@ -59,7 +59,9 @@
     </div>
 
     <!-- <a-row :gutter="16" class="mt-5" v-if="!appDetails.created"> -->
-    <a-layout :class="{ 'mt-5': !editMode }" :style="editMode ? {backgroundColor: 'transparent'} : {}" v-if="!appDetails.created">
+    <Migrate v-if="!$auth.user.isXumm && !appDetails.created && !editMode" />
+
+    <a-layout :class="{ 'mt-5': !editMode }" :style="editMode ? {backgroundColor: 'transparent'} : {}" v-if="!appDetails.created && ($auth.user.isXumm || editMode)">
       <!-- <a-col :style="{ width: '200px' }"> -->
       <a-layout-sider theme="light" :style="{ width: '210px', maxWidth: '210px', flex: '0 0 210px', backgroundColor: 'transparent' }">
         <a-form layout="vertical">
@@ -219,6 +221,8 @@ import VueHighlightJS from 'vue-highlight.js'
 import bash from 'highlight.js/lib/languages/bash'
 import json from 'highlight.js/lib/languages/json'
 
+import Migrate from './Migrate'
+
 import 'highlight.js/styles/arta.css'
 Vue.use(VueHighlightJS, { languages: { bash, json } })
 
@@ -229,6 +233,9 @@ Vue.prototype.$form = Form
 
 export default {
   name: 'PersistApplication',
+  components: {
+    Migrate
+  },
   props: {
     editMode: {
       type: Boolean,

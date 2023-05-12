@@ -22,6 +22,10 @@
         <b>No application found</b>
       </div>
       <a-empty>
+        <div class="mb-5" slot="description" v-if="$store.appsLoaded && Object.keys($store.applications).length > 0 && $store.selectedApplication === '' && !$auth.user.isXumm">
+          <Migrate />
+        </div>
+
         <span slot="image" style="color: #1823F8" v-if="$store.appsLoaded && Object.keys($store.applications).length > 0 && $store.selectedApplication === ''">
           <a-icon class="d-block h1 mt-4" twoToneColor="#1823F8" type="experiment" theme="twoTone" />
           Please select an application:
@@ -37,14 +41,19 @@
             </a-menu-item>
           </a-menu>
           <div class="text-muted mt-4 mb-1"></div>
-          <a-button @click="$router.push({ name: 'create-application' })" size="large" icon="rocket" type="primary" :block="true">Create new application</a-button>
+          <a-button v-if="$auth.user.isXumm" @click="$router.push({ name: 'create-application' })" size="large" icon="rocket" type="primary" :block="true">Create new application</a-button>
         </div>
 
         <!-- If apps loaded but none exist -->
         <div slot="description" v-if="$store.appsLoaded && Object.keys($store.applications).length < 1">
           You don't own any <b>Xumm</b> applications.
         </div>
-        <a-button @click="$router.push({ name: 'create-application' })" icon="rocket" size="large" v-if="$store.appsLoaded && Object.keys($store.applications).length < 1" type="primary">Create new application</a-button>
+
+        <div v-if="$auth.user.isXumm">
+          <a-button @click="$router.push({ name: 'create-application' })" icon="rocket" size="large" v-if="$store.appsLoaded && Object.keys($store.applications).length < 1" type="primary">Create new application</a-button>
+        </div>
+
+        <Migrate v-if="!$auth.user.isXumm" />
 
         <!-- If app selected -->
         <!-- <div slot="description" v-if="$store.appsLoaded && $store.selectedApplication !== ''">
@@ -58,8 +67,13 @@
 </template>
 
 <script>
+import Migrate from './Migrate'
+
 export default {
   name: 'Home',
+  components: {
+    Migrate
+  },
   data () {
     return {
     }

@@ -155,7 +155,7 @@ const Store = new Vue({
         // TODO: (done?) check if Xumm sign in, if so: use that token
         // TODO: (done?) else: use $auth
 
-        const token = this.$auth?.user?.isXumm
+        const token = this.$auth?.user?.isXumm && endpoint !== 'console/migrate'
           ? await this.$xumm.environment.bearer
           : await this.$auth.getTokenSilently()
 

@@ -116,7 +116,27 @@ export default {
     })
 
     this.$xumm.on('success', async () => {
-      this.$xumm.user.account.then(account => {
+      this.$xumm.user.account.then(async account => {
+        if (this.$auth.isAuthenticated && !this.$auth.user?.isXumm) {
+          try {
+            const response = await this.$store.api('POST', 'console/migrate', {
+              xummjwt: await this.$xumm.environment.bearer,
+              auth0jwt: await this.$auth.getTokenSilently()
+            })
+
+            console.log('Migrated', response)
+
+            this.$auth.loading = true
+            this.$auth.loadingXumm = true
+            this.$auth.isAuthenticated = false
+
+            this.$auth.user = {}
+            this.$auth.logout(this.$router.currentRoute.name !== 'home' ? { returnTo: window.location.origin } : {})
+          } catch (e) {
+            this.$message.error('Error migrating your applications' + (e.reference ? ` (${e.reference})` : ''))
+          }
+        }
+
         console.log('Logged in', account)
 
         this.$auth.isAuthenticated = true

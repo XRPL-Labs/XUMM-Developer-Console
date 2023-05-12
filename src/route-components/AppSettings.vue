@@ -1,6 +1,9 @@
 <template>
   <div class="" v-if="$store.appName">
     <h3 class="mb-1">Settings</h3>
+
+    <Migrate class="mb-3 mt-2" v-if="!$auth.user.isXumm" />
+
     <h5 class="mb-3"><a-icon type="build" />&nbsp;{{ $store.appName }}</h5>
     <p>
       You can find your API Key below, for reference purposes. If your API Secret is compromised
@@ -87,6 +90,8 @@ import VueClipboard from 'vue-clipboard2'
 
 import PersistApplication from '../components/PersistApplication'
 
+import Migrate from '../components/Migrate'
+
 VueClipboard.config.autoSetContainer = true
 
 Vue.use(VueClipboard)
@@ -94,7 +99,8 @@ Vue.use(VueClipboard)
 export default {
   name: 'AppSettings',
   components: {
-    PersistApplication
+    PersistApplication,
+    Migrate
   },
   data () {
     return {
