@@ -27,17 +27,18 @@
               <a-skeleton active :style="{marginTop: '-15px', marginBottom: '-10px'}" />
             </div>
             <div v-else>
-              <a-alert type="warning" showIcon>
+              <div class="text-center">Please sign in:</div>
+              <!-- <a-alert type="warning" showIcon>
                 <span slot="message">
                   Not logged in.
                 </span>
-              </a-alert>
-              <div class="text-center mt-3">
-                <a-button icon="lock" :loading="loggingIn" @click="login" class="mr-1 bg-muted text-secondary">
-                  <b class="pl-1 pr-1 text-danger">LEGACY</b>Sign in with email or Github
+              </a-alert> -->
+              <div class="text-center mt-3 pb-2">
+                <a-button icon="warning" :loading="loggingIn" size="small" @click="login" class="mr-1 bg-muted text-danger">
+                  <span class="mr-2 text-secondary">Email or Github Sign in</span> <b class="text-danger">LEGACY</b>
                 </a-button>
                 <div class="my-2 mx-2">- or -</div>
-                <a-button icon="lock" :loading="loggingInXumm" @click="loginXumm" class="ml-1 text-dark" size="large"><b class="px-2">Sign in with Xumm</b></a-button>
+                <a-button icon="lock" :loading="loggingInXumm" @click="loginXumm" type="primary" class="ml-1 text-white" size="large"><b class="px-2">Sign in with Xumm</b></a-button>
               </div>
             </div>
           </a-card>
@@ -64,7 +65,7 @@ export default {
   },
   computed: {
     isMobile () {
-      return isMobile || this.windowWidth < 990
+      return isMobile || this.windowWidth < 920
     }
   },
   data () {
