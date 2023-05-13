@@ -31,6 +31,12 @@
         <span class="nav-text">User tokens</span>
       </router-link>
     </a-menu-item>
+    <a-menu-item key="permissions">
+      <router-link :to="{ name: 'permissions', params: { appId: $store.selectedApplication } }">
+        <a-icon type="team" />
+        <span class="nav-text">Permissions</span>
+      </router-link>
+    </a-menu-item>
     <a-sub-menu key="dev">
       <span slot="title">
         <span>Docs &amp; Support</span>

@@ -7,6 +7,7 @@ import AppSettings from './route-components/AppSettings.vue'
 import AppLogs from './route-components/AppLogs.vue'
 import AppPayloads from './route-components/AppPayloads.vue'
 import AppXapp from './route-components/AppXapp.vue'
+import AppPermissions from './route-components/AppPermissions.vue'
 import Docs from './route-components/Docs.vue'
 
 import RouteSidebarRecords from './route-components/RouteSidebarRecords.vue'
@@ -45,6 +46,15 @@ const routes = [
     path: '/:appId?/app-xapp',
     name: 'app-xapp',
     component: AppXapp,
+    meta: {
+      padding: true,
+      appRequired: true
+    }
+  },
+  {
+    path: '/:appId?/permissions',
+    name: 'permissions',
+    component: AppPermissions,
     meta: {
       padding: true,
       appRequired: true
