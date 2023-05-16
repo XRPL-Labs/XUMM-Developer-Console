@@ -18,6 +18,7 @@
     "less": "^3.12.2",
     "less-loader": "^5.0.0",
     "mobile-device-detect": "^0.3.3",
+    "ripple-address-codec": "^4.2.5",
     "vue": "^2.6.12",
     "vue-clipboard2": "^0.3.1",
     "vue-highlight.js": "^3.1.0",
