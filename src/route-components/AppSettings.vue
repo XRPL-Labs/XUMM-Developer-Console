@@ -5,9 +5,22 @@
     <Migrate class="mb-3 mt-2" v-if="!$auth.user.isXumm" />
 
     <h5 class="mb-3"><a-icon type="build" />&nbsp;{{ $store.appName }}</h5>
+
+    <a-alert v-if="!$store.isAppOwner" class="text-left mb-3" showIcon>
+      <span slot="message">
+        <b>Shared application access</b>
+        <br />
+        This application has been shared with you by <code>{{ $store.app.details.application_auth0_owner }}</code>. You can view all data and make most of changes yourself, but for some operations you will have to reach out
+        to the person who shared this application with you.
+      </span>
+    </a-alert>
+
     <p>
-      You can find your API Key below, for reference purposes. If your API Secret is compromised
-      or lost, you can regenerate your API Secret. You will have to update your API Secret in your application.
+      You can find your API Key below, for reference purposes.
+      {{ $store.isAppOwner
+          ? 'If your API Secret is compromised or lost, you can regenerate your API Secret. You will have to update your API Secret in your application.'
+          : 'If your API Secret is compromised or lost, please contact the owner/creator of this application. He/she can regegenerate the API Secret.'
+      }}
     </p>
 
     <a-card class="form-padding-sm">
@@ -22,7 +35,7 @@
             <code class="d-inline-block ml-1 mr-2 text-primary">{{ $store.app.details.application_uuidv4 }}</code>
             <a-button type="default" v-clipboard:copy="$store.app.details.application_uuidv4" v-clipboard:success="copied" size="small"><a-icon type="copy" /> Copy</a-button>
           </a-form-item>
-          <a-form-item :class="{ 'alert-warning': newSecret !== '' }" class="alert pt-2 pl-2" :colon="false" style="margin: 0;" :label-col="{ sm: { span: 6 }, md: { span: 5 }, lg: { span: 4 }, xl: { span: 3 } }" :wrapper-col="{ sm: { span: 24 - 6 }, md: { span: 24 - 5 }, lg: { span: 24 - 4 }, xl: { span: 24 - 3 } }"
+          <a-form-item v-if="$store.isAppOwner" :class="{ 'alert-warning': newSecret !== '' }" class="alert pt-2 pl-2" :colon="false" style="margin: 0;" :label-col="{ sm: { span: 6 }, md: { span: 5 }, lg: { span: 4 }, xl: { span: 3 } }" :wrapper-col="{ sm: { span: 24 - 6 }, md: { span: 24 - 5 }, lg: { span: 24 - 4 }, xl: { span: 24 - 3 } }"
             label="API Secret">
             <a-icon type="thunderbolt" style="color:rgba(0,0,0,.25)" />
             <code v-if="newSecret === ''" class="d-inline-block ml-1 mr-2 text-muted">××××××××<span class="text-secodary">-</span>××××<span class="text-secodary">-</span>××××<span class="text-secodary">-</span>××××<span class="text-secodary">-</span>××××××××××××</code>
@@ -59,8 +72,8 @@
       <PersistApplication :editMode="true" />
     </a-card>
 
-    <h5 class="text-muted mt-3">Danger zone</h5>
-    <p class="text-muted">
+    <h5 v-if="$store.isAppOwner" class="text-muted mt-3">Danger zone</h5>
+    <p v-if="$store.isAppOwner" class="text-muted">
       If you no longer wish to use this app, you can
       <a-popconfirm
         @confirm="destroyApp"
@@ -139,7 +152,7 @@ export default {
         this.$store.selectedApplication = ''
         this.$store.fetchApps(false)
       } catch (e) {
-        this.$message.error('Error regenerating secret' + (e.reference ? ` (${e.reference})` : ''))
+        this.$message.error('Error destroying app' + (e.reference ? ` (${e.reference})` : ''))
       }
     },
     copied () {

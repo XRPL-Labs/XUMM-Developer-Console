@@ -18,6 +18,7 @@ const Store = new Vue({
       appsLoaded: false,
       appsLoadedPromise: ExternalPromise.appsLoaded.promise,
       applications: {},
+      sharedAccounts: [],
       appData: {
         'app-logs': {
           loading: false,
@@ -56,6 +57,9 @@ const Store = new Vue({
     })
   },
   computed: {
+    isAppOwner () {
+      return this.app.details.application_auth0_owner === this.$auth?.user?.sub
+    },
     apiEndpoint () {
       const liveUrl = 'https://xumm.app/api/v1/'
       const devUrl = 'http://localhost:3001/api/v1/'
@@ -114,6 +118,9 @@ const Store = new Vue({
   },
   methods: {
     async fetchApps (autoSelect = true) {
+      const knownSharedAccounts = await this.api('get', 'console/known-shared-accounts')
+      this.sharedAccounts = knownSharedAccounts?.accounts || []
+
       const apps = await this.api('get', 'console/apps')
       // console.log(apps)
 

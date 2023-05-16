@@ -31,7 +31,7 @@
         <span class="nav-text">User tokens</span>
       </router-link>
     </a-menu-item>
-    <a-menu-item key="permissions">
+    <a-menu-item key="permissions" v-if="$store.isAppOwner">
       <router-link :to="{ name: 'permissions', params: { appId: $store.selectedApplication } }">
         <a-icon type="team" />
         <span class="nav-text">Permissions</span>

@@ -12,7 +12,9 @@
     </a-menu-item>
     <a-sub-menu v-if="$router.currentRoute.name !== 'home' || $store.selectedApplication !== ''">
       <span slot="title" class="submenu-title-wrapper" v-if="$store.selectedApplication !== ''">
-        <a-avatar :style="{marginTop: '-3px', marginRight: '12px'}" shape="square" :src="$store.app.icon" />
+        <a-badge v-if="$store.app.details.application_auth0_owner !== $auth.user.sub" dot><a-avatar :style="{marginTop: '-3px', marginRight: '12px'}" shape="square" :src="$store.app.icon" /></a-badge>
+        <a-avatar v-else :style="{marginTop: '-3px', marginRight: '12px'}" shape="square" :src="$store.app.icon" />
+
         <!-- <a-icon type="experiment" theme="twoTone" twoToneColor="#1823F8" :style="{fontSize: '1.5em', position: 'relative', top: '0.125em'}" /> -->
         <strong>{{ $store.app.name }}</strong>
       </span>
@@ -21,7 +23,9 @@
         Select an app
       </span>
       <a-menu-item class="my-0" :disabled="$store.selectedApplication === k" @click="$store.selectedApplication = k" v-for="(v, k) in $store.applications" v-bind:key="k">
-        <a-avatar :style="avatarMargins" shape="square" :src="v.icon" />
+        <a-badge v-if="v.details.application_auth0_owner !== $auth.user.sub" dot><a-avatar :style="avatarMargins" shape="square" :src="v.icon" /></a-badge>
+        <a-avatar v-else :style="avatarMargins" shape="square" :src="v.icon" />
+
         <img v-if="v.details.application_xapp_identifier" src="/icon_xapp.png" alt="" style="height: 9px;" class="float-right mt-3 ml-3 img-responsive">
         {{ v.name }}
       </a-menu-item>
@@ -105,7 +109,24 @@ export default {
 }
 </script>
 
+<style lang="scss">
+  sup.ant-badge-dot {
+    position: absolute;
+    background-color: #E4996E;
+    right: 6px;
+    top: -1px;
+  }
+  .ant-menu-horizontal {
+    sup.ant-badge-dot {
+      right: 12px;
+      top: -2px;
+    }
+  }
+</style>
 <style scoped lang="scss">
+  .ant-menu .ant-avatar sup.ant-badge-dot {
+    margin-left: 100px;
+  }
   #toplogo {
     position: absolute;
     top: 0; left: 0;
