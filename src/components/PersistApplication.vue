@@ -300,15 +300,15 @@ export default {
       if (this.$store.appsReady) {
         return {
           appName: this.$store.app.name,
-          appDescription: this.$store.app.details.application_description,
-          appWebhookUrl: this.$store.app.details.application_webhookurl,
-          redirectUris: this.$store.app.details.application_redirect_uris,
+          appDescription: this.$store.app.details.application_description || '',
+          appWebhookUrl: this.$store.app.details.application_webhookurl || '',
+          redirectUris: this.$store.app.details.application_redirect_uris || '',
 
-          infourlHomepage: this.$store.app.details.application_infourl_homepage,
-          infourlTerms: this.$store.app.details.application_infourl_terms,
-          infourlSupport: this.$store.app.details.application_infourl_support,
-          infourlPrivacy: this.$store.app.details.application_infourl_privacy,
-          devEmail: this.$store.app.details.application_dev_email || (this.$auth.user?.email || '')
+          infourlHomepage: this.$store.app.details.application_infourl_homepage || '',
+          infourlTerms: this.$store.app.details.application_infourl_terms || '',
+          infourlSupport: this.$store.app.details.application_infourl_support || '',
+          infourlPrivacy: this.$store.app.details.application_infourl_privacy || '',
+          devEmail: this.$store.app.details.application_dev_email || ''
         }
       }
       return {
@@ -321,7 +321,7 @@ export default {
         infourlTerms: '',
         infourlSupport: '',
         infourlPrivacy: '',
-        devEmail: this.$auth.user?.email || ''
+        devEmail: ''
       }
     },
     uploadDraggerStyle () {
