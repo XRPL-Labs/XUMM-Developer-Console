@@ -85,6 +85,7 @@ export default {
       })
 
       this.preEditAccounts = [ ...this.selectedAccounts ]
+      this.$store.app.details.application_shared_with = this.preEditAccounts.join(',')
     },
     changeAddresses () {
       this.selectedAccounts.forEach(account => {
