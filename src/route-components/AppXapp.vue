@@ -104,7 +104,7 @@
                   'sandboxUuids',
                   { rules: [
                     {
-                      required: false, whitespace: true, message: 'Please enter one valid Device UUID per line, max. 10',
+                      required: false, whitespace: true, message: 'Please enter one valid Device UUID per line, max. 30',
                       pattern: /^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89ABab][0-9a-fA-F]{3}-[0-9a-fA-F]{12}[\n]{0,1}){1,30}$/
                     }
                   ] }
