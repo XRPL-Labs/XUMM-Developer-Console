@@ -24,8 +24,8 @@
           <!-- <li>The data you will store in your backend (if this applies)</li> -->
           <li>You can enroll for a <b>sandbox xApp</b></li>
           <li>Only <b>you</b> can use your own <b>sandbox xApp</b> from a specific Xumm installation you can whitelist after activating xApp features.</li>
-          <li>The fact that you got a sandbox xApp is not to be presented anywhere as an endorsement (e.g. in communcation like on social media, etc.))</li>
-          <li>To build an xApp, you need to have experience with Frontend Web Developent as xApps are WebApps (loaded in Xumm)</li>
+          <li>The fact that you got a sandbox xApp is not to be presented anywhere as an endorsement (e.g. in communication like on social media, etc.))</li>
+          <li>To build an xApp, you need to have experience with Frontend Web Development as xApps are WebApps (loaded in Xumm)</li>
           <li>xApps need to add value to a significant share of the Xumm user base</li>
           <li>xApps need to be self explanatory to have clear instructions for end users</li>
           <li>xApps need to be designed in a way where users can not make dangerous mistakes: users need to be protected</li>
@@ -98,14 +98,14 @@
               </div>
               <div v-else-if="sandbox && k === 'application_xapp_debug_devices_uuids'" class="d-inline-block ml-1 mr-2 text-primary d-block" style="position: relative;">
                 <span slot="label">
-                  Guest Device ID's (max. 10, allowed to access your sandboxed xApp)
+                  Guest Device ID's (max. 30, allowed to access your sandboxed xApp)
                 </span>
                 <a-textarea @change="sandboxUuidsChange" :autosize="{ minRows: 2, maxRows: 12 }" size="large" :style="{ fontSize: '16px', padding: '7px 11px' }" v-decorator="[
                   'sandboxUuids',
                   { rules: [
                     {
                       required: false, whitespace: true, message: 'Please enter one valid Device UUID per line, max. 10',
-                      pattern: /^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89ABab][0-9a-fA-F]{3}-[0-9a-fA-F]{12}[\n]{0,1}){1,10}$/
+                      pattern: /^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89ABab][0-9a-fA-F]{3}-[0-9a-fA-F]{12}[\n]{0,1}){1,30}$/
                     }
                   ] }
                 ]" placeholder="d5017a35-83f6-42e2-b83e-d95ea3028b47" />
