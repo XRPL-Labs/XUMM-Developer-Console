@@ -139,24 +139,24 @@
           <a-form :layout="'horizontal'">
             <a-skeleton v-if="Object.keys(stats).indexOf('all_time') < 0" class="mt-2" active :title="false" :paragraph="{ rows: 2 }" />
             <a-row v-else>
-              <a-col :span="6">
+              <a-col :span="6" class="py-1">
                 <a-statistic groupSeparator="" title="Opened / 24h" :value="stats.d1.c" style="margin-right: 20px" class="bg-light rounded px-3 py-2">
                   <template #suffix>
                     <span class="text-secondary"> / {{ stats.d1.u }}</span>
                   </template>
                 </a-statistic>
               </a-col>
-              <a-col :span="6">
+              <a-col :span="6" class="py-1">
                 <a-statistic groupSeparator="" title="Opened / 30d" :value="stats.d30.c" style="margin-right: 20px" class="bg-light rounded px-3 py-2">
                   <template #suffix>
                     <span class="text-secondary"> / {{ stats.d30.u }}</span>
                   </template>
                 </a-statistic>
               </a-col>
-              <a-col :span="6">
+              <a-col :span="6" class="py-1">
                 <a-statistic groupSeparator="" title="Opened (total)" :value="stats.all_time.c" style="margin-right: 20px" class="bg-light rounded px-3 py-2" />
               </a-col>
-              <a-col :span="6">
+              <a-col :span="6" class="py-1">
                 <a-statistic groupSeparator="" title="Pending Events" :value="pending_events" class="bg-light rounded px-3 py-2">
                   <template v-if="(Number(pending_events) || 0) > 0" #suffix>
                     <button @click="purgePendingEvents" style="position: relative; top: -4px;" class="ml-1 btn btn-sm px-2 py-0 btn-danger">Purge</button>
@@ -390,7 +390,9 @@ export default {
           .then(r => {
             this.pending_events = r?.['event_count']
           })
+
         this.stats = await this.$store.api('GET', 'console/xapp/' + this.$store.selectedApplication + '/stats')
+
         if (Object.keys(this.stats).length > 0) {
           // this.$message.success('xApp Stats updated')
           console.log('xApp Stats updated, all time #', this.stats.all_time.c)
