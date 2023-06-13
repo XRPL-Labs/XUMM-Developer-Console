@@ -95,7 +95,7 @@ export default {
           if (account !== 'empty') {
             this.$notification.error({
               message: 'Invalid r-address entered',
-              description: <div><q><code>{account}</code></q><br />Check for typos, white space, etc. Addresess are case sensitive.</div>,
+              description: <div><q><code>{account}</code></q><br />Check for typos, white space, etc. Addresses are case sensitive.</div>,
               placement: 'topRight'
             })
           }
