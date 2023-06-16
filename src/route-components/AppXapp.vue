@@ -168,6 +168,64 @@
         </div>
       </a-card>
       <!-- <pre>{{ xAppData }}</pre> -->
+
+      <a-card class="form-padding-sm mt-3" v-show="Object.keys(stats).indexOf('all_time') > -1">
+        <span slot="title">
+          <b><a-icon type="pie-chart" /> Auto stats export to Google BigQuery</b>
+        </span>
+        <div class="form-label-left form-line-height-sm">
+          <a-form :layout="'horizontal'">
+            <a-skeleton v-if="!extStatsLoaded" class="mt-2" active :title="false" :paragraph="{ rows: 3 }" />
+            <a-row v-else>
+              <a-col :span="24" class="py-1 px-2">
+                <div v-if="extStatsActive">
+                  <div class="text-success"><a-icon theme="filled" type="check-circle" /> Google BigQuery dataset stats publishing: Enabled</div>
+                  <br />
+                  <b>External dataset:</b>
+                  <div><a :href="'https://console.cloud.google.com/bigquery?ws=!1m5!1m4!4m3!1sxamandb!2sxappstats!3s' + this.$store.selectedApplication" class="text-primary fw-bold font-bold" target="_blank"><code class="text-primary"><strong><u>xamandb.xappstats.{{ $store.selectedApplication }}</u></strong></code></a></div>
+                  <br />
+                  <b>Example query:</b>
+                  <pre class="pl-4 text-primary">SELECT *
+FROM `xamandb.xappstats.{{ $store.selectedApplication }}`
+ORDER BY moment DESC
+LIMIT 1</pre>
+
+                  <div class="mt-3">
+                    <h5><b>Authorizations</b></h5>
+                    <div class="px-2 py-1 alert alert-danger" v-if="extStatsUsers.length === 0">
+                      There are no authorized users yet, this dataset cannot be queried. Please add a user below.
+                    </div>
+                    <div v-else>
+                      <ul class="list">
+                        <li v-for="i in extStatsUsers" v-bind:key="i"><code class="text-dark">{{ i }}</code> <a @click="revokeExtUser(i)"><code class="text-danger">&times;</code></a></li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="mt-3">
+                    <h5><b>Add user(s)</b></h5>
+                    To authorize a Google account (Google Apps / For Work / Gmail / ...) to access the dataset with xApp stats,
+                    enter an email address:
+                  </div>
+                  <div>
+                    <input v-on:keyup.enter="addExtStatUsr" type="text" class="input form-control input-sm" v-model="extStatsUsr" value="" placeholder="Google user account, e.g. my-db-admin@gmail.com">
+                    <div class="text-right"><button :disabled="extStatsUsr.trim() === ''" @click="addExtStatUsr" class="ant-btn ant-btn-primary ant-btn-md mt-2">Authorize Google account</button></div>
+                  </div>
+                </div>
+                <div v-else>
+                  To automatically export xApp stats to Google BigQuery for your own detailed analysis or dashboards,
+                  activate Google BigQuery stats publishing. We will create a private dataset for you. You can then
+                  add one or more Google Accounts authorized to access the dataset.
+                  <br />
+                  <div class="text-right">
+                    <button @click="activateExtStats" class="ant-btn ant-btn-primary ant-btn-md mt-2">Activate xApp stats publishing</button>
+                  </div>
+                </div>
+              </a-col>
+            </a-row>
+          </a-form>
+        </div>
+      </a-card>
+
     </div>
   </div>
 </template>
@@ -187,7 +245,11 @@ export default {
       originalxAppDestinationUrl: '',
       debugIdChanged: false,
       sandboxUuidsChanged: false,
-      xAppDestinationUrlChanged: false
+      xAppDestinationUrlChanged: false,
+      extStatsLoaded: false,
+      extStatsActive: false,
+      extStatsUsers: [],
+      extStatsUsr: ''
     }
   },
   props: {},
@@ -206,6 +268,7 @@ export default {
   },
   mounted () {
     this.fetchStats()
+    this.getExtStatsState()
     // statsFetcher = setInterval(() => {
     //   this.fetchStats()
     // }, 60 * 1000)
@@ -252,6 +315,36 @@ export default {
     // clearInterval(statsFetcher)
   },
   methods: {
+    async addExtStatUsr () {
+      const val = this.extStatsUsr.trim()
+      if (this.extStatsUsr.trim() !== '' && this.extStatsUsers.indexOf(val) < 0) {
+        this.extStatsUsers.push(val)
+        this.extStatsUsr = ''
+        const response = await this.$store.api('POST', 'console/xapp/' + this.$store.selectedApplication + '/ext-stats', { user: val })
+        console.log(response)
+        this.getExtStatsState()
+      }
+    },
+    async revokeExtUser (val) {
+      const io = this.extStatsUsers.indexOf(val)
+      if (io > -1) {
+        this.extStatsUsers.splice(io, 1)
+        const response = await this.$store.api('DELETE', 'console/xapp/' + this.$store.selectedApplication + '/ext-stats', { user: val })
+        console.log(response)
+      }
+    },
+    async activateExtStats () {
+      const response = await this.$store.api('POST', 'console/xapp/' + this.$store.selectedApplication + '/ext-stats')
+      console.log(response)
+      this.extStatsActive = true
+    },
+    async getExtStatsState () {
+      const response = await this.$store.api('GET', 'console/xapp/' + this.$store.selectedApplication + '/ext-stats')
+      this.extStatsLoaded = true
+      console.log(response)
+      this.extStatsActive = !!response?.active
+      this.extStatsUsers = response?.grants || []
+    },
     purgePendingEvents () {
       this.pending_events = '0'
       this.$store.api('DELETE', 'console/xapp/' + this.$store.selectedApplication + '/xapp-events')
