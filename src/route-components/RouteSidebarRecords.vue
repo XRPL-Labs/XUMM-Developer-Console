@@ -120,7 +120,8 @@ export default {
       return record.length === 1 ? record[0] : null
     },
     validSearchUuid () {
-      return this.searchUuid.match(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i)
+      return this.searchUuid.match(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i) ||
+        this.searchUuid.match(/^[0-9A-F]{64}$/)
     }
   },
   watch: {
@@ -135,19 +136,31 @@ export default {
   methods: {
     async searchByUuid () {
       if (this.validSearchUuid && this.$router.currentRoute.params?.record !== this.searchUuid) {
-        this.$router.push({
-          name: this.$router.currentRoute.name,
-          params: {
-            appId: this.$store.selectedApplication,
-            record: this.searchUuid
-          }
-        })
-
         const record = await this.$store.api('get', 'console/' + this.api() + '/' + this.$store.selectedApplication + '/' + this.searchUuid.toLowerCase() + '?one=true')
+
         if (Array.isArray(record) && record.length === 1) {
+          this.searchUuid = record[0].call_uuidv4
+
+          this.$router.push({
+            name: this.$router.currentRoute.name,
+            params: {
+              appId: this.$store.selectedApplication,
+              record: this.searchUuid
+            }
+          })
+
           if (this.data.filter(d => d.call_uuidv4 === record[0].call_uuidv4).length < 1) {
             this.data.unshift(record[0])
           }
+
+          this.$nextTick(() => {
+            const domSelectedRecord = document.getElementById(this.selectedRecord.call_uuidv4)
+            if (domSelectedRecord) {
+              document.getElementById('record-scroller').querySelector('.ant-card-body').scrollTo({
+                top: domSelectedRecord.offsetTop
+              })
+            }
+          })
         } else {
           this.$notification.open({
             key: 'record_no_found',
