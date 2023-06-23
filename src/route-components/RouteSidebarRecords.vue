@@ -5,7 +5,7 @@
         <a-input-group style="position: absolute; top: 7px; left: 8px; bottom: 0; right: 0;">
           <a-row :gutter="3">
             <a-col :span="20">
-              <a-input v-on:keydown.enter="searchByUuid" v-model="searchUuid" placeholder="Search / Retrieve by UUID" default-value="" />
+              <a-input v-on:keydown.enter="searchByUuid" v-model="searchUuid" :placeholder="$router.currentRoute.name === 'app-payloads' ? 'Search by UUID/TX ID' : 'Search by UUID'" default-value="" />
             </a-col>
             <a-col :span="4">
               <a-button :disabled="!validSearchUuid" @click="searchByUuid" type="primary" icon="search"></a-button>
