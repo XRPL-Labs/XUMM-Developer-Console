@@ -31,7 +31,7 @@
           <li>xApps need to be designed in a way where users can not make dangerous mistakes: users need to be protected</li>
           <li>xApps developers can not be anonymous (accountability)</li>
           <li>Promotion of speculation, pushing users towards buying tokens <b>is not allowed</b> (see: user protection)</li>
-          <li>Activating xApp features and building a <b>sandbox xApp</b> does <b><u>NOT</u></b> guarantee your xApp will be going live in the future. To take your xApp live, it will be audited by XRPL Labs. The rules above apply, security &amp; usability will be tested. If you want to have more certainty in advance, please reach out to XRPL Labs. <a href="https://support.xumm.app/hc/en-us/requests/new" target="_blank"><b>Submit a support ticket here</b></a></li>
+          <li>Activating xApp features and building a <b>sandbox xApp</b> does <b><u>NOT</u></b> guarantee your xApp will be going live in the future. To take your xApp live, it will be audited by XRPL Labs. The rules above apply, security &amp; usability will be tested. If you want to have more certainty in advance, please reach <a href="https://docs.xumm.dev/environments/xapps-dapps/requirements#public-listed-xapps" target="_blank">read our Developer Help Center docs</a> out to XRPL Labs. <a href="https://xumm.app/detect/xapp:xumm.support-md" target="_blank"><b>Submit a support ticket here</b></a></li>
         </ul>
         <button @click="xAppSandboxActivate" class="ant-btn ant-btn-primary ant-btn-md mt-2">I agree. Please activate xApp features</button>
       </div>
@@ -77,7 +77,7 @@
               </span>
               <span v-else-if="k === '_sandbox' || k === 'application_xapp_listed' || k === 'application_xapp_featured' || k === 'application_allow_fetch_kyc_data' || k === 'application_allow_ott_appauth' || k === 'application_permissions_xapp_push'" class="d-inline-block ml-1 mr-2 text-primary">
                 <div class="text-success" v-if="(!sandbox && xAppData[k] && xAppData[k] > 0) || (k === '_sandbox' && sandbox)"><a-icon theme="filled" type="check-circle" /> Yes</div>
-                <div class="text-danger" v-else><a-icon type="minus-circle" theme="filled" /> No</div>
+                <div class="text-danger" v-else><a-icon type="minus-circle" theme="filled" /> No <a v-if="k === 'application_xapp_listed'" class="ml-2 text-primary" href="https://docs.xumm.dev/environments/xapps-dapps/requirements#public-listed-xapps" target="_blank"><u>Read more in our Dev. Docs</u></a></div>
               </span>
               <span v-else-if="k === 'application_token_exp_days'" class="d-inline-block ml-1 mr-2 text-primary">{{ xAppData[k] }} days after last use (per <code>user_token</code>)</span>
               <div v-else-if="k === 'application_xapp_debug_device_uuidv4_bin'" class="d-inline-block ml-1 mr-2 text-primary d-block" style="position: relative;">
