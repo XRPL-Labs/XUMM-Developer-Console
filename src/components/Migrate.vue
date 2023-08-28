@@ -33,7 +33,7 @@
         and sign in with the account you would like to use, and all your apps will be migrated automatically.</b>
       </p>
       <p>
-        After migrating, the next time you simply sing in with Xumm.
+        After migrating, the next time you simply sign in with Xumm.
       </p>
       <div class="text-center">
         <a-button @click="$xumm.authorize()" class="w-100 float-right mt-2" type="primary">
