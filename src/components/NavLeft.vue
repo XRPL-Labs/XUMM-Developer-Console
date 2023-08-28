@@ -41,9 +41,18 @@
       <span slot="title">
         <span>Docs &amp; Support</span>
       </span>
-      <a-menu-item key="docs" @click="openDocs">
+      <a-menu-item key="docs" @click="openDevDocs">
         <a-icon type="book" />
         <span class="nav-text">Developer Docs</span>
+        <!-- Router link & page replaced by window.open -->
+        <!-- <router-link :to="{ name: 'docs', params: { appId: $store.selectedApplication } }">
+          <a-icon type="book" />
+          <span class="nav-text">Developer Docs</span>
+        </router-link> -->
+      </a-menu-item>
+      <a-menu-item key="docs" @click="openDocs">
+        <a-icon type="code" />
+        <span class="nav-text">API Reference</span>
         <!-- Router link & page replaced by window.open -->
         <!-- <router-link :to="{ name: 'docs', params: { appId: $store.selectedApplication } }">
           <a-icon type="book" />
@@ -86,6 +95,9 @@ export default {
   methods: {
     openQA () {
       window.open('https://xumm.readme.io/discuss')
+    },
+    openDevDocs () {
+      window.open('https://docs.xumm.dev')
     },
     async openDocs () {
       const data = await this.$store.api('GET', 'console/docs-jwt/' + this.$store.selectedApplication)
