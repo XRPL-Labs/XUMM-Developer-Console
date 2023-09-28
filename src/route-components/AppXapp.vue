@@ -9,19 +9,8 @@
     </p>
     <a-alert v-if="!$store.app.details.application_xapp_identifier" message="xApp features not enabled" type="info" show-icon>
       <div slot="description">
-        <!-- For your WebApp to be opened in XUMM as xApp (listed or unlisted), xApp features need to be manually enabled by XRPL Labs first. Please
-        <a href="https://support.xumm.app/hc/en-us/requests/new" target="_blank"><b>submit a support ticket here</b></a>. -->
-        <!-- <br /> -->
-        <!-- <br /> -->
-        <!-- <b>In your support ticket, mention <u>at least</u>:</b> -->
         <h6 class="text-danger">To enable xApp features, <b>please read the rules</b> below <b><u>carefully</u></b>:</h6>
         <ul>
-          <!-- <li>The API Key of this application:<br /><code class="text-primary"><b>{{ $store.app.details.application_uuidv4 }}</b></code></li> -->
-          <!-- <li>Your frontend &amp; backend coding experience</li> -->
-          <!-- <li>What you are planning on building</li> -->
-          <!-- <li>If your app will be open source (if so: please add a Github link)</li> -->
-          <!-- <li>How end users will interact with your xApp</li> -->
-          <!-- <li>The data you will store in your backend (if this applies)</li> -->
           <li>You can enroll for a <b>sandbox xApp</b></li>
           <li>Only <b>you</b> can use your own <b>sandbox xApp</b> from a specific Xumm installation you can whitelist after activating xApp features.</li>
           <li>The fact that you got a sandbox xApp is not to be presented anywhere as an endorsement (e.g. in communication like on social media, etc.))</li>
@@ -72,6 +61,19 @@
                   <b><small class="d-inline-block mb-0 pb-0 pl-4 text-primary ml-1">Xumm 2.5.0 and higher</small></b>
                 </a-checkbox>
               </span>
+
+              <span v-else-if="k === 'application_xapp_networks'" class="d-inline-block ml-1 mr-2 text-muted">
+                <div v-for="(l, r) in rails" v-bind:key="r">
+                  <a-checkbox v-bind:key="'xummNetwork_' + r" :checked="$store.app.details.application_xapp_networks.indexOf(r) > -1" @change="xummNetworkChange(r)" class="d-block w-100 pb-3">
+                    <code class="text-dark border-secondary border border-1 bg-light" style="padding: 3px 0px 1px 5px; border-radius: 10px;">
+                      <i style="display: inline-block; width: 10px; height: 10px; border-radius: 10px;" :style="{'background-color': l.color}"></i>
+                      <b class="pl-1 pr-2">{{ r }}</b>
+                    </code>
+                    <span style="position: absolute; margin-top: -8px; margin-left: 27px;" class="d-block"><small>{{ l.name }} <code>{{ l.chain_id }}</code></small></span>
+                  </a-checkbox>
+                </div>
+              </span>
+
               <span v-else-if="k === 'application_xapp_url' && !sandbox" class="d-inline-block ml-1 mr-2 text-muted">
                 <a-icon type="link" /> <a :href="xAppUrl" class="text-muted" target='_blank'><u>{{ xAppData[k] }}</u></a>
               </span>
@@ -93,8 +95,6 @@
                 ] } ]" placeholder="Xumm device ID (App: Settings - Advanced) allowed to re-fetch OTT data">
                   <a-icon slot="prefix" type="tag" style="color: rgba(0,0,0,.25)" />
                 </a-input>
-                <!-- TODO: Remove this note when this feature is live (JWT, etc.) -->
-                <!-- <div class="text-muted">All OTT's originally created by opening your xApp on the device with the Device ID whitelisted above <b>will be allowed re-fetching for local browser xApp debugging &amp; testing</b>.</div> -->
               </div>
               <div v-else-if="sandbox && k === 'application_xapp_debug_devices_uuids'" class="d-inline-block ml-1 mr-2 text-primary d-block" style="position: relative;">
                 <span slot="label">
@@ -121,8 +121,6 @@
                 ] } ]" placeholder="xApp destination URL">
                   <a-icon slot="prefix" type="tag" style="color: rgba(0,0,0,.25)" />
                 </a-input>
-                <!-- TODO: Remove this note when this feature is live (JWT, etc.) -->
-                <!-- <div class="text-muted">All OTT's originally created by opening your xApp on the device with the Device ID whitelisted above <b>will be allowed re-fetching for local browser xApp debugging &amp; testing</b>.</div> -->
               </div>
               <span v-else-if="!xAppData[k]" class="d-inline-block ml-1 mr-2 text-primary">-</span>
               <span v-else class="d-inline-block ml-1 mr-2 text-primary">{{ xAppData[k] }}</span>
@@ -238,6 +236,7 @@ export default {
   },
   data () {
     return {
+      rails: {},
       pending_events: '...',
       stats: {},
       originalDebugId: '',
@@ -269,9 +268,9 @@ export default {
   mounted () {
     this.fetchStats()
     this.getExtStatsState()
-    // statsFetcher = setInterval(() => {
-    //   this.fetchStats()
-    // }, 60 * 1000)
+    this.$store.api('GET', 'platform/rails').then(r => {
+      this.rails = r
+    })
   },
   computed: {
     sandbox () {
@@ -289,6 +288,7 @@ export default {
         application_xapp_identifier: 'Deeplink / QR Value',
         application_xapp_url: 'WebApp URL',
         application_xummloader: 'Xumm Loader Screen',
+        application_xapp_networks: 'Available for networks',
         application_xapp_listed: 'Listed',
         application_xapp_featured: 'Featured',
         application_permissions_xapp_push: 'Push permission',
@@ -404,6 +404,19 @@ export default {
         this.handleSubmit(e)
       })
     },
+    xummNetworkChange (network) {
+      this.$nextTick(async () => {
+        const curIndex = this.$store.app.details.application_xapp_networks.indexOf(network)
+        if (curIndex > -1) {
+          // Remove
+          this.$store.app.details.application_xapp_networks.splice(curIndex, 1)
+        } else {
+          // Add
+          this.$store.app.details.application_xapp_networks.push(network)
+        }
+        this.handleSubmit()
+      })
+    },
     devUuidChange () {
       this.$nextTick(() => {
         if (this.originalDebugId !== this.form.getFieldValue('devUuid').toUpperCase().replace(/[^A-F0-9]/g, '')) {
@@ -456,12 +469,15 @@ export default {
     },
     handleSubmit (e) {
       // console.log('handleSubmit')
-      e.preventDefault()
+      if (e) {
+        e.preventDefault()
+      }
       this.form.validateFields(async (err, values) => {
         if (err) {
           this.$message.error('Please check all required form fields')
           return
         }
+        Object.assign(values, { xAppNetworks: this.$store.app.details.application_xapp_networks })
         console.log(values)
         try {
           const response = await this.$store.api('POST', 'console/xapp/' + this.$store.selectedApplication + '/debug', { ...values })
