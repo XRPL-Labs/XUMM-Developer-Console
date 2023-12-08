@@ -2,6 +2,7 @@ import Home from './components/Home.vue'
 import NotFound from './components/404.vue'
 
 import PersistApplication from './components/PersistApplication.vue'
+import ManageAppSettings from './components/ManageAppSettings.vue'
 
 import AppSettings from './route-components/AppSettings.vue'
 import AppLogs from './route-components/AppLogs.vue'
@@ -28,6 +29,15 @@ const routes = [
     path: '/create-application',
     name: 'create-application',
     component: PersistApplication,
+    meta: {
+      padding: true,
+      clearSelectedApp: true
+    }
+  },
+  {
+    path: '/manage-app-settings',
+    name: 'manage-app-settings',
+    component: ManageAppSettings,
     meta: {
       padding: true,
       clearSelectedApp: true

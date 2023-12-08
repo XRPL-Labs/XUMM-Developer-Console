@@ -48,6 +48,9 @@
         <a-avatar shape="square" size="large" :style="{ marginLeft: '15px' }" :src="$auth.user.picture" />
         <!-- </a-badge> -->
       </span>
+      <a-menu-item class="my-0" @click="$route.name === 'manage-app-settings' || $router.push({ name: 'manage-app-settings' })">
+        <a-icon type="setting" /> Xumm App settings
+      </a-menu-item>
       <a-menu-item class="my-0" v-if="$auth.user.sub && $auth.user.sub.split('|')[0] === 'auth0'" @click="changePassword">
         <a-icon type="lock" /> Change password
       </a-menu-item>
