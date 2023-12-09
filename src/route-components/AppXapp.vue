@@ -50,13 +50,13 @@
               :label-col="{ sm: { span: 12 }, md: { span: 8 }, lg: { span: 6 }, xl: { span: 4 } }"
               :wrapper-col="{ sm: { span: 24 - 12 }, md: { span: 24 - 8 }, lg: { span: 24 - 6 }, xl: { span: 24 - 4 } }"
             >
-              <span slot="label"><div :class="{ 'mt-2': k === 'application_xapp_debug_device_uuidv4_bin' || (k === 'application_xapp_url' && sandbox) }">{{ xAppDataFieldName[k] }}</div></span>
+              <span slot="label">
+                <div :class="{ 'mt-2': k === 'application_xapp_debug_device_uuidv4_bin' || (k === 'application_xapp_url' && sandbox) }">{{ xAppDataFieldName[k] }}</div>
+              </span>
 
               <span v-if="k === 'application_no_netswitch_rld'" class="d-inline-block ml-1 mr-2 text-muted">
                 <a-checkbox :disabled="$store.app.details.application_xapp_networks.length < 2" v-bind:key="k" @change="xummEventChange" v-decorator="[ 'xummEvent', { valuePropName: 'checked', initialValue: !!$store.app.details.application_xapp_networks, }, ]">
                   xApp Event instead of xApp reload on end user network change
-                  <br />
-                  <a class="ml-2 text-primary" href="https://docs.xumm.dev/js-ts-sdk/sdk-syntax/xumm.xapp/on-event-fn#network-switch" target="_blank"><u>Read more in our Dev. Docs</u></a>
                   <br />
                   <b><small class="d-inline-block mb-0 pb-0 pl-4 text-primary ml-1">Xumm 2.6.0 and higher</small></b>
                 </a-checkbox>
@@ -90,7 +90,7 @@
               </span>
               <span v-else-if="k === '_sandbox' || k === 'application_xapp_listed' || k === 'application_xapp_featured' || k === 'application_allow_fetch_kyc_data' || k === 'application_allow_ott_appauth' || k === 'application_permissions_xapp_push'" class="d-inline-block ml-1 mr-2 text-primary">
                 <div class="text-success" v-if="(!sandbox && xAppData[k] && xAppData[k] > 0) || (k === '_sandbox' && sandbox)"><a-icon theme="filled" type="check-circle" /> Yes</div>
-                <div class="text-danger" v-else><a-icon type="minus-circle" theme="filled" /> No <a v-if="k === 'application_xapp_listed'" class="ml-2 text-primary" href="https://docs.xumm.dev/environments/xapps-dapps/requirements#public-listed-xapps" target="_blank"><u>Read more in our Dev. Docs</u></a></div>
+                <div class="text-danger" v-else><a-icon type="minus-circle" theme="filled" /> No <a v-if="k === 'application_xapp_listed'" class="ml-2 text-primary" href="https://docs.xumm.dev/environments/xapps-dapps/requirements#public-listed-xapps" target="_blank"><u><b>Read more...</b></u></a></div>
               </span>
               <span v-else-if="k === 'application_token_exp_days'" class="d-inline-block ml-1 mr-2 text-primary">{{ xAppData[k] }} days after last use (per <code>user_token</code>)</span>
               <div v-else-if="k === 'application_xapp_debug_device_uuidv4_bin'" class="d-inline-block ml-1 mr-2 text-primary d-block" style="position: relative;">
