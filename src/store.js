@@ -13,6 +13,7 @@ ExternalPromise.appsLoaded.promise = new Promise((resolve, reject) => {
 const Store = new Vue({
   data () {
     return {
+      apiHasBeen200: false,
       someProp: 'test',
       selectedApplication: '',
       appsLoaded: false,
@@ -170,7 +171,7 @@ const Store = new Vue({
 
         // console.log(token)
         // console.log('token', token)
-        const { data } = await axios({
+        const { data, status } = await axios({
           method: method.trim().toLowerCase(),
           url: this.apiEndpoint + endpoint,
           headers: {
@@ -181,9 +182,28 @@ const Store = new Vue({
         })
 
         // console.log('@store.js: $store.api() responseData', data)
+        if (status === 200) {
+          this.apiHasBeen200 = true
+        }
+
         return data
       } catch (e) {
         e.reference = e?.response?.data?.error?.reference
+        if (e.reference) {
+          console.log('Error reference', e.reference)
+        }
+
+        const status = e?.response?.status
+        if (status) {
+          console.log('API HTTP code', status)
+          if (this.apiHasBeen200) {
+            if (status === 401) {
+              // Sign out redirect
+              window.location.reload()
+            }
+          }
+        }
+
         throw e
       }
     }
