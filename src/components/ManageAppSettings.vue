@@ -248,7 +248,11 @@ export default {
         if (this.isValidWebSocketURL(this.form.websocketEndpoint)) {
           console.log('CONNECTING', this.form.websocketEndpoint)
 
-          const client = new XrplClient(this.form.websocketEndpoint, {
+          var sEndpoint = this.form.websocketEndpoint.match(/^ws:/)
+            ? 'wss://custom-node.xrpl-labs.com/ws/' + this.form.websocketEndpoint.replace(/^ws[s]{0,1}:\/\//, '')
+            : this.form.websocketEndpoint
+
+          const client = new XrplClient(sEndpoint, {
             assumeOfflineAfterSeconds: 7,
             connectAttemptTimeoutSeconds: 7
           })
