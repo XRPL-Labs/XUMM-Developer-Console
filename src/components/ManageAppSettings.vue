@@ -67,7 +67,7 @@
 
           <a-form-item
             class="py-0 my-0"
-            label="Chain ID"
+            label="Network ID"
             :label-col="{ span: 4 }"
             :wrapper-col="{ span: 20 }"
             :validate-status="validationErrors.chainId !== '' ? 'error' : ''"
@@ -151,7 +151,7 @@ export default {
       tableData: [],
       columns: [
         {
-          title: 'Chain ID',
+          title: 'Network ID',
           dataIndex: 'chain_id',
           key: 'chain_id'
         },
@@ -341,7 +341,7 @@ export default {
     },
     async validateForm () {
       if (!Number.isInteger(this.form.chainId) || this.form.chainId < 0 || this.form.chainId > 4294967295) {
-        this.validationErrors.chainId = 'Chain ID must be an uint32 number'
+        this.validationErrors.chainId = 'Network ID must be an uint32 number'
       } else {
         this.validationErrors.chainId = ''
       }
