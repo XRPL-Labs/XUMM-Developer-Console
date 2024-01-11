@@ -5,7 +5,7 @@
   "license": "SEE LICENSE IN <LICENSE>",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service --skip-plugins @vue/cli-plugin-eslint build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
