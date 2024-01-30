@@ -46,7 +46,7 @@
 
         <!-- If apps loaded but none exist -->
         <div slot="description" v-if="$store.appsLoaded && Object.keys($store.applications).length < 1">
-          You don't own any <b>Xumm</b> applications.
+          You don't own any <b>Xaman</b> applications.
         </div>
 
         <div v-if="$auth.user.isXumm">

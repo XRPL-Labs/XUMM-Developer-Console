@@ -2,7 +2,7 @@
   <a-layout id="components-layout" class="h100">
     <div id="mobile" v-if="isMobile">
       <img class="logo-icon rounded mb-1" src="./assets/icon.png" />
-      <h1 class="py-0 my-0"><b>Xumm</b></h1>
+      <h1 class="py-0 my-0"><b>Xaman</b></h1>
       <h6 class="py-0 text-secondary">Developer Console</h6>
       <a-alert type="warning" class="mt-5">
         <div slot="message" class="text-dark">
@@ -10,7 +10,7 @@
           <b>Screen real estate required</b>
         </div>
         <div slot="description" class="text-secondary">
-          The <b>Xumm</b> Developer Console is not available on mobile devices.
+          The <b>Xaman</b> Developer Console is not available on mobile devices.
           Please visit the Developer Console on your desktop.
         </div>
       </a-alert>
@@ -21,7 +21,7 @@
         <a-col :span="8" :offset="0">
           <a-card class="bg-title">
             <div slot="title">
-              <b>Xumm</b> Developer Console
+              <b>Xaman</b> Developer Console
             </div>
             <div v-if="$auth.loading || $auth.loadingXumm || (!$store.appsLoaded && $auth.isAuthenticated)">
               <a-skeleton active :style="{marginTop: '-15px', marginBottom: '-10px'}" />
@@ -38,7 +38,7 @@
                   <span class="mr-2 text-secondary">Email or Github Sign in</span> <b class="text-danger">LEGACY</b>
                 </a-button>
                 <div class="my-2 mx-2">- or -</div>
-                <a-button icon="lock" :loading="loggingInXumm" @click="loginXumm" type="primary" class="ml-1 text-white" size="large"><b class="px-2">Sign in with Xumm</b></a-button>
+                <a-button icon="lock" :loading="loggingInXumm" @click="loginXumm" type="primary" class="ml-1 text-white" size="large"><b class="px-2">Sign in with Xaman</b></a-button>
               </div>
             </div>
           </a-card>

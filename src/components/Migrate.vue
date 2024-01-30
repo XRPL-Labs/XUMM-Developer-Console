@@ -4,7 +4,7 @@
       <span slot="message">
         <b>Warning!</b>
         <br />
-        You are signed in with a legacy account type (email or Github). You have to migrate your account to <b>Sign in with Xumm</b>.
+        You are signed in with a legacy account type (email or Github). You have to migrate your account to <b>Sign in with Xaman</b>.
         <br />
         <a-button @click="showDrawer" class="float-right mt-2" type="default">
           <a-icon type="smile" class="mr-2" /><strong>Migrate account</strong>
@@ -22,18 +22,18 @@
       @close="onClose"
     >
       <p>
-        The Xumm Developer Console is switching from email / Github sign in to <b>Sign in with Xumm</b>.
+        The Xaman Developer Console is switching from email / Github sign in to <b>Sign in with Xaman</b>.
       </p>
       <p>
         After a migration period, we will add multi user access: you will be able to invite your team by r-address
         to sign in and manage one or more apps alongside of you.
       </p>
       <p>
-        <b>If you continue with the account migration, you will be presented a Xumm Sign in QR code. Scan the QR code
+        <b>If you continue with the account migration, you will be presented a Xaman Sign in QR code. Scan the QR code
         and sign in with the account you would like to use, and all your apps will be migrated automatically.</b>
       </p>
       <p>
-        After migrating, the next time you simply sign in with Xumm.
+        After migrating, the next time you simply sign in with Xaman.
       </p>
       <div class="text-center">
         <a-button @click="$xumm.authorize()" class="w-100 float-right mt-2" type="primary">

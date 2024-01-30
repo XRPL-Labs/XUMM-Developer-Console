@@ -3,7 +3,7 @@
     <h3 class="mb-1">xApp</h3>
     <h5 class="mb-3"><a-icon type="code" />&nbsp;{{ $store.appName }}</h5>
     <p>
-      xApps are WebApps, embedded in Xumm for a great user experience. They add value (tooling, wizards) for end users, using
+      xApps are WebApps, embedded in Xaman for a great user experience. They add value (tooling, wizards) for end users, using
       Sign Requests and their Web UI to help users perform tasks on the XRPL and beyond.
       <a href="https://docs.xumm.dev/environments/xapps-dapps" target="_blank"><b>Read more about xApps in the Developer Docs</b></a>.
     </p>
@@ -12,10 +12,10 @@
         <h6 class="text-danger">To enable xApp features, <b>please read the rules</b> below <b><u>carefully</u></b>:</h6>
         <ul>
           <li>You can enroll for a <b>sandbox xApp</b></li>
-          <li>Only <b>you</b> can use your own <b>sandbox xApp</b> from a specific Xumm installation you can whitelist after activating xApp features.</li>
+          <li>Only <b>you</b> can use your own <b>sandbox xApp</b> from a specific Xaman installation you can whitelist after activating xApp features.</li>
           <li>The fact that you got a sandbox xApp is not to be presented anywhere as an endorsement (e.g. in communication like on social media, etc.))</li>
-          <li>To build an xApp, you need to have experience with Frontend Web Development as xApps are WebApps (loaded in Xumm)</li>
-          <li>xApps need to add value to a significant share of the Xumm user base</li>
+          <li>To build an xApp, you need to have experience with Frontend Web Development as xApps are WebApps (loaded in Xaman)</li>
+          <li>xApps need to add value to a significant share of the Xaman user base</li>
           <li>xApps need to be self explanatory to have clear instructions for end users</li>
           <li>xApps need to be designed in a way where users can not make dangerous mistakes: users need to be protected</li>
           <li>xApps developers can not be anonymous (accountability)</li>
@@ -33,7 +33,7 @@
         show-icon
       >
         <div slot="description">
-          This application is xApp enabled: you can load your WebApp in Xumm and use xApp related
+          This application is xApp enabled: you can load your WebApp in Xaman and use xApp related
           <a href="https://docs.xumm.dev/environments/xapps-dapps" target="_blank"><b>features</b></a> 🎉
         </div>
       </a-alert>
@@ -58,7 +58,7 @@
                 <a-checkbox :disabled="$store.app.details.application_xapp_networks.length < 2" v-bind:key="k" @change="xummEventChange" v-decorator="[ 'xummEvent', { valuePropName: 'checked', initialValue: !!$store.app.details.application_xapp_networks, }, ]">
                   xApp Event instead of xApp reload on end user network change
                   <br />
-                  <b><small class="d-inline-block mb-0 pb-0 pl-4 text-primary ml-1">Xumm 2.6.0 and higher</small></b>
+                  <b><small class="d-inline-block mb-0 pb-0 pl-4 text-primary ml-1">Xaman 2.6.0 and higher</small></b>
                 </a-checkbox>
               </span>
 
@@ -67,9 +67,9 @@
               </span>
               <span v-else-if="k === 'application_xummloader'" class="d-inline-block ml-1 mr-2 text-muted">
                 <a-checkbox :disabled="String($store.app.details.application_infourl_support || '') === ''" v-bind:key="k" @change="xummLoaderChange" v-decorator="[ 'xummLoader', { valuePropName: 'checked', initialValue: true, }, ]">
-                  Xumm loader till SDK <code>ready()</code> is called
+                  Xaman loader till SDK <code>ready()</code> is called
                   <br />
-                  <b><small class="d-inline-block mb-0 pb-0 pl-4 text-primary ml-1">Xumm 2.5.0 and higher</small></b>
+                  <b><small class="d-inline-block mb-0 pb-0 pl-4 text-primary ml-1">Xaman 2.5.0 and higher</small></b>
                 </a-checkbox>
               </span>
 
@@ -103,7 +103,7 @@
                     whitespace: false,
                     message: 'Please enter a valid Device ID (36 char. UUIDv4, App: Settings - Advanced)',
                   }
-                ] } ]" placeholder="Xumm device ID (App: Settings - Advanced) allowed to re-fetch OTT data">
+                ] } ]" placeholder="Xaman device ID (App: Settings - Advanced) allowed to re-fetch OTT data">
                   <a-icon slot="prefix" type="tag" style="color: rgba(0,0,0,.25)" />
                 </a-input>
               </div>
@@ -298,7 +298,7 @@ export default {
         _sandbox: 'Sandboxed',
         application_xapp_identifier: 'Deeplink / QR Value',
         application_xapp_url: 'WebApp URL',
-        application_xummloader: 'Xumm Loader Screen',
+        application_xummloader: 'Xaman Loader Screen',
         application_xapp_networks: 'Available for networks',
         application_no_netswitch_rld: 'Network Switch Event',
         application_xapp_listed: 'Listed',
