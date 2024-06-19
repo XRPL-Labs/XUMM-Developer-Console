@@ -64,7 +64,7 @@
                     <a v-else :href="'https://xrpl.org/' + record[k].toLowerCase() + '.html'" target="_blank"><b><u>{{ record[k] }}</u></b></a>
                   </td>
                   <!-- Bool -->
-                  <td v-else-if="['payload_submit','__payload_expired','payload_multisign','payload_pathfinding'].indexOf(k) > -1" :class="{ 'text-success': record[k] > 0, 'text-danger': record[k] < 1 }">
+                  <td v-else-if="['payload_submit','__payload_expired','payload_pathfinding_fallback','payload_multisign','payload_pathfinding'].indexOf(k) > -1" :class="{ 'text-success': record[k] > 0, 'text-danger': record[k] < 1 }">
                     <a-icon :type="Number(record[k] || 0) > 0 ? 'check' : 'close'" />
                     {{ Number(record[k] || 0) > 0 ? 'Yes' : 'No' }}
                   </td>
@@ -200,6 +200,7 @@ export default {
       visible: false,
       forceShowKeys: [
         '_opened_by_deeplink',
+        'payload_pathfinding_fallback',
         '__payload_expired'
       ],
       hiddenKeys: [
@@ -278,6 +279,8 @@ export default {
         payload_multisign: 'Sign for multisign',
         meta_string: 'Custom Identifier',
         meta_blob: 'Meta data (Blob)',
+        payload_force_network: 'Force network',
+        payload_pathfinding_fallback: 'Pathfinding Fallback',
         meta_user_instruction: 'User instruction',
         payload_reject_initiator: 'Payload rejected by',
         payload_origintype: 'Payload Origin',
