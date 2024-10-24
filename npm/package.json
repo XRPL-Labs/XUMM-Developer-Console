@@ -1,0 +1,67 @@
+{
+  "name": "xumm-developer-dashboard",
+  "version": "0.1.0",
+  "private": false,
+  "license": "SEE LICENSE IN <LICENSE>",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service --skip-plugins @vue/cli-plugin-eslint build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@auth0/auth0-spa-js": "^1.22.1",
+    "ant-design-vue": "^1.6.5",
+    "axios": "^0.21.1",
+    "babel-plugin-import": "^1.13.1",
+    "core-js": "^2.6.11",
+    "highlight.js": "^9.18.3",
+    "ip": "*",
+    "less": "^3.12.2",
+    "less-loader": "^5.0.0",
+    "mobile-device-detect": "^0.3.3",
+    "ripple-address-codec": "^4.2.5",
+    "vue": "^2.6.12",
+    "vue-clipboard2": "^0.3.1",
+    "vue-highlight.js": "^3.1.0",
+    "vue-json-pretty": "^1.7.1",
+    "vue-moments-ago": "git+https://github.com/WietseWind/vue-moments-ago.git",
+    "vue-router": "^3.4.7",
+    "xrpl-client": "^2.3.1"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-optional-chaining": "^7.12.1",
+    "@vue/cli-plugin-babel": "^3.12.1",
+    "@vue/cli-plugin-eslint": "^3.12.1",
+    "@vue/cli-service": "^4.5.8",
+    "@vue/eslint-config-standard": "^4.0.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "node-sass": "^4.14.1",
+    "sass-loader": "^7.3.1",
+    "vue-template-compiler": "^2.6.12"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "@vue/standard"
+    ],
+    "rules": {},
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ]
+}
