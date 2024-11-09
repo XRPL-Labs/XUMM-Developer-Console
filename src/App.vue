@@ -17,9 +17,9 @@
     </div><!-- On mobile -->
 
     <div v-if="!isMobile && ($auth.loading || $auth.loadingXumm || !$store.appsLoaded || !$auth.isAuthenticated) && $route.name !== 'FourOhFour'" class="h100">
-      <a-row class="h100 flex-center">
+      <a-row class="h100 flex-center text-center">
         <a-col :span="8" :offset="0">
-          <a-card class="bg-title">
+          <!-- <a-card class="bg-title">
             <div slot="title">
               <b>Xaman</b> Developer Console
             </div>
@@ -28,20 +28,14 @@
             </div>
             <div v-else>
               <div class="text-center">Please sign in:</div>
-              <!-- <a-alert type="warning" showIcon>
-                <span slot="message">
-                  Not logged in.
-                </span>
-              </a-alert> -->
               <div class="text-center mt-3 pb-2">
-                <!-- <a-button icon="warning" :loading="loggingIn" size="small" @click="login" class="mr-1 bg-muted text-danger">
-                  <span class="mr-2 text-secondary">Email or Github Sign in</span> <b class="text-danger">LEGACY</b>
-                </a-button>
-                <div class="my-2 mx-2">- or -</div> -->
                 <a-button icon="lock" :loading="loggingInXumm" @click="loginXumm" type="primary" class="ml-1 text-white" size="large"><b class="px-2">Sign in with Xaman</b></a-button>
               </div>
             </div>
-          </a-card>
+          </a-card> -->
+          <img class="mb-2" src="/67028cc20682f3c6f7ec6161_Xaman%20Logo.svg" />
+          <h1 class="h5 text-dark pb-4 text-center">Developer Console</h1>
+          <a-button icon="lock" :loading="loggingInXumm" @click="loginXumm" type="primary" class="ml-1 text-white" size="large"><b class="px-2">Sign in with Xaman</b></a-button>
         </a-col>
       </a-row>
     </div><!-- Not on mobile, auth not loading (auth ready) -->
