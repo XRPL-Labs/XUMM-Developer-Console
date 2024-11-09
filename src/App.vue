@@ -34,10 +34,10 @@
                 </span>
               </a-alert> -->
               <div class="text-center mt-3 pb-2">
-                <a-button icon="warning" :loading="loggingIn" size="small" @click="login" class="mr-1 bg-muted text-danger">
+                <!-- <a-button icon="warning" :loading="loggingIn" size="small" @click="login" class="mr-1 bg-muted text-danger">
                   <span class="mr-2 text-secondary">Email or Github Sign in</span> <b class="text-danger">LEGACY</b>
                 </a-button>
-                <div class="my-2 mx-2">- or -</div>
+                <div class="my-2 mx-2">- or -</div> -->
                 <a-button icon="lock" :loading="loggingInXumm" @click="loginXumm" type="primary" class="ml-1 text-white" size="large"><b class="px-2">Sign in with Xaman</b></a-button>
               </div>
             </div>
