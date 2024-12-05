@@ -72,6 +72,13 @@
                   <b><small class="d-inline-block mb-0 pb-0 pl-4 text-primary ml-1">Xaman 2.5.0 and higher</small></b>
                 </a-checkbox>
               </span>
+              <span v-else-if="k === 'application_no_monetization'" class="d-inline-block ml-1 mr-2 text-muted">
+                <a-checkbox v-bind:key="k" @change="xummNoMonChange" v-decorator="[ 'xummNoMon', { valuePropName: 'checked', initialValue: true, }, ]">
+                  Always allow users to open this xApp (even if payment restricted)
+                  <br />
+                  <b><small class="d-inline-block mb-0 pb-0 pl-4 text-primary ml-1">Xaman 3.2.0 and higher</small></b>
+                </a-checkbox>
+              </span>
 
               <span v-else-if="k === 'application_xapp_networks'" class="d-inline-block ml-1 mr-2 text-muted">
                 <div v-for="(l, r) in rails" v-bind:key="r">
@@ -301,6 +308,7 @@ export default {
         application_xummloader: 'Xaman Loader Screen',
         application_xapp_networks: 'Available for networks',
         application_no_netswitch_rld: 'Network Switch Event',
+        application_no_monetization: 'Disable monetisation',
         application_xapp_listed: 'Listed',
         application_xapp_featured: 'Featured',
         application_permissions_xapp_push: 'Push permission',
@@ -422,6 +430,12 @@ export default {
         this.handleSubmit(e)
       })
     },
+    xummNoMonChange (e) {
+      this.$nextTick(async () => {
+        this.$store.app.details.application_no_monetization = Number(this.form.getFieldValue('xummNoMon'))
+        this.handleSubmit(e)
+      })
+    },
     xummNetworkChange (network) {
       this.$nextTick(async () => {
         const curIndex = this.$store.app.details.application_xapp_networks.indexOf(network)
@@ -482,6 +496,9 @@ export default {
             }),
             xummEvent: this.$form.createFormField({
               value: Number(this.$store.app.details.application_no_netswitch_rld || 0) === 1
+            }),
+            xummNoMon: this.$form.createFormField({
+              value: Number(this.$store.app.details.application_no_monetization || 0) === 1
             })
           }
         }
