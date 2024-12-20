@@ -65,7 +65,7 @@
       <!-- <a-col :style="{ width: '200px' }"> -->
       <a-layout-sider theme="light" :style="{ width: '210px', maxWidth: '210px', flex: '0 0 210px', backgroundColor: 'transparent' }">
         <a-form layout="vertical">
-          <a-form-item required label="App icon">
+          <a-form-item :required="editMode" label="App icon">
             <div :style="uploadContainerStyle">
               <a-upload-dragger ref="icon" :multiple="false" :style="uploadDraggerStyle" name="upload" listType="picture-card" class="avatar-uploader" :showUploadList="false" :beforeUpload="beforeUpload">
                 <div v-show="uploading > 0" style="position: absolute; top: 50px; left: 50px; border-radius: 80px; padding: 10px; background: rgba(255,255,255,.5);">
@@ -106,39 +106,39 @@
             ]" placeholder="Simplify this and that using My Super Cool App" />
           </a-form-item>
 
-          <a-form-item label="Project homepage" class="my-0">
+          <a-form-item v-if="editMode" label="Project homepage" class="my-0">
             <a-input size="default" v-decorator="[
               'infourlHomepage',
               { rules: [
-                { required: true, type: 'url', message: 'Please enter a valid URL for your project homepage' }
+                { required: editMode, type: 'url', message: 'Please enter a valid URL for your project homepage' }
               ] }
             ]" placeholder="https://my-project.com">
               <a-icon slot="prefix" type="tag" style="color: rgba(0,0,0,.25)" />
             </a-input>
           </a-form-item>
-          <a-form-item label="Your Support URL (Help Center / Discord / ...)" class="my-0">
+          <a-form-item v-if="editMode" label="Your Support URL (Help Center / Discord / ...)" class="my-0">
             <a-input size="default" v-decorator="[
               'infourlSupport',
               { rules: [
-                { required: true, type: 'url', message: 'Please enter a valid URL linking to your Support page' }
+                { required: editMode, type: 'url', message: 'Please enter a valid URL linking to your Support page' }
               ] }
             ]" placeholder="https://my-project.com/support">
               <a-icon slot="prefix" type="tag" style="color: rgba(0,0,0,.25)" />
             </a-input>
           </a-form-item>
-          <a-form-item class="my-0">
+          <a-form-item v-if="editMode" class="my-0">
             <span slot="label">Your email address (so we can reach you). <b>This needs to be an email that is monitored by a human. Important system
             messages that could affect your service will be sent here.</b></span>
             <a-input size="default" v-decorator="[
               'devEmail',
               { rules: [
-                { required: true, type: 'email', message: 'Please enter the email address we can reach you on' }
+                { required: editMode, type: 'email', message: 'Please enter the email address we can reach you on' }
               ] }
             ]" placeholder="email@example.com">
               <a-icon slot="prefix" type="tag" style="color: rgba(0,0,0,.25)" />
             </a-input>
           </a-form-item>
-          <a-form-item label="Your Terms of Service" class="my-0">
+          <a-form-item v-if="editMode" label="Your Terms of Service" class="my-0">
             <a-input size="default" v-decorator="[
               'infourlTerms',
               { rules: [
@@ -148,7 +148,7 @@
               <a-icon slot="prefix" type="tag" style="color: rgba(0,0,0,.25)" />
             </a-input>
           </a-form-item>
-          <a-form-item label="Privacy Policy URL" class="mt-0 mb-4">
+          <a-form-item v-if="editMode" label="Privacy Policy URL" class="mt-0 mb-4">
             <a-input size="default" v-decorator="[
               'infourlPrivacy',
               { rules: [
@@ -358,6 +358,9 @@ export default {
             this.imageUrl = this.$store.app.details.application_icon_url
           })
         })
+      } else {
+        // If new app, prefill, accept empty and this will be default
+        this.imageCdnUrl = 'https://xumm-cdn.imgix.net/app-logo/27d62e4d-2972-4582-8ae6-f1c64d0e7499.png'
       }
     },
     createForm () {
