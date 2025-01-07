@@ -42,8 +42,17 @@
         <span slot="title">
           <b><a-icon type="tool" /> xApp Details</b>
           <br />
-          <small>To change any of the xApp related settings, please <a href="https://support.xumm.app/hc/en-us/requests/new" target="_blank"><b>submit a support ticket here</b></a>.</small>
+          <small>To change any of the static xApp related settings, please <a href="https://xumm.app/detect/xapp:xumm.support-md" target="_blank"><b>submit a support ticket here</b></a>.</small>
         </span>
+        <a-alert v-if="sandbox" type="info" class="mt-2 pt-1 pb-2 mb-3">
+            <div slot="description" class="py-0 my-0">
+              Activating xApp features and building a <b>sandbox xApp</b> does <b><u>NOT</u></b>
+              guarantee your xApp will be going live in the future. To take your xApp live, it will be audited by XRPL Labs.
+              Security &amp; usability will be tested. If you want to have more certainty in advance,
+              please reach <a href="https://docs.xumm.dev/environments/xapps-dapps/requirements#public-listed-xapps" target="_blank">read our Developer Help Center docs</a>
+              out to XRPL Labs. <a href="https://xumm.app/detect/xapp:xumm.support-md" target="_blank"><b>Submit a support ticket here</b></a>
+            </div>
+          </a-alert>
         <div class="form-label-left form-line-height-sm">
           <a-form autocomplete="off" :form="form" layout="vertical" @submit="handleSubmit">
             <a-form-item v-for="(v, k) in xAppDataFieldName" v-bind:key="k" class="alert pt-0 pl-1" :colon="false" style="margin: 0;"
