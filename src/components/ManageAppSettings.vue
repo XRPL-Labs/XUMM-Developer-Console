@@ -156,6 +156,11 @@ export default {
           key: 'chain_id'
         },
         {
+          title: 'Custom ID',
+          dataIndex: 'id',
+          key: 'id'
+        },
+        {
           title: 'Color',
           key: 'color',
           scopedSlots: { customRender: 'color' }
@@ -166,17 +171,17 @@ export default {
           key: 'name'
         },
         {
-          title: 'Native Asset',
+          title: 'Asset',
           dataIndex: 'native_asset',
           key: 'native_asset'
         },
         {
-          title: 'Reserve (Acc.)',
+          title: 'Acc. Reserve',
           dataIndex: 'reserve_account',
           key: 'reserve_account'
         },
         {
-          title: 'Reserve (Obj.)',
+          title: 'Obj. Reserve ',
           dataIndex: 'reserve_object',
           key: 'reserve_object'
         },
