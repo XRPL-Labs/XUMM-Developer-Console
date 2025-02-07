@@ -7,6 +7,12 @@
         <span class="nav-text">Settings</span>
       </router-link>
     </a-menu-item>
+    <a-menu-item key="app-revshare">
+      <router-link :to="{ name: 'app-revshare', params: { appId: $store.selectedApplication } }">
+        <a-icon type="trophy" />
+        <span class="nav-text">Revshare</span>
+      </router-link>
+    </a-menu-item>
     <a-menu-item key="app-logs">
       <router-link :to="{ name: 'app-logs', params: { appId: $store.selectedApplication } }">
         <a-icon type="profile" />

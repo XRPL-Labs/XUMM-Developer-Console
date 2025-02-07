@@ -6,6 +6,7 @@ import ManageAppSettings from './components/ManageAppSettings.vue'
 
 import AppSettings from './route-components/AppSettings.vue'
 import AppLogs from './route-components/AppLogs.vue'
+import AppRevshare from './route-components/AppRevshare.vue'
 import AppPayloads from './route-components/AppPayloads.vue'
 import AppXapp from './route-components/AppXapp.vue'
 import AppPermissions from './route-components/AppPermissions.vue'
@@ -65,6 +66,15 @@ const routes = [
     path: '/:appId?/permissions',
     name: 'permissions',
     component: AppPermissions,
+    meta: {
+      padding: true,
+      appRequired: true
+    }
+  },
+  {
+    path: '/:appId?/revshare',
+    name: 'app-revshare',
+    component: AppRevshare,
     meta: {
       padding: true,
       appRequired: true
