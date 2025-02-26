@@ -114,6 +114,10 @@ export default {
       this.fetchStats()
     },
     async fetchStats () {
+      // Clean
+      this.fetched = false
+      this.journalised = []
+      this.pending = {}
       try {
         this.$store.api('GET', 'console/revshare/' + this.$store.selectedApplication)
           .then(r => {
