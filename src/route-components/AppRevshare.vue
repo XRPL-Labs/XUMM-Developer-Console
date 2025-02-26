@@ -22,7 +22,7 @@
         </span>
         <div class="form-label-left form-line-height-sm">
           <a-form :layout="'horizontal'">
-            <a-skeleton v-if="journalised.length < 1" class="mt-2" active :title="false" :paragraph="{ rows: 2 }" />
+            <a-skeleton v-if="!fetched && journalised.length < 1" class="mt-2" active :title="false" :paragraph="{ rows: 2 }" />
             <a-row v-else>
               <a-col :span="12" class="py-1">
                 <a-statistic groupSeparator="" title="Amount of fee transactions" :value="pending.fee_txcount" style="margin-right: 20px" class="bg-light rounded px-3 py-2">
@@ -42,7 +42,7 @@
         </span>
         <div class="form-label-left form-line-height-sm">
           <a-form :layout="'horizontal'">
-            <a-skeleton v-if="journalised.length < 1" class="mt-2" active :title="false" :paragraph="{ rows: 2 }" />
+            <a-skeleton v-if="!fetched && journalised.length < 1" class="mt-2" active :title="false" :paragraph="{ rows: 2 }" />
             <a-row v-else>
               <a-col :span="24" class="" style="padding: 0; margin: 0;">
                 <a-table :dataSource="journalised" :columns="columns" :pagination="false" />
@@ -64,6 +64,7 @@ export default {
     return {
       journalised: [],
       pending: {},
+      fetched: false,
       columns: [
         {
           title: 'Year & Week',
@@ -116,6 +117,7 @@ export default {
       try {
         this.$store.api('GET', 'console/revshare/' + this.$store.selectedApplication)
           .then(r => {
+            this.fetched = true
             if (Array.isArray(r?.journalised)) {
               this.journalised = r.journalised.map(t => {
                 return {
