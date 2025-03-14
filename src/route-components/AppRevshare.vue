@@ -36,6 +36,30 @@
           </a-form>
         </div>
       </a-card>
+      <a-card v-if="!canclaim" class="form-padding-sm mt-3">
+        <span slot="title">
+          <b>Payout verification</b>
+        </span>
+        <div class="form-label-left form-line-height-sm">
+          <a-form :layout="'horizontal'">
+            Payouts will be automatically processed within 24h, as an on ledger
+            <a target="_blank" href="https://xrpl.org/docs/concepts/payment-types/checks"><b><u>Check</u></b></a>
+            sent to your Developer Console account. This can claim the Check on ledger.
+            <br />
+            <b class="text-danger">
+              To be eligible for payouts, your developer console account needs to be
+              periodically verified by signing an empty AccountSet transaction.
+            </b>
+            <br />
+            <br />
+            After signing the verification transaction, it can take up to 24h until your payouts are available as Check.
+            <br />
+            <a-button @click="verify" class="float-right mt-2" type="primary">
+              <strong>Verify account</strong>
+            </a-button>
+          </a-form>
+        </div>
+      </a-card>
       <a-card class="form-padding-sm mt-3">
         <span slot="title">
           <b>Historic Revshare</b>
@@ -64,6 +88,7 @@ export default {
     return {
       journalised: [],
       pending: {},
+      canclaim: true,
       fetched: false,
       columns: [
         {
@@ -110,6 +135,21 @@ export default {
   destroyed () {
   },
   methods: {
+    verify () {
+      console.log(this.$xumm.user.account.then(Account => {
+        this.$xumm.payload.create({
+          options: {
+            force_network: 'MAINNET',
+            signers: [Account],
+            return_url: { web: document.location.href }
+          },
+          custom_meta: { instructions: 'Sign to accept Xaman Revshare payments' },
+          txjson: { Account, TransactionType: 'AccountSet' }
+        }).then(r => {
+          document.location.href = r.next.always
+        })
+      }))
+    },
     prepare () {
       this.fetchStats()
     },
@@ -128,13 +168,15 @@ export default {
                   ...t,
                   yearweek: String(t.yearweek).slice(0, 4) + ' W' + String(t.yearweek).slice(4),
                   revshare_xrp: t.revshare_xrp.toFixed(6),
-                  claimtx: t.claimtx || 'Coming up...'
+                  claimtx: t.claimtx || (this.canclaim ? 'Pending (max. 24h)...' : '-')
                 }
               })
             }
             if (r?.pending && r?.pending?.[0]?.yearweek) {
               this.pending = r.pending[0]
             }
+
+            this.canclaim = !!r?.verification
           })
 
         // this.stats = await this.$store.api('GET', 'console/xapp/' + this.$store.selectedApplication + '/stats')
