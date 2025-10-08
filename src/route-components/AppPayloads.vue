@@ -61,7 +61,7 @@
                   <td v-else-if="k === 'payload_tx_type'">
                     <a-icon type="link" />&nbsp;
                     <a v-if="record[k].toLowerCase() === 'signin'" href="https://docs.xumm.dev/environments/identity-oauth2-openid" target="_blank"><b><u>{{ record[k] }}</u></b></a>
-                    <a v-else :href="'https://xrpl.org/' + record[k].toLowerCase() + '.html'" target="_blank"><b><u>{{ record[k] }}</u></b></a>
+                    <a v-else :href="'https://xrpl.org/docs/references/protocol/transactions/types/' + record[k].toLowerCase()" target="_blank"><b><u>{{ record[k] }}</u></b></a>
                   </td>
                   <!-- Bool -->
                   <td v-else-if="['payload_submit','__payload_expired','payload_pathfinding_fallback','payload_multisign','payload_pathfinding'].indexOf(k) > -1" :class="{ 'text-success': record[k] > 0, 'text-danger': record[k] < 1 }">
