@@ -1,4 +1,4 @@
-# XUMM Developer Console
+# XAMANM Developer Console
 
 As running on https://apps.xumm.dev - Documentation: https://xumm.readme.io
 
