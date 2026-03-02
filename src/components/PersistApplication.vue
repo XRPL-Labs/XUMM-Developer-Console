@@ -85,7 +85,7 @@
       </a-layout-sider>
       <!-- <a-col> -->
 
-      <a-layout-content class="pl-2 overflow-visible">
+      <a-layout-content class="pl-2 overflow-visible" :appName="$store.appName">
         <a-form autocomplete="off" :form="form" layout="vertical" @submit="handleSubmit">
           <a-form-item label="Application name">
             <a-input size="large" v-focus="!editMode" v-decorator="[
