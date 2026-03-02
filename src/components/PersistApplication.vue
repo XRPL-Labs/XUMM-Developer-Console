@@ -85,7 +85,7 @@
       </a-layout-sider>
       <!-- <a-col> -->
 
-      <a-layout-content class="pl-2 overflow-visible" :appid="$store.app.details.application_uuidv4">
+      <a-layout-content class="pl-2 overflow-visible" :appid="((($store || {})?.app || {})?.details || {})?.application_uuidv4 || ''">
         <a-form autocomplete="off" :form="form" layout="vertical" @submit="handleSubmit">
           <a-form-item label="Application name">
             <a-input size="large" v-focus="!editMode" v-decorator="[
