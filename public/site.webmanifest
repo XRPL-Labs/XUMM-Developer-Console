@@ -1,6 +1,6 @@
 {
-    "name": "XUMM",
-    "short_name": "XUMM",
+    "name": "Xaman Developer Console",
+    "short_name": "Xaman Dev",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",

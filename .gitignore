@@ -2,11 +2,8 @@
 node_modules
 /dist
 
-package-lock.json
-package.json
-yarn.lock
-
 # local env files
+.env
 .env.local
 .env.*.local
 
@@ -23,5 +20,3 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
-/auth_config.json
-.env

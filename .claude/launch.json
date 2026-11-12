@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "console",
+      "runtimeExecutable": "bun",
+      "runtimeArgs": ["run", "dev"],
+      "port": 8080
+    },
+    {
+      "name": "console-mock",
+      "runtimeExecutable": "bun",
+      "runtimeArgs": ["run", "dev:mock", "--port", "8081"],
+      "port": 8081
+    }
+  ]
+}

@@ -1,0 +1,121 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: 'IBM Plex Sans Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Xaman blue */
+  --color-brand-50: #eef2ff;
+  --color-brand-100: #dfe6ff;
+  --color-brand-200: #c3ceff;
+  --color-brand-300: #9cabff;
+  --color-brand-400: #6f80ff;
+  --color-brand-500: #3d56ff;
+  --color-brand-600: #0f2ff5;
+  --color-brand-700: #0a22cc;
+  --color-brand-800: #0c1fa0;
+  --color-brand-900: #0d1b70;
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+  --color-fg: var(--text);
+  --color-fg-2: var(--text-2);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+
+  --animate-fade-up: fade-up 0.18s ease-out;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+:root {
+  --bg: #f6f8fa;
+  --surface: #fff;
+  --surface-2: #f8fafb;
+  --surface-3: #eef2f5;
+  --border: #e3e8ee;
+  --border-strong: #d1d9e0;
+  --text: #1a2230;
+  --text-2: #414a5a;
+  --muted: #6a7383;
+  --faint: #99a2b0;
+  --ring: #0f2ff540;
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #0b1016;
+  --surface: #10161d;
+  --surface-2: #131a22;
+  --surface-3: #1a222c;
+  --border: #212b36;
+  --border-strong: #2c3845;
+  --text: #e6ebf1;
+  --text-2: #c2cad4;
+  --muted: #8d98a6;
+  --faint: #5f6b79;
+  --ring: #6f80ff66;
+  color-scheme: dark;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']),
+  [role='switch']:not(:disabled),
+  summary {
+    cursor: pointer;
+  }
+
+  ::selection {
+    background: #3d56ff40;
+  }
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Text links in running copy */
+@utility link {
+  font-weight: 500;
+  color: var(--color-brand-700);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--color-brand-500) 40%, transparent);
+  text-underline-offset: 3px;
+  &:hover {
+    text-decoration-color: var(--color-brand-500);
+  }
+  &:where(.dark, .dark *) {
+    color: var(--color-brand-300);
+  }
+}
