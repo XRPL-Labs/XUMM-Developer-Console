@@ -26,6 +26,12 @@ type MockHandler = (method: string, endpoint: string, body?: unknown) => Promise
 let tokenProvider: TokenProvider = async () => ''
 let mockHandler: MockHandler | null = null
 let apiHasBeen200 = false
+let onSessionEnded: () => void = () => {}
+
+// Called before the reload when the API refuses the session (401)
+export const setSessionEndedHandler = (handler: () => void) => {
+  onSessionEnded = handler
+}
 
 export const setTokenProvider = (provider: TokenProvider) => {
   tokenProvider = provider
@@ -37,14 +43,15 @@ export const setApiMock = (handler: MockHandler) => {
 
 export const getBearer = () => tokenProvider()
 
-export async function api<T = any>(method: string, endpoint: string, body?: unknown): Promise<T> {
+// anonymous: a call without a session (sign in with a passkey). No token, and a refusal is not the end of a session.
+export async function api<T = any>(method: string, endpoint: string, body?: unknown, options: { anonymous?: boolean } = {}): Promise<T> {
   const httpMethod = method.trim().toUpperCase()
 
   if (mockHandler) {
     return (await mockHandler(httpMethod, endpoint, body)) as T
   }
 
-  const token = await tokenProvider()
+  const token = options.anonymous ? '' : await tokenProvider()
   const isForm = typeof FormData !== 'undefined' && body instanceof FormData
   const hasJsonBody = !isForm && typeof body === 'object' && body !== null
 
@@ -53,7 +60,7 @@ export async function api<T = any>(method: string, endpoint: string, body?: unkn
     response = await fetch(apiEndpoint + endpoint, {
       method: httpMethod,
       headers: {
-        Authorization: 'Bearer ' + token,
+        ...(options.anonymous ? {} : { Authorization: 'Bearer ' + token }),
         ...(hasJsonBody ? { 'Content-Type': 'application/json' } : {}),
       },
       body: isForm ? (body as FormData) : hasJsonBody ? JSON.stringify(body) : undefined,
@@ -75,14 +82,15 @@ export async function api<T = any>(method: string, endpoint: string, body?: unkn
     error.reference = data?.error?.reference
 
     // The session ended (JWT expired): start over at the sign in
-    if (response.status === 401 && apiHasBeen200) {
+    if (response.status === 401 && apiHasBeen200 && !options.anonymous) {
+      onSessionEnded()
       window.location.reload()
     }
 
     throw error
   }
 
-  apiHasBeen200 = true
+  if (!options.anonymous) apiHasBeen200 = true
 
   return data as T
 }

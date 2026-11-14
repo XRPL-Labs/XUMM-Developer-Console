@@ -6,17 +6,37 @@ import { useStore } from '../lib/store'
 import { toast } from '../lib/toast'
 import { AppForm } from './AppForm'
 import { SharedAccessAlert } from './shared'
-import { Card, CardBody, CardHeader, Code, Confirm, CopyButton, Page, PageHeader, Row, cx } from '../components/ui'
+import { Card, CardBody, CardHeader, Code, Confirm, CopyButton, Page, PageHeader, Row, Toggle, cx } from '../components/ui'
 import { faCubes, faGear, faRotate, faShieldHalved, faTrash } from '../components/icons'
 
 export function AppSettings() {
   const { app, isOwner } = useSelectedApp()
   const fetchApps = useStore(s => s.fetchApps)
+  const patchAppDetails = useStore(s => s.patchAppDetails)
   const navigate = useNavigate()
   const [newSecret, setNewSecret] = useState('')
+  const [savingBackendOnly, setSavingBackendOnly] = useState(false)
 
   if (!app) return null
   const appId = app.details.application_uuidv4
+
+  // Backend payload creation only: 1 on (developer), 2 on (automatic), 3 off (developer), 0 never set.
+  // Not in the details: the API does not know the setting
+  const backendOnlyValue = app.details.payload_create_backend_only
+  const backendOnlyKnown = backendOnlyValue !== undefined && backendOnlyValue !== null
+  const backendOnly = backendOnlyValue === 1 || backendOnlyValue === 2
+
+  const setBackendOnly = async (on: boolean) => {
+    setSavingBackendOnly(true)
+    try {
+      await api('PATCH', 'console/app/' + appId, { backendOnly: on })
+      patchAppDetails(appId, { payload_create_backend_only: on ? 1 : 3 })
+      toast.success(on ? 'Backend payload creation only: on' : 'Backend payload creation only: off')
+    } catch (e) {
+      toast.error('Error updating the setting' + errorRef(e))
+    }
+    setSavingBackendOnly(false)
+  }
 
   const regenerateSecret = async () => {
     try {
@@ -85,6 +105,26 @@ export function AppSettings() {
                   </>
                 )}
               </div>
+            </Row>
+          )}
+          {backendOnlyKnown && (
+            <Row label="Payload creation">
+              <Toggle
+                checked={backendOnly}
+                onChange={on => void setBackendOnly(on)}
+                disabled={savingBackendOnly}
+                label="Backend payload creation only"
+                description={
+                  <>
+                    When on, sign requests (payloads) can only be created by your backend, with the API Key and API Secret. Payload creation from the browser (JWT: client
+                    side only / OAuth2 flow) is refused. This is <strong className="font-semibold text-fg-2">much safer</strong>: nobody can create sign requests in your
+                    name with only your public API Key. <strong className="font-semibold text-fg-2">Highly advised.</strong> Requires a backend.
+                    {backendOnlyValue === 2 && (
+                      <span className="mt-1 block text-emerald-700 dark:text-emerald-400">Turned on automatically: this application creates its payloads from a backend.</span>
+                    )}
+                  </>
+                }
+              />
             </Row>
           )}
         </div>

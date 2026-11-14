@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { api, errorRef, safeUrl } from '../lib/api'
-import { getXumm, isMock } from '../lib/auth'
+import { getXumm, isMock, signInWithXamanToo } from '../lib/auth'
 import { useSelectedApp } from '../lib/routes'
+import { useStore } from '../lib/store'
 import { toast } from '../lib/toast'
 import { SharedAccessAlert } from './shared'
 import { Button, Card, CardBody, CardHeader, EmptyState, ExtLink, Page, PageHeader, Skeleton, Stat } from '../components/ui'
@@ -59,6 +60,11 @@ export function AppRevshare() {
     if (isMock) return toast.info('Verification needs a Xaman sign in (not in mock mode)')
     setVerifying(true)
     try {
+      // A passkey session can not create a sign request: Sign in with Xaman first
+      if (useStore.getState().user?.passkey && !(await signInWithXamanToo())) {
+        setVerifying(false)
+        return toast.info('Sign in with Xaman is needed for the verification')
+      }
       const xumm = getXumm()
       const Account = await xumm.user.account
       const payload = await xumm.payload?.create({

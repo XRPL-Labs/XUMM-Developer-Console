@@ -28,6 +28,7 @@ import {
   faMoon,
   faPlus,
   faRightFromBracket,
+  faFingerprint,
   faScrewdriverWrench,
   faSun,
   faTrophy,
@@ -266,6 +267,12 @@ function UserMenu() {
             <button type="button" className={menuItem} onClick={() => navigate('/manage-app-settings')}>
               <Icon icon={faScrewdriverWrench} className="w-4 text-muted" />
               Xaman App settings
+            </button>
+          </MenuItem>
+          <MenuItem>
+            <button type="button" className={menuItem} onClick={() => navigate('/passkeys')}>
+              <Icon icon={faFingerprint} className="w-4 text-muted" />
+              Passkeys
             </button>
           </MenuItem>
           <MenuItem>
