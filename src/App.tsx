@@ -15,6 +15,7 @@ import { CreateApplication } from './pages/CreateApplication'
 import { Docs } from './pages/Docs'
 import { Home } from './pages/Home'
 import { NotFound } from './pages/NotFound'
+import { Passkeys } from './pages/Passkeys'
 import { Records } from './pages/records/Records'
 import { XamanAppSettings } from './pages/XamanAppSettings'
 
@@ -82,6 +83,7 @@ export function App() {
             <Route index element={<Home />} />
             <Route path="create-application" element={<CreateApplication />} />
             <Route path="manage-app-settings" element={<XamanAppSettings />} />
+            <Route path="passkeys" element={<Passkeys />} />
             <Route path=":appId?/app-settings" element={page('app-settings', <AppSettings />)} />
             <Route path=":appId?/app-xapp" element={page('app-xapp', <AppXapp />)} />
             <Route path=":appId?/permissions" element={page('permissions', <AppPermissions />)} />

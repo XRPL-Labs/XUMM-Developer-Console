@@ -2,7 +2,8 @@
  * Sign in with Xaman (OAuth2 PKCE, the Xumm SDK). The JWT of the session authorises the calls to the Xaman API.
  */
 import { Xumm } from 'xumm'
-import { setTokenProvider } from './api'
+import { setSessionEndedHandler, setTokenProvider } from './api'
+import { signInWithPasskey, type PasskeySession } from './passkeys'
 import { useStore, type User } from './store'
 import { toast } from './toast'
 
@@ -23,6 +24,41 @@ const hasStoredSession = (): boolean => {
     return false
   }
 }
+
+/**
+ * The session of a sign in with a passkey: a token of the Xaman API for the account of the passkey. There is no
+ * Xaman SDK session with it, so the console can not create sign requests: Sign in with Xaman replaces it.
+ */
+const passkeyStorageKey = 'XamanConsolePasskeySession'
+let passkeySession: PasskeySession | null = null
+
+const storedPasskeySession = (): PasskeySession | null => {
+  try {
+    const session = JSON.parse(localStorage.getItem(passkeyStorageKey) || 'null')
+    if (typeof session?.jwt === 'string' && typeof session?.account === 'string' && Number(session?.expires) > Date.now() / 1000 + 30) {
+      return { jwt: session.jwt, account: session.account, expires: Number(session.expires) }
+    }
+  } catch {
+    // No (valid) stored session
+  }
+  return null
+}
+
+const setPasskeySession = (session: PasskeySession | null) => {
+  passkeySession = session
+  try {
+    if (session) localStorage.setItem(passkeyStorageKey, JSON.stringify(session))
+    else localStorage.removeItem(passkeyStorageKey)
+  } catch {
+    // No storage: the session is for this page only
+  }
+}
+
+const passkeyUser = (account: string): User => ({
+  sub: account,
+  picture: `https://xumm.app/avatar/${account}.png`,
+  passkey: true,
+})
 
 // Back from the sign in on a mobile device (redirect instead of popup)
 const isReturningFromSignIn = (): boolean => {
@@ -57,7 +93,14 @@ export const startAuth = async () => {
   const sdk = xumm
 
   // The properties of the SDK are replaced when the session changes: read them at call time
-  setTokenProvider(async () => (await sdk.environment.bearer) || '')
+  setTokenProvider(async () => passkeySession?.jwt || (await sdk.environment.bearer) || '')
+  // The API refused the session: a passkey session is over (the page reloads to the sign in)
+  setSessionEndedHandler(() => setPasskeySession(null))
+
+  // A stored passkey session, when there is no session of Sign in with Xaman (that one has the SDK: it comes first)
+  const storedPasskey = storedPasskeySession()
+  const restorePasskey = !!storedPasskey && !hasStoredSession() && !isReturningFromSignIn()
+  if (!restorePasskey) setPasskeySession(null)
 
   if (hasStoredSession() || isReturningFromSignIn()) {
     useStore.setState({ auth: 'restoring' })
@@ -81,6 +124,8 @@ export const startAuth = async () => {
     // The SDK reports a session more than once (retrieved, success)
     if (!account || account === signedInAccount) return
     signedInAccount = account
+    // Sign in with Xaman replaces a passkey session
+    setPasskeySession(null)
 
     const [jwt, openid] = await Promise.all([sdk.environment.jwt, sdk.environment.openid])
     const user = { ...(jwt || {}), ...(openid || {}) } as User
@@ -107,6 +152,11 @@ export const startAuth = async () => {
     // A fresh SDK (and console) for the next sign in
     window.location.assign('/')
   })
+
+  if (restorePasskey && storedPasskey) {
+    passkeySession = storedPasskey
+    await onSignedIn(passkeyUser(storedPasskey.account))
+  }
 }
 
 export const signIn = async () => {
@@ -118,8 +168,25 @@ export const signIn = async () => {
   }
 }
 
+// Sign in with a passkey of the account. Rejects when the browser dialog is closed or the API refuses the passkey.
+export const signInPasskey = async () => {
+  const session = await signInWithPasskey()
+  setPasskeySession(session)
+  await onSignedIn(passkeyUser(session.account))
+}
+
+/**
+ * In a passkey session: Sign in with Xaman, for what needs a sign request (add a passkey, revenue share
+ * verification). The passkey session stays when the sign in is closed or rejected.
+ */
+export const signInWithXamanToo = async (): Promise<boolean> => {
+  const result = await getXumm().authorize()
+  return !(result instanceof Error || !result)
+}
+
 export const signOut = async () => {
-  if (isMock) {
+  if (isMock || passkeySession) {
+    setPasskeySession(null)
     useStore.getState().reset()
     return window.location.assign('/')
   }

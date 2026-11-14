@@ -25,6 +25,9 @@ export type AppDetails = {
   application_xummloader?: number | null
   application_no_netswitch_rld?: number | null
   application_no_monetization?: number | null
+  // Backend payload creation only: 0 not set, 1 on (developer), 2 on (automatic), 3 off (developer).
+  // Not there: the API does not know the setting (yet)
+  payload_create_backend_only?: number | null
   [key: string]: unknown
 }
 
@@ -39,6 +42,8 @@ export type User = {
   sub: string
   name?: string
   picture?: string
+  // Signed in with a passkey (no Xaman SDK session: no sign requests from the console)
+  passkey?: boolean
   [key: string]: unknown
 }
 

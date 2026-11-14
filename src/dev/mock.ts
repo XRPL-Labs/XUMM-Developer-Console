@@ -44,6 +44,7 @@ const apps: AppDetails[] = [
     application_xummloader: 1,
     application_no_netswitch_rld: 0,
     application_no_monetization: 0,
+    payload_create_backend_only: 0,
     application_xapp_listed: 0,
     application_xapp_featured: 0,
     application_permissions_xapp_push: 0,
@@ -88,6 +89,7 @@ const apps: AppDetails[] = [
     application_xummloader: 0,
     application_no_netswitch_rld: 1,
     application_no_monetization: 1,
+    payload_create_backend_only: 2,
     application_xapp_listed: 1,
     application_xapp_featured: 0,
     application_permissions_xapp_push: 1,
@@ -184,6 +186,11 @@ const rails = {
   XAHAUTESTNET: { color: '#FF6600', name: 'Xahau Testnet', chain_id: 21338 },
 }
 
+let passkeys = [
+  { id: 1, name: 'Mac Chrome', created: now() - 40 * 86400, last_used: now() - 3600, backed_up: true, transports: ['internal', 'hybrid'], current: false },
+  { id: 2, name: 'YubiKey', created: now() - 5 * 86400, last_used: null, backed_up: false, transports: ['usb'], current: false },
+]
+
 const fail = (message: string, status = 400) => Object.assign(new Error(message), { status, reference: uuid(9999) })
 
 async function handler(method: string, endpoint: string, body: any): Promise<unknown> {
@@ -207,10 +214,23 @@ async function handler(method: string, endpoint: string, body: any): Promise<unk
   if (path === 'console/apps') return { applications: apps.map(a => ({ ...a })) }
   if (path === 'platform/rails') return rails
 
+  if (seg[1] === 'passkeys') {
+    if (method === 'GET') return { passkeys: passkeys.map(p => ({ ...p })), max: 10 }
+    if (method === 'DELETE') {
+      passkeys = passkeys.filter(p => p.id !== Number(seg[2]))
+      return { removed: true }
+    }
+    throw fail('Mock API: adding a passkey needs the Xaman API', 503)
+  }
+
   if (path === 'console/store-logo') return { uploaded: true, file: { key: 'app-logo/27d62e4d-2972-4582-8ae6-f1c64d0e7499.png' } }
 
   if (seg[1] === 'app') {
     if (method === 'PATCH' && body?.regenerateSecret) return { updated: true, credentials: { secret: crypto.randomUUID() } }
+    if (method === 'PATCH' && typeof body?.backendOnly === 'boolean') {
+      if (app) app.payload_create_backend_only = body.backendOnly ? 1 : 3
+      return { updated: true, credentials: { secret: null } }
+    }
     if (method === 'DELETE' && body?.removeApp) {
       apps.splice(apps.indexOf(app!), 1)
       return { updated: true }

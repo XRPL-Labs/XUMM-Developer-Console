@@ -21,6 +21,7 @@ export {
   faCopy,
   faCubes,
   faDesktop,
+  faFingerprint,
   faFloppyDisk,
   faGear,
   faImage,
