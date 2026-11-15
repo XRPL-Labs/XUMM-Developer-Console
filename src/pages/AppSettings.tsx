@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { api, errorRef } from '../lib/api'
+import { confirmInXaman, refusalOf } from '../lib/confirm'
 import { useSelectedApp } from '../lib/routes'
 import { useStore } from '../lib/store'
 import { toast } from '../lib/toast'
@@ -40,22 +41,28 @@ export function AppSettings() {
 
   const regenerateSecret = async () => {
     try {
-      const response = await api('PATCH', 'console/app/' + appId, { regenerateSecret: true })
+      // A dangerous action: confirmed in Xaman (null: cancelled)
+      const confirm = await confirmInXaman('regenerate-secret', 'Regenerate the API Secret of ' + app.name, appId)
+      if (confirm === null) return
+      const response = await api('PATCH', 'console/app/' + appId, { regenerateSecret: true, ...(confirm ? { confirm } : {}) })
       setNewSecret(response.credentials.secret)
       toast.success('Secret regenerated')
     } catch (e) {
-      toast.error('Error regenerating secret' + errorRef(e))
+      toast.error('Error regenerating secret' + errorRef(e), refusalOf(e) || undefined)
     }
   }
 
   const destroyApp = async () => {
     try {
-      await api('DELETE', 'console/app/' + appId, { removeApp: true })
+      // A dangerous action: confirmed in Xaman (null: cancelled)
+      const confirm = await confirmInXaman('remove-app', 'Remove the application ' + app.name, appId)
+      if (confirm === null) return
+      await api('DELETE', 'console/app/' + appId, { removeApp: true, ...(confirm ? { confirm } : {}) })
       toast.success(`Application ${app.name} has been removed`)
       navigate('/')
       void fetchApps().catch(() => {})
     } catch (e) {
-      toast.error('Error destroying app' + errorRef(e))
+      toast.error('Error destroying app' + errorRef(e), refusalOf(e) || undefined)
     }
   }
 

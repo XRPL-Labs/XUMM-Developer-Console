@@ -177,11 +177,15 @@ export const signInPasskey = async () => {
 
 /**
  * In a passkey session: Sign in with Xaman, for what needs a sign request (add a passkey, revenue share
- * verification). The passkey session stays when the sign in is closed or rejected.
+ * verification, the confirmation of a dangerous action). The passkey session stays when the sign in is closed or
+ * rejected. Resolves true when the session is one of Sign in with Xaman.
  */
 export const signInWithXamanToo = async (): Promise<boolean> => {
   const result = await getXumm().authorize()
-  return !(result instanceof Error || !result)
+  if (result instanceof Error || !result) return false
+  // The 'success' event of the SDK ends the passkey session: the next API call must go with the new session
+  for (let i = 0; i < 50 && passkeySession; i++) await new Promise(resolve => setTimeout(resolve, 100))
+  return !passkeySession
 }
 
 export const signOut = async () => {
