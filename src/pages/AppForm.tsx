@@ -4,6 +4,7 @@
 import { useEffect, useRef, useState, type DragEvent, type FormEvent } from 'react'
 import { useNavigate } from 'react-router'
 import { api, errorRef } from '../lib/api'
+import { confirmInXaman, refusalOf } from '../lib/confirm'
 import { useStore, type App } from '../lib/store'
 import { toast } from '../lib/toast'
 import { isEmail, isUrl, uriLinesRe } from '../lib/validate'
@@ -151,7 +152,10 @@ export function AppForm({ app, onCreated }: { app?: App; onCreated?: (created: C
     try {
       // Create: name and description. Update: all the details
       const body = edit ? { ...values } : { appName: values.appName, appDescription: values.appDescription }
-      const response = await api('POST', 'console/app' + (app ? '/' + app.details.application_uuidv4 : ''), { ...body, appIcon: imageCdnUrl })
+      // A new application is a dangerous action: confirmed in Xaman (null: cancelled)
+      const confirm = edit ? undefined : await confirmInXaman('create-app', 'Create the application ' + values.appName.trim())
+      if (confirm === null) return
+      const response = await api('POST', 'console/app' + (app ? '/' + app.details.application_uuidv4 : ''), { ...body, appIcon: imageCdnUrl, ...(confirm ? { confirm } : {}) })
 
       if (edit) {
         if (response?.updated !== true) throw new Error('Error updating application details')
@@ -163,7 +167,7 @@ export function AppForm({ app, onCreated }: { app?: App; onCreated?: (created: C
 
       void fetchApps().catch(() => {})
     } catch (e) {
-      toast.error((edit ? 'Error updating your application' : 'Error creating your application') + errorRef(e))
+      toast.error((edit ? 'Error updating your application' : 'Error creating your application') + errorRef(e), refusalOf(e) || undefined)
     } finally {
       setSubmitting(false)
     }

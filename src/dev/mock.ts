@@ -223,6 +223,15 @@ async function handler(method: string, endpoint: string, body: any): Promise<unk
     throw fail('Mock API: adding a passkey needs the Xaman API', 503)
   }
 
+  // The confirmation of a dangerous action. To see the dialog: localStorage.mockConfirm = 'xaman' | 'passkey'
+  if (path === 'console/confirm') {
+    const session = localStorage.getItem('mockConfirm')
+    if (session !== 'xaman' && session !== 'passkey') return { needed: false }
+    const instruction = body?.action === 'create-app' ? 'Confirm: create a new application (Xaman Developer Console)'
+      : `Confirm: ${body?.action === 'remove-app' ? 'remove the application' : 'regenerate the API Secret of the application'} "${apps.find(a => a.application_uuidv4 === body?.app)?.application_name || ''}" (Xaman Developer Console)`
+    return { needed: true, session, confirm: { challenge: 'mock', identifier: 'confirm-mock', memo: 'AB', instruction, seconds: 300 } }
+  }
+
   if (path === 'console/store-logo') return { uploaded: true, file: { key: 'app-logo/27d62e4d-2972-4582-8ae6-f1c64d0e7499.png' } }
 
   if (seg[1] === 'app') {

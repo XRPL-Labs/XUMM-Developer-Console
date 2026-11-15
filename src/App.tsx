@@ -5,6 +5,7 @@ import type { AppSectionName } from './lib/routes'
 import { useStore } from './lib/store'
 import { Shell } from './components/Shell'
 import { FullScreenLoader, SignIn } from './components/SignIn'
+import { ConfirmInXaman } from './components/ConfirmInXaman'
 import { Toaster } from './components/Toaster'
 import { Alert, Button } from './components/ui'
 import { AppPermissions } from './pages/AppPermissions'
@@ -95,6 +96,7 @@ export function App() {
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <ConfirmInXaman />
       <Toaster />
     </BrowserRouter>
   )
