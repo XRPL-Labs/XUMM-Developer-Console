@@ -6,6 +6,7 @@ import { useStore } from './lib/store'
 import { Shell } from './components/Shell'
 import { FullScreenLoader, SignIn } from './components/SignIn'
 import { ConfirmInXaman } from './components/ConfirmInXaman'
+import { KycNeeded } from './components/KycNeeded'
 import { Toaster } from './components/Toaster'
 import { Alert, Button } from './components/ui'
 import { AppPermissions } from './pages/AppPermissions'
@@ -97,6 +98,7 @@ export function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
       <ConfirmInXaman />
+      <KycNeeded />
       <Toaster />
     </BrowserRouter>
   )

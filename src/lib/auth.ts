@@ -3,6 +3,7 @@
  */
 import { Xumm } from 'xumm'
 import { setSessionEndedHandler, setTokenProvider } from './api'
+import { fetchKycStatus } from './kyc'
 import { signInWithPasskey, type PasskeySession } from './passkeys'
 import { useStore, type User } from './store'
 import { toast } from './toast'
@@ -68,6 +69,8 @@ const isReturningFromSignIn = (): boolean => {
 
 const onSignedIn = async (user: User) => {
   useStore.setState({ auth: 'signedIn', user })
+  // The KYC state of the account (lib/kyc.ts): for the notice in the last days of a KYC. Not waited for.
+  void fetchKycStatus()
   await useStore.getState().fetchApps().catch(e => console.log(e?.message))
 }
 

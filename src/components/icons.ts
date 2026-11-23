@@ -24,6 +24,7 @@ export {
   faFingerprint,
   faFloppyDisk,
   faGear,
+  faIdCard,
   faImage,
   faKey,
   faLink,

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { api, errorRef } from '../lib/api'
 import { confirmInXaman, refusalOf } from '../lib/confirm'
+import { withKyc } from '../lib/kyc'
 import { useSelectedApp } from '../lib/routes'
 import { useStore } from '../lib/store'
 import { toast } from '../lib/toast'
@@ -30,23 +31,29 @@ export function AppSettings() {
   const setBackendOnly = async (on: boolean) => {
     setSavingBackendOnly(true)
     try {
-      await api('PATCH', 'console/app/' + appId, { backendOnly: on })
-      patchAppDetails(appId, { payload_create_backend_only: on ? 1 : 3 })
-      toast.success(on ? 'Backend payload creation only: on' : 'Backend payload creation only: off')
+      // A change of the application: the account needs a KYC
+      await withKyc('backend-only', async () => {
+        await api('PATCH', 'console/app/' + appId, { backendOnly: on })
+        patchAppDetails(appId, { payload_create_backend_only: on ? 1 : 3 })
+        toast.success(on ? 'Backend payload creation only: on' : 'Backend payload creation only: off')
+      })
     } catch (e) {
-      toast.error('Error updating the setting' + errorRef(e))
+      toast.error('Error updating the setting' + errorRef(e), refusalOf(e) || undefined)
     }
     setSavingBackendOnly(false)
   }
 
   const regenerateSecret = async () => {
     try {
-      // A dangerous action: confirmed in Xaman (null: cancelled)
-      const confirm = await confirmInXaman('regenerate-secret', 'Regenerate the API Secret of ' + app.name, appId)
-      if (confirm === null) return
-      const response = await api('PATCH', 'console/app/' + appId, { regenerateSecret: true, ...(confirm ? { confirm } : {}) })
-      setNewSecret(response.credentials.secret)
-      toast.success('Secret regenerated')
+      // A change of the application: the account needs a KYC
+      await withKyc('regenerate-secret', async () => {
+        // A dangerous action: confirmed in Xaman (null: cancelled)
+        const confirm = await confirmInXaman('regenerate-secret', 'Regenerate the API Secret of ' + app.name, appId)
+        if (confirm === null) return
+        const response = await api('PATCH', 'console/app/' + appId, { regenerateSecret: true, ...(confirm ? { confirm } : {}) })
+        setNewSecret(response.credentials.secret)
+        toast.success('Secret regenerated')
+      })
     } catch (e) {
       toast.error('Error regenerating secret' + errorRef(e), refusalOf(e) || undefined)
     }

@@ -2,6 +2,7 @@ import { useMemo, useRef, useState, type ClipboardEvent, type KeyboardEvent } fr
 import { isValidClassicAddress } from 'ripple-address-codec'
 import { api, errorRef } from '../lib/api'
 import { confirmInXaman, refusalOf } from '../lib/confirm'
+import { withKyc } from '../lib/kyc'
 import { useSelectedApp } from '../lib/routes'
 import { useStore } from '../lib/store'
 import { toast } from '../lib/toast'
@@ -80,14 +81,19 @@ export function AppPermissions() {
   const persist = async () => {
     setSaving(true)
     try {
-      // Access for one more account is a dangerous action: confirmed in Xaman (null: cancelled)
       const added = selected.filter(account => !saved.includes(account))
-      const confirm = added.length > 0 ? await confirmInXaman('add-co-owner', `Give ${added.length === 1 ? added[0] : added.length + ' accounts'} access to ${app.name}`, appId, selected) : undefined
-      if (confirm === null) return
-      await api('POST', 'console/known-shared-accounts', { app: appId, sharedWith: selected, ...(confirm ? { confirm } : {}) })
-      setSaved([...selected])
-      patchAppDetails(appId, { application_shared_with: selected.join(',') })
-      toast.success('Permissions saved')
+      const save = async () => {
+        // Access for one more account is a dangerous action: confirmed in Xaman (null: cancelled)
+        const confirm = added.length > 0 ? await confirmInXaman('add-co-owner', `Give ${added.length === 1 ? added[0] : added.length + ' accounts'} access to ${app.name}`, appId, selected) : undefined
+        if (confirm === null) return
+        await api('POST', 'console/known-shared-accounts', { app: appId, sharedWith: selected, ...(confirm ? { confirm } : {}) })
+        setSaved([...selected])
+        patchAppDetails(appId, { application_shared_with: selected.join(',') })
+        toast.success('Permissions saved')
+      }
+      // Access for one more account: the account that is signed in needs a KYC. To take access away needs none.
+      if (added.length > 0) await withKyc('add-co-owner', save)
+      else await save()
     } catch (e) {
       toast.error('Error saving the permissions' + errorRef(e), refusalOf(e) || undefined)
     } finally {

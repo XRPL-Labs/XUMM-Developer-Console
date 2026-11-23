@@ -11,6 +11,7 @@ import { isAppOwner, useStore, type App } from '../lib/store'
 import { useTheme, type Theme } from '../lib/theme'
 import { toast } from '../lib/toast'
 import { AppIcon, Badge, cx } from './ui'
+import { KycNotice } from './KycNeeded'
 import { XamanLogo } from './XamanLogo'
 import {
   Icon,
@@ -340,6 +341,7 @@ export function Shell() {
         </header>
 
         <main className="flex min-h-0 flex-1 flex-col">
+          <KycNotice />
           <Outlet />
         </main>
       </div>
