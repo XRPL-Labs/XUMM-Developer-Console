@@ -1,6 +1,8 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { api, errorRef } from '../lib/api'
+import { refusalOf } from '../lib/confirm'
 import { bufferJsonToHex, hexToUuid, onlyHex } from '../lib/format'
+import { withKyc } from '../lib/kyc'
 import { useSelectedApp } from '../lib/routes'
 import { useStore, type App } from '../lib/store'
 import { toast } from '../lib/toast'
@@ -46,11 +48,14 @@ function Activate({ appId }: { appId: string }) {
   const activate = async () => {
     setActivating(true)
     try {
-      const response = await api('POST', 'console/xapp/' + appId + '/activate', {})
-      if (!response?.valid) throw new Error('Not activated')
-      await fetchApps()
+      // A change of the application: the account needs a KYC
+      await withKyc(async () => {
+        const response = await api('POST', 'console/xapp/' + appId + '/activate', {})
+        if (!response?.valid) throw new Error('Not activated')
+        await fetchApps()
+      })
     } catch (e) {
-      toast.error('Your xApp could not be activated' + errorRef(e))
+      toast.error('Your xApp could not be activated' + errorRef(e), refusalOf(e) || undefined)
     } finally {
       setActivating(false)
     }
@@ -154,16 +159,21 @@ function Details({ app, appId }: { app: App; appId: string }) {
 
     setSaving(true)
     try {
-      await api('POST', 'console/xapp/' + appId + '/debug', values)
+      // A change of the application: the account needs a KYC (false: cancelled)
+      const saved = await withKyc(async () => {
+        await api('POST', 'console/xapp/' + appId + '/debug', values)
 
-      setStoredDebugId(onlyHex(devUuid))
-      if (sandbox) {
-        setStoredGuests(sandboxUuids.toUpperCase())
-        setStoredUrl(xAppUrl)
-        patchAppDetails(appId, { application_xapp_url: xAppUrl, application_xapp_debug_devices_uuids: sandboxUuids.toUpperCase() })
-      }
+        setStoredDebugId(onlyHex(devUuid))
+        if (sandbox) {
+          setStoredGuests(sandboxUuids.toUpperCase())
+          setStoredUrl(xAppUrl)
+          patchAppDetails(appId, { application_xapp_url: xAppUrl, application_xapp_debug_devices_uuids: sandboxUuids.toUpperCase() })
+        }
+      })
+      // What is stored, instead of what was on screen
+      if (!saved) void fetchApps().catch(() => {})
     } catch (e) {
-      toast.error('Error updating your application' + errorRef(e))
+      toast.error('Error updating your application' + errorRef(e), refusalOf(e) || undefined)
       // What is stored, instead of what was on screen
       void fetchApps().catch(() => {})
     } finally {
@@ -450,10 +460,13 @@ function BigQueryCard({ appId }: { appId: string }) {
   const activate = async () => {
     setBusy(true)
     try {
-      await api('POST', endpoint)
-      setActive(true)
+      // A change of the application: the account needs a KYC
+      await withKyc(async () => {
+        await api('POST', endpoint)
+        setActive(true)
+      })
     } catch (e) {
-      toast.error('Error activating stats publishing' + errorRef(e))
+      toast.error('Error activating stats publishing' + errorRef(e), refusalOf(e) || undefined)
     } finally {
       setBusy(false)
     }
@@ -466,9 +479,10 @@ function BigQueryCard({ appId }: { appId: string }) {
     setUser('')
     setBusy(true)
     try {
-      await api('POST', endpoint, { user: value })
+      // A change of the application: the account needs a KYC
+      await withKyc(() => api('POST', endpoint, { user: value }))
     } catch (e) {
-      toast.error('Error authorizing the Google account' + errorRef(e))
+      toast.error('Error authorizing the Google account' + errorRef(e), refusalOf(e) || undefined)
     } finally {
       setBusy(false)
     }

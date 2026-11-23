@@ -10,6 +10,8 @@ export const appSocketUrl = (appId: string): string =>
 
 export class ApiError extends Error {
   status?: number
+  // The error code of the API
+  code?: number
   // The reference of the failed call: support can look the call up with it
   reference?: string
 }
@@ -22,6 +24,12 @@ export const errorRef = (e: unknown): string => {
 
 type TokenProvider = () => Promise<string>
 type MockHandler = (method: string, endpoint: string, body?: unknown) => Promise<unknown>
+type ApiOptions = {
+  // A call without a session (sign in with a passkey). No token, and a refusal is not the end of a session.
+  anonymous?: boolean
+  // The answer must come from the API now: never from a cache of the browser
+  noCache?: boolean
+}
 
 let tokenProvider: TokenProvider = async () => ''
 let mockHandler: MockHandler | null = null
@@ -43,8 +51,7 @@ export const setApiMock = (handler: MockHandler) => {
 
 export const getBearer = () => tokenProvider()
 
-// anonymous: a call without a session (sign in with a passkey). No token, and a refusal is not the end of a session.
-export async function api<T = any>(method: string, endpoint: string, body?: unknown, options: { anonymous?: boolean } = {}): Promise<T> {
+export async function api<T = any>(method: string, endpoint: string, body?: unknown, options: ApiOptions = {}): Promise<T> {
   const httpMethod = method.trim().toUpperCase()
 
   if (mockHandler) {
@@ -64,6 +71,7 @@ export async function api<T = any>(method: string, endpoint: string, body?: unkn
         ...(hasJsonBody ? { 'Content-Type': 'application/json' } : {}),
       },
       body: isForm ? (body as FormData) : hasJsonBody ? JSON.stringify(body) : undefined,
+      ...(options.noCache ? { cache: 'no-store' as const } : {}),
     })
   } catch (e) {
     throw Object.assign(new ApiError((e as Error)?.message || 'Network error'), { cause: e })
@@ -79,6 +87,7 @@ export async function api<T = any>(method: string, endpoint: string, body?: unkn
   if (!response.ok) {
     const error = new ApiError(data?.error?.message || `API HTTP code ${response.status}`)
     error.status = response.status
+    error.code = typeof data?.error?.code === 'number' ? data.error.code : undefined
     error.reference = data?.error?.reference
 
     // The session ended (JWT expired): start over at the sign in

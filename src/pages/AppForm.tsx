@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, type DragEvent, type FormEvent } from 'rea
 import { useNavigate } from 'react-router'
 import { api, errorRef } from '../lib/api'
 import { confirmInXaman, refusalOf } from '../lib/confirm'
+import { withKyc } from '../lib/kyc'
 import { useStore, type App } from '../lib/store'
 import { toast } from '../lib/toast'
 import { isEmail, isUrl, uriLinesRe } from '../lib/validate'
@@ -106,6 +107,7 @@ export function AppForm({ app, onCreated }: { app?: App; onCreated?: (created: C
 
     if (!isImage || !isSmall) return
 
+    const shownBefore = imageUrl
     const reader = new FileReader()
     reader.addEventListener('load', () => setImageUrl(String(reader.result)))
     reader.readAsDataURL(file)
@@ -115,13 +117,17 @@ export function AppForm({ app, onCreated }: { app?: App; onCreated?: (created: C
 
     setUploading(n => n + 1)
     try {
-      const response = await api('POST', 'console/store-logo', formData)
-      if (response?.uploaded) {
-        const url = cdnUrl(response.file.key)
-        setImageCdnUrl(url)
-        // Warm up the CDN
-        new Image().src = url
-      }
+      // The account needs a KYC to create or change an application (false: cancelled, the icon stays as it was)
+      const uploaded = await withKyc(async () => {
+        const response = await api('POST', 'console/store-logo', formData)
+        if (response?.uploaded) {
+          const url = cdnUrl(response.file.key)
+          setImageCdnUrl(url)
+          // Warm up the CDN
+          new Image().src = url
+        }
+      })
+      if (!uploaded) setImageUrl(shownBefore)
     } catch (e) {
       toast.error('Error while uploading your icon' + errorRef(e))
     } finally {
@@ -152,27 +158,30 @@ export function AppForm({ app, onCreated }: { app?: App; onCreated?: (created: C
     try {
       // Create: name and description. Update: all the details
       const body = edit ? { ...values } : { appName: values.appName, appDescription: values.appDescription }
-      // A new application, and another webhook URL for an application, are dangerous actions: confirmed in Xaman
-      // (null: cancelled)
-      const webhookUrl = values.appWebhookUrl.trim()
-      const newWebhookUrl = !!app && webhookUrl !== '' && webhookUrl !== (app.details.application_webhookurl || '').trim()
-      const confirm = !app
-        ? await confirmInXaman('create-app', 'Create the application ' + values.appName.trim())
-        : newWebhookUrl
-          ? await confirmInXaman('change-webhook', 'Change the webhook URL of ' + app.name, app.details.application_uuidv4, webhookUrl)
-          : undefined
-      if (confirm === null) return
-      const response = await api('POST', 'console/app' + (app ? '/' + app.details.application_uuidv4 : ''), { ...body, appIcon: imageCdnUrl, ...(confirm ? { confirm } : {}) })
+      // The account needs a KYC to create or change an application: asked first
+      await withKyc(async () => {
+        // A new application, and another webhook URL for an application, are dangerous actions: confirmed in Xaman
+        // (null: cancelled)
+        const webhookUrl = values.appWebhookUrl.trim()
+        const newWebhookUrl = !!app && webhookUrl !== '' && webhookUrl !== (app.details.application_webhookurl || '').trim()
+        const confirm = !app
+          ? await confirmInXaman('create-app', 'Create the application ' + values.appName.trim())
+          : newWebhookUrl
+            ? await confirmInXaman('change-webhook', 'Change the webhook URL of ' + app.name, app.details.application_uuidv4, webhookUrl)
+            : undefined
+        if (confirm === null) return
+        const response = await api('POST', 'console/app' + (app ? '/' + app.details.application_uuidv4 : ''), { ...body, appIcon: imageCdnUrl, ...(confirm ? { confirm } : {}) })
 
-      if (edit) {
-        if (response?.updated !== true) throw new Error('Error updating application details')
-        toast.success(`Application "${response.name}" updated`)
-      } else {
-        if (response?.created !== true) throw new Error('Response validation error')
-        onCreated?.({ uuidv4: response.uuidv4, name: response.name, secret: response.credentials.secret })
-      }
+        if (edit) {
+          if (response?.updated !== true) throw new Error('Error updating application details')
+          toast.success(`Application "${response.name}" updated`)
+        } else {
+          if (response?.created !== true) throw new Error('Response validation error')
+          onCreated?.({ uuidv4: response.uuidv4, name: response.name, secret: response.credentials.secret })
+        }
 
-      void fetchApps().catch(() => {})
+        void fetchApps().catch(() => {})
+      })
     } catch (e) {
       toast.error((edit ? 'Error updating your application' : 'Error creating your application') + errorRef(e), refusalOf(e) || undefined)
     } finally {

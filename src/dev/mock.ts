@@ -191,7 +191,47 @@ let passkeys = [
   { id: 2, name: 'YubiKey', created: now() - 5 * 86400, last_used: null, backed_up: false, transports: ['usb'], current: false },
 ]
 
-const fail = (message: string, status = 400) => Object.assign(new Error(message), { status, reference: uuid(9999) })
+const fail = (message: string, status = 400, code?: number) => Object.assign(new Error(message), { status, code, reference: uuid(9999) })
+
+/*
+ * KYC for developers (lib/kyc.ts). The state: localStorage.mockKyc =
+ *   (not set)   an API without the status route (404): the console works as before
+ *   'ok'        a valid KYC
+ *   'ending'    a valid KYC that ends in 12 days (the notice)
+ *   'required'  no KYC: the dialog before a create / change
+ *   'expired'   a KYC of 14 months ago: the dialog, with that text
+ *   'refused'   the status says 'not required', but the create / change is refused (the dialog after the refusal)
+ * In the dialog: 'Start KYC in Xaman' (a new tab), then 'check again' twice (the first answer is 'not yet').
+ */
+const day = 86400
+const kyc = { started: false, checksAfterStart: 0, done: false, refusedOnce: false }
+const kycState = () => localStorage.getItem('mockKyc') || ''
+const kycNeeded = () => ['required', 'expired', 'refused'].includes(kycState()) && !kyc.done
+document.addEventListener('click', e => {
+  if ((e.target as Element | null)?.closest?.('a[data-kyc="start"]')) kyc.started = true
+})
+const kycStatus = () => {
+  const state = kycState()
+  if (state === '') throw fail('Endpoint unknown or method invalid for given endpoint', 404, 404)
+  const base = { mode: 'on', required: false, kyc: true, reason: null, since: now() - 165 * day, validUntil: now() + 200 * day, account: account.slice(0, 6) + '...' + account.slice(-4), maxAgeDays: 365, kycUrl: 'https://xaman.app/detect/xapp:xumm.kyc' }
+  if (state === 'ending') return { ...base, since: now() - 353 * day, validUntil: now() + 12 * day }
+  if (!kycNeeded()) return kyc.done ? { ...base, since: now(), validUntil: now() + 365 * day } : base
+  if (state === 'refused' && !kyc.refusedOnce) return base
+  // The KYC in Xaman takes a moment: the first check after the start finds nothing yet
+  if (kyc.started && ++kyc.checksAfterStart >= 2) {
+    kyc.done = true
+    return { ...base, since: now(), validUntil: now() + 365 * day }
+  }
+  return state === 'expired'
+    ? { ...base, required: true, kyc: false, reason: 'expired', since: now() - 430 * day, validUntil: null }
+    : { ...base, required: true, kyc: false, reason: 'none', since: null, validUntil: null }
+}
+// A create / change of an application without a valid KYC: refused, as the API does
+const kycGate = () => {
+  if (!kycNeeded()) return
+  kyc.refusedOnce = true
+  throw fail('KYC is needed for this account before an application can be created or changed', 403, 644)
+}
 
 async function handler(method: string, endpoint: string, body: any): Promise<unknown> {
   await wait()
@@ -204,6 +244,8 @@ async function handler(method: string, endpoint: string, body: any): Promise<unk
   if (path === 'console/known-shared-accounts') {
     if (method === 'POST') {
       const target = apps.find(a => a.application_uuidv4 === body.app)
+      const have = String(target?.application_shared_with || '').split(',')
+      if (body.sharedWith.some((a: string) => !have.includes(a))) kycGate()
       if (target) target.application_shared_with = body.sharedWith.join(',')
       sharedAccounts = [...new Set([...sharedAccounts, ...body.sharedWith])]
       return { added: body.sharedWith, removed: [] }
@@ -248,9 +290,16 @@ async function handler(method: string, endpoint: string, body: any): Promise<unk
     return { needed: true, session, confirm: { challenge: 'mock', identifier: 'confirm-mock', memo: 'AB', instruction, seconds: 300 } }
   }
 
-  if (path === 'console/store-logo') return { uploaded: true, file: { key: 'app-logo/27d62e4d-2972-4582-8ae6-f1c64d0e7499.png' } }
+  if (path === 'console/kyc-status') return kycStatus()
+
+  if (path === 'console/store-logo') {
+    kycGate()
+    return { uploaded: true, file: { key: 'app-logo/27d62e4d-2972-4582-8ae6-f1c64d0e7499.png' } }
+  }
 
   if (seg[1] === 'app') {
+    // To remove an application needs no KYC
+    if (method !== 'DELETE') kycGate()
     if (method === 'PATCH' && body?.regenerateSecret) return { updated: true, credentials: { secret: crypto.randomUUID() } }
     if (method === 'PATCH' && typeof body?.backendOnly === 'boolean') {
       if (app) app.payload_create_backend_only = body.backendOnly ? 1 : 3
@@ -337,6 +386,7 @@ async function handler(method: string, endpoint: string, body: any): Promise<unk
 
   if (seg[1] === 'xapp' && app) {
     const id = app.application_uuidv4
+    if (method === 'POST' && ['activate', 'debug', 'ext-stats'].includes(seg[3])) kycGate()
     switch (seg[3]) {
       case 'activate':
         Object.assign(app, { application_xapp_identifier: 'sandbox.' + id.slice(0, 12).replace(/-/g, ''), application_xapp_url: '', application_xapp_networks: ['MAINNET'], application_token_exp_days: 30 })
