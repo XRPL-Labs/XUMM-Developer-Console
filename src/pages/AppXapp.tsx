@@ -49,7 +49,7 @@ function Activate({ appId }: { appId: string }) {
     setActivating(true)
     try {
       // A change of the application: the account needs a KYC
-      await withKyc(async () => {
+      await withKyc('xapp-activate', async () => {
         const response = await api('POST', 'console/xapp/' + appId + '/activate', {})
         if (!response?.valid) throw new Error('Not activated')
         await fetchApps()
@@ -160,7 +160,7 @@ function Details({ app, appId }: { app: App; appId: string }) {
     setSaving(true)
     try {
       // A change of the application: the account needs a KYC (false: cancelled)
-      const saved = await withKyc(async () => {
+      const saved = await withKyc('xapp-settings', async () => {
         await api('POST', 'console/xapp/' + appId + '/debug', values)
 
         setStoredDebugId(onlyHex(devUuid))
@@ -461,7 +461,7 @@ function BigQueryCard({ appId }: { appId: string }) {
     setBusy(true)
     try {
       // A change of the application: the account needs a KYC
-      await withKyc(async () => {
+      await withKyc('ext-stats-activate', async () => {
         await api('POST', endpoint)
         setActive(true)
       })
@@ -480,7 +480,7 @@ function BigQueryCard({ appId }: { appId: string }) {
     setBusy(true)
     try {
       // A change of the application: the account needs a KYC
-      await withKyc(() => api('POST', endpoint, { user: value }))
+      await withKyc('ext-stats-grant', () => api('POST', endpoint, { user: value }))
     } catch (e) {
       toast.error('Error authorizing the Google account' + errorRef(e), refusalOf(e) || undefined)
     } finally {

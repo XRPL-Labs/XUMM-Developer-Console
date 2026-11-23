@@ -127,7 +127,11 @@ export function KycNotice() {
     <div className="flex items-start gap-2.5 border-b border-amber-200 bg-amber-50 px-4 py-2.5 text-[13px] text-amber-900 sm:px-6 dark:border-amber-400/20 dark:bg-amber-400/5 dark:text-amber-200" role="status" data-kyc="notice">
       <Icon icon={faClock} className="mt-0.5 shrink-0 text-amber-600 dark:text-amber-400" />
       <span className="min-w-0 flex-1">
-        Your KYC for the Developer Console is valid until {kycDay(end)}. After that date a new KYC is needed to create or change an application.
+        Your KYC for the Developer Console is valid until {kycDay(end)}. After that date a new KYC is needed to create or change an application. Your present KYC stays valid
+        until the new one is approved.{' '}
+        <a href={linkOf(status)} target="_blank" rel="noopener noreferrer" className="font-semibold whitespace-nowrap underline underline-offset-2 hover:no-underline" data-kyc="renew">
+          Renew now
+        </a>
       </span>
       <button type="button" className="-my-0.5 shrink-0 rounded-md p-1 hover:bg-amber-100 dark:hover:bg-amber-400/10" onClick={() => setHidden(true)} aria-label="Hide this notice">
         <Icon icon={faXmark} />

@@ -118,7 +118,7 @@ export function AppForm({ app, onCreated }: { app?: App; onCreated?: (created: C
     setUploading(n => n + 1)
     try {
       // The account needs a KYC to create or change an application (false: cancelled, the icon stays as it was)
-      const uploaded = await withKyc(async () => {
+      const uploaded = await withKyc('upload-logo', async () => {
         const response = await api('POST', 'console/store-logo', formData)
         if (response?.uploaded) {
           const url = cdnUrl(response.file.key)
@@ -159,7 +159,7 @@ export function AppForm({ app, onCreated }: { app?: App; onCreated?: (created: C
       // Create: name and description. Update: all the details
       const body = edit ? { ...values } : { appName: values.appName, appDescription: values.appDescription }
       // The account needs a KYC to create or change an application: asked first
-      await withKyc(async () => {
+      await withKyc(app ? 'update-app' : 'create-app', async () => {
         // A new application, and another webhook URL for an application, are dangerous actions: confirmed in Xaman
         // (null: cancelled)
         const webhookUrl = values.appWebhookUrl.trim()

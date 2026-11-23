@@ -206,6 +206,7 @@ const fail = (message: string, status = 400, code?: number) => Object.assign(new
 const day = 86400
 const kyc = { started: false, checksAfterStart: 0, done: false, refusedOnce: false }
 const kycState = () => localStorage.getItem('mockKyc') || ''
+const kycActions = ['create-app', 'update-app', 'regenerate-secret', 'backend-only', 'add-co-owner', 'xapp-activate', 'xapp-settings', 'ext-stats-activate', 'ext-stats-grant', 'upload-logo']
 const kycNeeded = () => ['required', 'expired', 'refused'].includes(kycState()) && !kyc.done
 document.addEventListener('click', e => {
   if ((e.target as Element | null)?.closest?.('a[data-kyc="start"]')) kyc.started = true
@@ -213,7 +214,7 @@ document.addEventListener('click', e => {
 const kycStatus = () => {
   const state = kycState()
   if (state === '') throw fail('Endpoint unknown or method invalid for given endpoint', 404, 404)
-  const base = { mode: 'on', required: false, kyc: true, reason: null, since: now() - 165 * day, validUntil: now() + 200 * day, account: account.slice(0, 6) + '...' + account.slice(-4), maxAgeDays: 365, kycUrl: 'https://xaman.app/detect/xapp:xumm.kyc' }
+  const base = { mode: 'on', required: false, kyc: true, reason: null, since: now() - 165 * day, validUntil: now() + 200 * day, account: account.slice(0, 6) + '...' + account.slice(-4), maxAgeDays: 365, kycUrl: 'https://xaman.app/detect/xapp:xumm.kyc', actions: kycActions }
   if (state === 'ending') return { ...base, since: now() - 353 * day, validUntil: now() + 12 * day }
   if (!kycNeeded()) return kyc.done ? { ...base, since: now(), validUntil: now() + 365 * day } : base
   if (state === 'refused' && !kyc.refusedOnce) return base

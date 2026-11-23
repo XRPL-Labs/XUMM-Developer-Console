@@ -92,7 +92,7 @@ export function AppPermissions() {
         toast.success('Permissions saved')
       }
       // Access for one more account: the account that is signed in needs a KYC. To take access away needs none.
-      if (added.length > 0) await withKyc(save)
+      if (added.length > 0) await withKyc('add-co-owner', save)
       else await save()
     } catch (e) {
       toast.error('Error saving the permissions' + errorRef(e), refusalOf(e) || undefined)

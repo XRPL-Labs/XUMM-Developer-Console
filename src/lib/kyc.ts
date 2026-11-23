@@ -36,7 +36,22 @@ export type KycStatus = {
   account: string | null
   maxAgeDays: number
   kycUrl?: string
+  // The actions that need the KYC. Not in the answer: all of them.
+  actions?: string[]
 }
+
+// The actions of the console that create or change an application (the names of the API)
+export type KycAction =
+  | 'create-app'
+  | 'update-app'
+  | 'regenerate-secret'
+  | 'backend-only'
+  | 'add-co-owner'
+  | 'xapp-activate'
+  | 'xapp-settings'
+  | 'ext-stats-activate'
+  | 'ext-stats-grant'
+  | 'upload-logo'
 
 // The dialog
 export type PendingKyc = {
@@ -90,13 +105,14 @@ const askForKyc = (first: KycStatus | null): Promise<boolean> =>
   })
 
 /**
- * Runs an action that creates or changes an application.
+ * Runs an action that creates or changes an application. name: the action, as the API names it.
  * Resolves true when the action ran, false when the user cancelled the KYC dialog (the action did not run).
  * Rejects with the error of the action.
  */
-export const withKyc = async (action: () => Promise<void>): Promise<boolean> => {
+export const withKyc = async (name: KycAction, action: () => Promise<void>): Promise<boolean> => {
   const status = await fetchKycStatus()
-  if (status?.required && !(await askForKyc(status))) return false
+  const needed = !!status?.required && (!Array.isArray(status.actions) || status.actions.includes(name))
+  if (needed && !(await askForKyc(status))) return false
   try {
     await action()
   } catch (e) {

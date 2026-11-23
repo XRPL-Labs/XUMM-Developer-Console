@@ -32,7 +32,7 @@ export function AppSettings() {
     setSavingBackendOnly(true)
     try {
       // A change of the application: the account needs a KYC
-      await withKyc(async () => {
+      await withKyc('backend-only', async () => {
         await api('PATCH', 'console/app/' + appId, { backendOnly: on })
         patchAppDetails(appId, { payload_create_backend_only: on ? 1 : 3 })
         toast.success(on ? 'Backend payload creation only: on' : 'Backend payload creation only: off')
@@ -46,7 +46,7 @@ export function AppSettings() {
   const regenerateSecret = async () => {
     try {
       // A change of the application: the account needs a KYC
-      await withKyc(async () => {
+      await withKyc('regenerate-secret', async () => {
         // A dangerous action: confirmed in Xaman (null: cancelled)
         const confirm = await confirmInXaman('regenerate-secret', 'Regenerate the API Secret of ' + app.name, appId)
         if (confirm === null) return
