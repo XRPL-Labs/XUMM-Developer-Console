@@ -62,14 +62,12 @@ export function KycNeeded() {
                   application.
                 </p>
                 <p>
-                  Do the KYC in Xaman with the account that is signed in here
+                  Do the KYC in Xaman with the account that is signed in here{account ? ':' : '.'}
                   {account ? (
-                    <>
-                      : <span className="font-mono text-[12px] break-all text-fg">{account}</span>
-                    </>
-                  ) : (
-                    '.'
-                  )}
+                    <span className="mt-1.5 block w-fit max-w-full overflow-x-auto whitespace-nowrap rounded-md border border-line bg-surface-2 px-2.5 py-1.5 font-mono text-[12px] text-fg">
+                      {account}
+                    </span>
+                  ) : null}
                 </p>
                 <p>
                   The KYC has a one-time fee. You pay it in the Xaman app, which shows the amount first.
