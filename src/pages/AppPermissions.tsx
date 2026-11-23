@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState, type ClipboardEvent, type KeyboardEvent } from 'react'
 import { isValidClassicAddress } from 'ripple-address-codec'
 import { api, errorRef } from '../lib/api'
+import { confirmInXaman, refusalOf } from '../lib/confirm'
 import { useSelectedApp } from '../lib/routes'
 import { useStore } from '../lib/store'
 import { toast } from '../lib/toast'
@@ -79,12 +80,16 @@ export function AppPermissions() {
   const persist = async () => {
     setSaving(true)
     try {
-      await api('POST', 'console/known-shared-accounts', { app: appId, sharedWith: selected })
+      // Access for one more account is a dangerous action: confirmed in Xaman (null: cancelled)
+      const added = selected.filter(account => !saved.includes(account))
+      const confirm = added.length > 0 ? await confirmInXaman('add-co-owner', `Give ${added.length === 1 ? added[0] : added.length + ' accounts'} access to ${app.name}`, appId, selected) : undefined
+      if (confirm === null) return
+      await api('POST', 'console/known-shared-accounts', { app: appId, sharedWith: selected, ...(confirm ? { confirm } : {}) })
       setSaved([...selected])
       patchAppDetails(appId, { application_shared_with: selected.join(',') })
       toast.success('Permissions saved')
     } catch (e) {
-      toast.error('Error saving the permissions' + errorRef(e))
+      toast.error('Error saving the permissions' + errorRef(e), refusalOf(e) || undefined)
     } finally {
       setSaving(false)
     }

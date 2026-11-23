@@ -1,11 +1,15 @@
 /**
  * The confirmation in Xaman for a dangerous action: regenerate the API Secret, create an application, remove an
- * application. A console session alone is not enough for these (a session left open, a passkey session).
+ * application, give another account access to an application, send the webhooks of an application to another URL.
+ * A console session alone is not enough for these (a session left open, a passkey session).
  *
  * The API decides (POST console/confirm):
  * - Sign in with Xaman, at most 15 minutes ago: no question.
  * - Sign in with Xaman, longer ago: a sign request (SignIn), signed in Xaman. The action is sent with its proof.
  * - A passkey session: the console can not make a sign request. The user does Sign in with Xaman (then: no question).
+ *
+ * The last two actions are confirmed for their value (the accounts, the URL): the value goes with the question, and
+ * the API answers that no confirmation is needed when the value changes nothing that needs one.
  */
 import { create } from 'zustand'
 import { api, safeUrl, type ApiError } from './api'
@@ -13,7 +17,10 @@ import { getXumm, isMock, signInWithXamanToo } from './auth'
 import { useStore } from './store'
 import { toast } from './toast'
 
-export type ConfirmAction = 'regenerate-secret' | 'create-app' | 'remove-app'
+export type ConfirmAction = 'regenerate-secret' | 'create-app' | 'remove-app' | 'add-co-owner' | 'change-webhook'
+
+// The actions with a value. An API that does not know them (yet) answers 400: then there is nothing to confirm.
+const valueActions: ConfirmAction[] = ['add-co-owner', 'change-webhook']
 
 // The proof of a signed confirmation: sent with the action (`confirm` in the body)
 export type Confirmation = { challenge: string; payload: string }
@@ -54,9 +61,18 @@ export const refusalOf = (e: unknown): string => {
  * - a Confirmation: signed in Xaman, send it with the action (`confirm` in the body)
  * - null: the user cancelled (or did not sign): do not do the action
  * Rejects when the API refuses (e.g. not the owner of the application).
+ *
+ * value: for 'add-co-owner' the wished list of accounts, for 'change-webhook' the wished webhook URL.
  */
-export const confirmInXaman = async (action: ConfirmAction, title: string, app?: string): Promise<Confirmation | undefined | null> => {
-  const ask = () => api<ConfirmOptions>('POST', 'console/confirm', { action, ...(app ? { app } : {}) })
+export const confirmInXaman = async (action: ConfirmAction, title: string, app?: string, value?: string | string[]): Promise<Confirmation | undefined | null> => {
+  const ask = async (): Promise<ConfirmOptions> => {
+    try {
+      return await api<ConfirmOptions>('POST', 'console/confirm', { action, ...(app ? { app } : {}), ...(value !== undefined ? { value } : {}) })
+    } catch (e) {
+      if (valueActions.includes(action) && (e as ApiError)?.status === 400) return { needed: false }
+      throw e
+    }
+  }
 
   let options = await ask()
   if (!options.needed) return undefined

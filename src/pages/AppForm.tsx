@@ -152,8 +152,15 @@ export function AppForm({ app, onCreated }: { app?: App; onCreated?: (created: C
     try {
       // Create: name and description. Update: all the details
       const body = edit ? { ...values } : { appName: values.appName, appDescription: values.appDescription }
-      // A new application is a dangerous action: confirmed in Xaman (null: cancelled)
-      const confirm = edit ? undefined : await confirmInXaman('create-app', 'Create the application ' + values.appName.trim())
+      // A new application, and another webhook URL for an application, are dangerous actions: confirmed in Xaman
+      // (null: cancelled)
+      const webhookUrl = values.appWebhookUrl.trim()
+      const newWebhookUrl = !!app && webhookUrl !== '' && webhookUrl !== (app.details.application_webhookurl || '').trim()
+      const confirm = !app
+        ? await confirmInXaman('create-app', 'Create the application ' + values.appName.trim())
+        : newWebhookUrl
+          ? await confirmInXaman('change-webhook', 'Change the webhook URL of ' + app.name, app.details.application_uuidv4, webhookUrl)
+          : undefined
       if (confirm === null) return
       const response = await api('POST', 'console/app' + (app ? '/' + app.details.application_uuidv4 : ''), { ...body, appIcon: imageCdnUrl, ...(confirm ? { confirm } : {}) })
 

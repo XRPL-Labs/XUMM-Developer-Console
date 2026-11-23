@@ -223,12 +223,28 @@ async function handler(method: string, endpoint: string, body: any): Promise<unk
     throw fail('Mock API: adding a passkey needs the Xaman API', 503)
   }
 
-  // The confirmation of a dangerous action. To see the dialog: localStorage.mockConfirm = 'xaman' | 'passkey'
+  // The confirmation of a dangerous action. To see the dialog: localStorage.mockConfirm = 'xaman' | 'passkey'.
+  // 'old-api': an API that does not know the actions with a value (the action is then done without a confirmation)
   if (path === 'console/confirm') {
     const session = localStorage.getItem('mockConfirm')
+    if (session === 'old-api' && ['add-co-owner', 'change-webhook'].includes(body?.action)) throw fail('Unknown action', 400)
     if (session !== 'xaman' && session !== 'passkey') return { needed: false }
-    const instruction = body?.action === 'create-app' ? 'Confirm: create a new application (Xaman Developer Console)'
-      : `Confirm: ${body?.action === 'remove-app' ? 'remove the application' : 'regenerate the API Secret of the application'} "${apps.find(a => a.application_uuidv4 === body?.app)?.application_name || ''}" (Xaman Developer Console)`
+    const target = apps.find(a => a.application_uuidv4 === body?.app)
+    const name = target?.application_name || ''
+    let instruction = body?.action === 'create-app' ? 'Confirm: create a new application (Xaman Developer Console)'
+      : `Confirm: ${body?.action === 'remove-app' ? 'remove the application' : 'regenerate the API Secret of the application'} "${name}" (Xaman Developer Console)`
+    // The actions with a value: no confirmation when the value adds no account / is the stored URL
+    if (body?.action === 'add-co-owner') {
+      const have = String(target?.application_shared_with || '').split(',')
+      const added: string[] = (Array.isArray(body?.value) ? body.value : []).filter((a: string) => !have.includes(a)).sort()
+      if (added.length < 1) return { needed: false }
+      instruction = `Confirm: give ${added.length === 1 ? 'the account ' + added[0] : `${added.length} accounts (${added.join(', ')})`} access to the application "${name}" (Xaman Developer Console)`
+    }
+    if (body?.action === 'change-webhook') {
+      const url = String(body?.value || '').trim()
+      if (url === '' || url === (target?.application_webhookurl || '')) return { needed: false }
+      instruction = `Confirm: send the webhooks of the application "${name}" to ${new URL(url).host} (Xaman Developer Console)`
+    }
     return { needed: true, session, confirm: { challenge: 'mock', identifier: 'confirm-mock', memo: 'AB', instruction, seconds: 300 } }
   }
 
