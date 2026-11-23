@@ -52,7 +52,7 @@ const noop = () => {}
 // The text of a refusal of the API, for the message of the action
 export const refusalOf = (e: unknown): string => {
   const error = e as ApiError
-  return [403, 404, 503].includes(error?.status ?? 0) && error?.message ? error.message : ''
+  return [400, 403, 404, 503].includes(error?.status ?? 0) && error?.message && !/^API HTTP code /.test(error.message) ? error.message : ''
 }
 
 /**
